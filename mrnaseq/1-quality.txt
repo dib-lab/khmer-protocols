@@ -33,6 +33,7 @@ Install `khmer <http://khmer.readthedocs.org>`__::
    echo 'export PYTHONPATH=$PYTHONPATH:/usr/local/share/khmer' >> ~/.bashrc
    source ~/.bashrc
 
+
 Install `Trimmomatic <http://www.usadellab.org/cms/?page=trimmomatic>`__::
 
    cd /root
