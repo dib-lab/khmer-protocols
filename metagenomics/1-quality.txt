@@ -31,7 +31,7 @@ Install `khmer <http://khmer.readthedocs.org/>`__::
    git checkout protocols-v0.8.3
    make
 
-   echo 'export PYTHONPATH=/usr/local/share/khmer/python:$PYTHONPATH' >> ~/.bashrc
+   echo 'export PYTHONPATH=/usr/local/share/khmer:$PYTHONPATH' >> ~/.bashrc
    source ~/.bashrc
 
 Install `Trimmomatic <http://www.usadellab.org/cms/?page=trimmomatic>`__::
