@@ -8,44 +8,44 @@ of the example data set.
 
 .. note::
 
-   This follows the NGS 2013 tutorial,
-   `Short-read quality evaluation <http://ged.msu.edu/angus/tutorials-2013/short-read-quality-evaluation.html>`__,
-   but for multiple files.
+   The raw data for this tutorial is available as public snapshot
+   snap-05633504 on EC2/EBS.
 
 .. note::
 
-   The raw data for this tutorial is available as public snapshot
-   snap-05633504 on EC2/EBS. The end results of this tutorial are
-   available as public snapshot snap-85653384 on EC2/EBS.
-
-Also see:  :doc:`../mrnaseq/using-screen`.
+   Some of these commands may take a very long time.  Please see
+   :doc:`../amazon/using-screen`.
 
 Install software
 ================
 
-Install screed::
+Install `screed <http://screed.readthedocs.org/>`__::
 
    pip install screed
 
-Install the bleeding-edge version of khmer::
+Install `khmer <http://khmer.readthedocs.org/>`__::
 
    cd /usr/local/share
    git clone https://github.com/ged-lab/khmer.git
    cd khmer
-   git checkout protocols-v0.8.3
+   git checkout protocols-v0.8.5
    make
 
-   echo 'export PYTHONPATH=/usr/local/share/khmer/python:$PYTHONPATH' >> ~/.bashrc
+   echo 'export PYTHONPATH=/usr/local/share/khmer:$PYTHONPATH' >> ~/.bashrc
    source ~/.bashrc
 
-Install Trimmomatic::
+.. @@ ping.
+
+Install `Trimmomatic <http://www.usadellab.org/cms/?page=trimmomatic>`__::
 
    cd /root
-   curl -O http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.27.zip
-   unzip Trimmomatic-0.27.zip 
-   cp Trimmomatic-0.27/trimmomatic-0.27.jar /usr/local/bin
+   curl -O http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.30.zip
+   unzip Trimmomatic-0.30.zip
+   cd Trimmomatic-0.30/
+   cp trimmomatic-0.30.jar /usr/local/bin
+   cp -r adapters /usr/local/share/adapters
 
-Install libgtextutils and fastx::
+Install `libgtextutils and fastx <http://hannonlab.cshl.edu/fastx_toolkit/>`__::
 
    cd /root
    curl -O http://hannonlab.cshl.edu/fastx_toolkit/libgtextutils-0.6.1.tar.bz2
@@ -76,13 +76,17 @@ Let's create a place to work::
 Link in the data
 ================
 
-If you want to play along with the data specific to this tutorial
-(highly advised on a first runthrough!), please see
+The tutorial data is from `Sharon et al. 2013
+<http://www.ncbi.nlm.nih.gov/pubmed/22936250>`__; it's two data points
+from an infant gut sample.
+
+If you want to play along with this data (guaranteed to work -- highly
+advised on a first runthrough!), please see
 :doc:`../mrnaseq/0-download-and-save` and follow the instructions to
 (a) create a volume from snapshot snap-05633504 and (b) mount it as
 /data.
 
-Once you've done that, check that 'ls /data' shows exactl four FASTQ
+Once you've done that, check that 'ls /data' shows exactly four FASTQ
 files, and then type::
 
    ln -fs /data/SRR49206?_?.fastq.gz .
@@ -92,25 +96,22 @@ This links the data into the /mnt/assembly directory.
 Trim and quality filter
 =======================
 
-Grab some Illumina adapters::
-
-   curl -O https://s3.amazonaws.com/public.ged.msu.edu/illuminaClipping.fa
-
 Trim the first data set (~20 minutes)::
 
    mkdir trim
    cd trim
 
-   java -jar /usr/local/bin/trimmomatic-0.27.jar PE ../SRR492065_?.fastq.gz s1_pe s1_se s2_pe s2_se ILLUMINACLIP:../illuminaClipping.fa:2:30:10
+   java -jar /usr/local/bin/trimmomatic-0.30.jar PE ../SRR492065_?.fastq.gz s1_pe s1_se s2_pe s2_se ILLUMINACLIP:/usr/local/share/adapters/TruSeq3-PE.fa:2:30:10
 
    /usr/local/share/khmer/scripts/interleave-reads.py s?_pe > combined.fq
 
    fastq_quality_filter -Q33 -q 30 -p 50 -i combined.fq > combined-trim.fq
    fastq_quality_filter -Q33 -q 30 -p 50 -i s1_se > s1_se.trim
+   fastq_quality_filter -Q33 -q 30 -p 50 -i s2_se > s2_se.trim
    /usr/local/share/khmer/scripts/extract-paired-reads.py combined-trim.fq
 
    gzip -9c combined-trim.fq.pe > ../SRR492065.pe.qc.fq.gz
-   gzip -9c combined-trim.fq.se s1_se > ../SRR492065.se.qc.fq.gz
+   gzip -9c combined-trim.fq.se s1_se.trim s2_se.trim > ../SRR492065.se.qc.fq.gz
 
    cd ../
    rm -fr trim
@@ -120,16 +121,17 @@ Trim the second data set (~20 minutes)::
    mkdir trim
    cd trim
 
-   java -jar /usr/local/bin/trimmomatic-0.27.jar PE ../SRR492066_?.fastq.gz s1_pe s1_se s2_pe s2_se ILLUMINACLIP:../illuminaClipping.fa:2:30:10
+   java -jar /usr/local/bin/trimmomatic-0.30.jar PE ../SRR492066_?.fastq.gz s1_pe s1_se s2_pe s2_se ILLUMINACLIP:/usr/local/share/adapters/TruSeq3-PE.fa:2:30:10
 
    /usr/local/share/khmer/scripts/interleave-reads.py s?_pe > combined.fq
 
    fastq_quality_filter -Q33 -q 30 -p 50 -i combined.fq > combined-trim.fq
    fastq_quality_filter -Q33 -q 30 -p 50 -i s1_se > s1_se.trim
+   fastq_quality_filter -Q33 -q 30 -p 50 -i s2_se > s2_se.trim
    /usr/local/share/khmer/scripts/extract-paired-reads.py combined-trim.fq
 
    gzip -9c combined-trim.fq.pe > ../SRR492066.pe.qc.fq.gz
-   gzip -9c combined-trim.fq.se s1_se > ../SRR492066.se.qc.fq.gz
+   gzip -9c combined-trim.fq.se s1_se.trim s2_se.trim > ../SRR492066.se.qc.fq.gz
 
    cd ../
    rm -fr trim

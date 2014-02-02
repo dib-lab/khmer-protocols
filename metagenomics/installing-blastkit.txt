@@ -1,5 +1,5 @@
 ===============================
-4. BLASTing your assembled data
+7. BLASTing your assembled data
 ===============================
 
 One thing everyone wants to do is BLAST sequence data, right?  Here's a
@@ -56,18 +56,18 @@ It should say everything is OK.
 Adding the data
 ---------------
 
-If you've just finished a transcriptome assembly (:doc:`3-big-assembly`) then
+If you've just finished annotating a metagenome assembly
+(:doc:`6-annotating`) then
 you can do this to copy your newly generated assembly into the right place::
 
-   cp trinity_out_dir/Trinity.fasta /root/blastkit/db/db.fa
+   cp /mnt/annot/metag/testasm.faa /root/blastkit/db/db-prot.fa
 
-Alternatively, you can grab my version of the assembly (from running this
+Alternatively, you can grab our version of the assembly (from running this
 tutorial)::
 
    cd /root/blastkit
-   curl -O https://s3.amazonaws.com/public.ged.msu.edu/trinity-nematostella-raw.fa.gz
-   gunzip trinity-nematostella-raw.fa.gz 
-   mv trinity-nematostella-raw.fa db/db.fa
+   curl -O http://athyra.idyll.org/~t/testasm.faa
+   mv testasm.faa db/db-prot.fa
 
 Formatting the database
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -76,15 +76,15 @@ After you've done either of the above, format and install the database
 for blastkit::
 
    cd /root/blastkit
-   formatdb -i db/db.fa -o T -p F
-   python index-db.py db/db.fa
+   formatdb -i db/db-prot.fa -o T -p T
+   python index-db.py db/db-prot.fa
 
 Done!
 
 .. note::
 
-   You can install any file of DNA sequences you want this way; just copy
-   it into /root/blastkit/db/db.fa and run the indexing commands, above.
+   You can install any file of protein sequences you want this way; just copy
+   it into /root/blastkit/db/db-prot.fa and run the indexing commands, above.
 
 Running blastkit
 ----------------
@@ -96,15 +96,11 @@ Figure out what your machine name is
 
 Make sure you have enabled port 80 in your security settings on Amazon.
 
-(If you're using the Nematostella data set, try this sequence::
+(If you're using the human data set, try this sequence::
 
-   CAGCCTTTAGAAGGAAACAGTGGCAATATATAATTCTAGATGAAGCTCAGAATATCAAAA
-   ATTTTAAAAGTCAAAGGTGGCAGTTGCTGTTGAATTTTTCAAGTCAGAGGAGACTTTTGT
-   TGACTGGAACACCTTTGCAGAACAATTTGATGGAGCTGTGGTCGCTTATGCATTTCCTCA
-   TGCCATCAATGTTTGCTTCTCATAAAGATTTTAGGGAGTGGTTTTCTAACCCTGTTACAG
-   GGATGATTGAAGGGAATTCAG
+   MYLYTSYGTYQFLNQIKLNHQERNLFQFSTNDSSIILEESEGKSILKHPSSYQVIDSTGE
+   FNEHHFYSAIFVPTSEDHRQQLEKKLLHVDVPLSNFGGFKSYRLLKPTEGSTYKIYFGFA
+   NRTAYEDFKASDIFNENFSKDALSQYFGASGQHSSYFERYLYPIEDH
+
 
 It should match something in your assembly.)
-
-Next: :doc:`5-building-transcript-families`
-
