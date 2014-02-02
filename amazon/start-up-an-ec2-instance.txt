@@ -50,7 +50,7 @@ still have a copy of the key file you downloaded stored somewhere.
 "Create a new instance" page 1
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Enter 'ami-c17ec8a8' into the search box and click "search".  Select
+Enter 'ami-5519273c' into the search box and click "search".  Select
 it, and hit Continue.
 
 (If it doesn't show up, exit the wizard and make sure you're in US East
