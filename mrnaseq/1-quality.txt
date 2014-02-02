@@ -298,7 +298,7 @@ only want the QC files.  So::
 
    rm *.pe.fq.gz *.se.fq.gz
 
-And, finally, you can toss the pe.fq.gz files, because you've turned *those*
+And, finally, you can toss the pe.qc.fq.gz files, because you've turned *those*
 into .pe and .se files. ::
 
    rm *.pe.qc.fq.gz
