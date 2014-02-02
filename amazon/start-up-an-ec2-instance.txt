@@ -40,8 +40,13 @@ Choose the machine size
 
 Select 'General purpose', 'm1.xlarge', and then 'Review and Launch'.
 
+<<<<<<< HEAD
+Enter 'ami-5519273c' into the search box and click "search".  Select
+it, and hit Continue.
+=======
 .. image:: images/ec2-4.png
    :width: 80%
+>>>>>>> master
 
 Confirm and launch
 ~~~~~~~~~~~~~~~~~~

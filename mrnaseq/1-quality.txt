@@ -17,21 +17,24 @@ Install software
 Install `screed <http://screed.readthedocs.org/>`__::
 
    cd /usr/local/share
-   git clone https://github.com/ged-lab/screed.git
+   git clone https://github.com/ged-lab/screed.git -b protocols-v0.8.3
    cd screed
-   git checkout protocols-v0.8.3
    python setup.py install
+   
+Or::
+
+   pip install git+https://github.com/ged-lab/screed.git@protocols-v0.8.3#egg=screed
 
 Install `khmer <http://khmer.readthedocs.org>`__::
 
    cd /usr/local/share
-   git clone https://github.com/ged-lab/khmer.git
+   git clone https://github.com/ged-lab/khmer.git -b protocols-v0.8.5
    cd khmer
-   git checkout protocols-v0.8.5
-   make
+   make install
 
-   echo 'export PYTHONPATH=$PYTHONPATH:/usr/local/share/khmer' >> ~/.bashrc
-   source ~/.bashrc
+Or::
+
+   pip install git+https://github.com/ged-lab/khmer.git@protocols-v0.8.3#egg=khmer
 
 Install `Trimmomatic <http://www.usadellab.org/cms/?page=trimmomatic>`__::
 
@@ -314,7 +317,7 @@ only want the QC files.  So::
 
    rm *.pe.fq.gz *.se.fq.gz
 
-And, finally, you can toss the pe.fq.gz files, because you've turned *those*
+And, finally, you can toss the pe.qc.fq.gz files, because you've turned *those*
 into .pe and .se files. ::
 
    rm *.pe.qc.fq.gz
