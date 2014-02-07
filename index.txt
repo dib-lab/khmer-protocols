@@ -12,11 +12,6 @@ at:
 
   http://khmer-protocols.readthedocs.org/
 
-- EC2 instance is running;
-- used AMI ami-7f340c16;
-- NOT micro instance (m1.large, or bigger);
-- SSH, HTTP, HTTPS are enabled on the security group;
-=======
 .. You are reading v0.8.5; please use the following URL in citations and
 .. discussions:
 
