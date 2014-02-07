@@ -14,7 +14,7 @@ Getting started with Amazon EC2
 A final checklist:
 
 - EC2 instance is running;
-- used AMI ami-c17ec8a8;
+- used AMI ami-7f340c16;
 - NOT micro instance (m1.large, or bigger);
 - SSH, HTTP, HTTPS are enabled on the security group;
 
