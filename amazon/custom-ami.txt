@@ -3,7 +3,7 @@ Creating a Custom AMI
 
 When you find yourself continually starting EC2 instances and instantly having
 to modify the AMI before each project, you may consider creating a custom AMI.
-Below are the steps used to create ami-5519273c.
+Below are the steps used to create ami-7f340c16.
 
 Launch base image
 -----------------
@@ -90,7 +90,7 @@ Next we want to make sure the image boots correctly. To do this simply type::
 
 		reboot
 
-Wait a minute or so to allow the machine to repost. Then login using root::
+Wait a minute or so to allow the machine to reboot. Then login using root::
 
 		ssh -i <key_path> root@<machine_name>
 
@@ -106,8 +106,11 @@ AMI.  From the drop-down menu choose "Create Image".
 
 .. image:: images/ec2-create-img1.png
    :width: 50 
+
 This will open a pop-up window, where we will need to fill in the image name
-and description.
+and description. If you are making the image on behalf of GED, the naming
+pattern is <project>/dragon/<current date>. For example, ami-7f340c16 is named 
+khmer-protocols/dragon/2013.01.30.
 
 .. image:: images/ec2-create-img2.png
    :width: 50 
