@@ -40,7 +40,6 @@ Choose the machine size
 
 Select 'General purpose', 'm1.xlarge', and then 'Review and Launch'.
 
-<<<<<<< HEAD
 Enter 'ami-7f340c16' into the search box and click "search".  Select
 it, and hit Continue.
 =======
