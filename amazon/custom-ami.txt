@@ -3,7 +3,7 @@ Creating a Custom AMI
 
 When you find yourself continually starting EC2 instances and instantly having
 to modify the AMI before each project, you may consider creating a custom AMI.
-Below are the steps used to create ami-5519273c.
+Below are the steps used to create ami-7f340c16.
 
 Launch base image
 -----------------
