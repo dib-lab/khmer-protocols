@@ -13,6 +13,7 @@ of the Nematostella data set.
 
 Install software
 ----------------
+.. shell:: start
 
 Install `screed <http://screed.readthedocs.org/>`__::
 
@@ -20,10 +21,14 @@ Install `screed <http://screed.readthedocs.org/>`__::
    git clone https://github.com/ged-lab/screed.git -b protocols-v0.8.3
    cd screed
    python setup.py install
+
+.. shell:: stop
    
 Or::
 
    pip install git+https://github.com/ged-lab/screed.git@protocols-v0.8.3#egg=screed
+
+.. shell:: start
 
 Install `khmer <http://khmer.readthedocs.org>`__::
 
@@ -32,9 +37,13 @@ Install `khmer <http://khmer.readthedocs.org>`__::
    cd khmer
    make install
 
+.. shell:: stop
+
 Or::
 
    pip install git+https://github.com/ged-lab/khmer.git@protocols-v0.8.3#egg=khmer
+
+.. shell:: start
 
 Install `Trimmomatic <http://www.usadellab.org/cms/?page=trimmomatic>`__::
 
@@ -63,6 +72,8 @@ In each of these cases, we're downloading the software -- you can use
 google to figure out what each package is and does if we don't discuss
 it below.  We're then unpacking it, sometimes compiling it (which we
 can discuss later), and then installing it for general use.
+
+.. shell:: stop
 
 Find your data
 --------------
@@ -201,6 +212,8 @@ reads, respectively.
 Automating things a bit
 ~~~~~~~~~~~~~~~~~~~~~~~
 
+.. shell:: start
+
 OK, once you've done this once or twice, it gets kind of tedious, doesn't it?
 I've written a script to write these commands out automatically.  Run it
 like so::
@@ -215,6 +228,8 @@ Run this, and then look at 'trim.sh' using the 'more' command -- ::
 If it looks like it contains the right commands, you can run it by doing::
 
    bash trim.sh
+
+.. shell:: stop
 
 .. note::
 
@@ -247,6 +262,8 @@ quality score encodings.
 
 Automating this step
 ~~~~~~~~~~~~~~~~~~~~
+
+.. shell:: start
 
 This step can be automated with a 'for' loop at the shell prompt.  Try::
 
@@ -290,6 +307,8 @@ To run it on all of the pe qc files, do::
       /usr/local/share/khmer/scripts/extract-paired-reads.py $i
    done
 
+.. shell:: stop
+
 Finishing up
 ------------
 
@@ -304,6 +323,8 @@ data, for *each* of the original input files, you'll have::
    24HourB_GCCAAT_L002_R1_001.pe.qc.fq.gz.se	     - FASTX filtered SE
    24HourB_GCCAAT_L002_R1_001.se.fq.gz		     - adapter trimmed orphans
    24HourB_GCCAAT_L002_R1_001.se.qc.fq.gz	     - FASTX filtered orphans
+
+.. shell:: start
 
 Yikes!  What to do?
 
@@ -322,6 +343,8 @@ into .pe and .se files. ::
 
    rm *.pe.qc.fq.gz
 
+.. shell:: stop
+
 So now you should be left with only three files for each sample::
 
    24HourB_GCCAAT_L002_R1_001.pe.qc.fq.gz.pe   - FASTX filtered PE
@@ -339,6 +362,8 @@ the unwanted ones en masse.  This is a good idea, too.
 
 Renaming files
 --------------
+
+.. shell:: start
 
 I'm a fan of keeping the files named somewhat sensibly, and keeping them
 compressed.  Let's do some mass renaming::
@@ -378,6 +403,8 @@ doing this::
    mkdir save
    mv *.qc.fq.gz save
    du -sk save
+
+.. shell:: stop
 
 This puts the data you want to save into a subdirectory named 'save', and
 calculates the size.
