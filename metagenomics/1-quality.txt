@@ -19,10 +19,6 @@ of the example data set.
 Install software
 ================
 
-Install `screed <http://screed.readthedocs.org/>`__::
-
-   pip install screed
-
 Install `khmer <http://khmer.readthedocs.org/>`__::
 
    cd /usr/local/share
