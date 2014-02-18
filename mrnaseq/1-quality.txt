@@ -14,27 +14,12 @@ of the Nematostella data set.
 Install software
 ----------------
 
-Install `screed <http://screed.readthedocs.org/>`__::
-
-   cd /usr/local/share
-   git clone https://github.com/ged-lab/screed.git -b protocols-v0.8.3
-   cd screed
-   python setup.py install
-   
-Or::
-
-   pip install git+https://github.com/ged-lab/screed.git@protocols-v0.8.3#egg=screed
-
 Install `khmer <http://khmer.readthedocs.org>`__::
 
    cd /usr/local/share
    git clone https://github.com/ged-lab/khmer.git -b protocols-v0.8.5
    cd khmer
    make install
-
-Or::
-
-   pip install git+https://github.com/ged-lab/khmer.git@protocols-v0.8.3#egg=khmer
 
 Install `Trimmomatic <http://www.usadellab.org/cms/?page=trimmomatic>`__::
 
