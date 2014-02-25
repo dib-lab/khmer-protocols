@@ -13,7 +13,6 @@ of the Nematostella data set.
 
 Install software
 ----------------
-.. shell:: start
 
 Install `khmer <http://khmer.readthedocs.org>`__ :
 ::
@@ -60,7 +59,6 @@ google to figure out what each package is and does if we don't discuss
 it below.  We're then unpacking it, sometimes compiling it (which we
 can discuss later), and then installing it for general use.
 
-.. shell:: stop
 
 
 Find your data
@@ -201,8 +199,6 @@ reads, respectively.
 Automating things a bit
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-.. shell:: start
-
 OK, once you've done this once or twice, it gets kind of tedious, doesn't it?
 I've written a script to write these commands out automatically.  Run it
 like so :
@@ -211,8 +207,7 @@ like so :
    cd /mnt/work
    python /usr/local/share/khmer/sandbox/write-trimmomatic.py > trim.sh
 
-Run this, and then look at 'trim.sh' using the 'more' command -- :
-::
+Run this, and then look at 'trim.sh' using the 'more' command --::
 
    more trim.sh
 
@@ -228,7 +223,7 @@ If it looks like it contains the right commands, you can run it by doing :
    'more /usr/local/share/khmer/sandbox/write-trimmomatic.py' -- to get
    some idea of how this works.
 
-.. shell:: stop
+
 
 Quality trim each pair of files
 -------------------------------
@@ -258,11 +253,6 @@ Automating this step
 <<<<<<< HEAD
 This step can be automated with a 'for' loop at the shell prompt.  Try :
 ::
-=======
-.. shell: start
-
-This step can be automated with a 'for' loop at the shell prompt.  Try::
->>>>>>> 3dddaf7e3269d2a9bc9ae704621192f0e6d5b993
 
    for i in *.pe.fq.gz *.se.fq.gz
    do
@@ -305,11 +295,6 @@ To run it on all of the pe qc files, do :
       /usr/local/share/khmer/scripts/extract-paired-reads.py $i
    done
 
-<<<<<<< HEAD
-
-=======
-.. shell:: stop
->>>>>>> 3dddaf7e3269d2a9bc9ae704621192f0e6d5b993
 
 Finishing up
 ------------
@@ -327,8 +312,6 @@ data, for *each* of the original input files, you'll have::
    24HourB_GCCAAT_L002_R1_001.se.qc.fq.gz	     - FASTX filtered orphans
 
 Yikes!  What to do?
-
-.. shell:: start
 
 Well, first, you can get rid of the original data.  You already have it on a
 disk somewhere, right? :
@@ -348,12 +331,6 @@ into .pe and .se files. :
 
    rm *.pe.qc.fq.gz
 
-<<<<<<< HEAD
-
-=======
-.. shell:: stop
->>>>>>> 3dddaf7e3269d2a9bc9ae704621192f0e6d5b993
-
 So now you should be left with only three files for each sample::
 
    24HourB_GCCAAT_L002_R1_001.pe.qc.fq.gz.pe   - FASTX filtered PE
@@ -371,11 +348,6 @@ the unwanted ones en masse.  This is a good idea, too.
 
 Renaming files
 --------------
-
-<<<<<<< HEAD
-=======
-.. shell:: start
->>>>>>> 3dddaf7e3269d2a9bc9ae704621192f0e6d5b993
 
 I'm a fan of keeping the files named somewhat sensibly, and keeping them
 compressed.  Let's do some mass renaming :
@@ -400,14 +372,9 @@ and also some mass combining :
      rm $i combine
    done
 
-<<<<<<< HEAD
+
 and finally, make the end product files read-only :
 ::
-=======
-.. shell:: stop
-
-and finally, make the end product files read-only::
->>>>>>> 3dddaf7e3269d2a9bc9ae704621192f0e6d5b993
 
    chmod u-w *.qc.fq.gz
 
@@ -415,8 +382,6 @@ to make sure you don't accidentally delete something.
 
 Saving the files
 ----------------
-
-.. shell:: start
 
 At this point, you should save these files, which will be used in two
 ways: first, for assembly; and second, for mapping, to do quantitation
@@ -427,16 +392,8 @@ doing this::
    mv *.qc.fq.gz save
    du -sk save
 
-<<<<<<< HEAD
-
-
 .. shell:: stop
 
-=======
-.. shell:: stop
-
-
->>>>>>> 3dddaf7e3269d2a9bc9ae704621192f0e6d5b993
 This puts the data you want to save into a subdirectory named 'save', and
 calculates the size.
 
