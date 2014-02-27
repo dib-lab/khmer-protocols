@@ -30,7 +30,6 @@ Or::
 Install `Trimmomatic <http://www.usadellab.org/cms/?page=trimmomatic>`__ :
 ::
 
-
    cd /root
    curl -O http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.30.zip
    unzip Trimmomatic-0.30.zip
