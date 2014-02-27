@@ -250,7 +250,6 @@ quality score encodings.
 Automating this step
 ~~~~~~~~~~~~~~~~~~~~
 
-<<<<<<< HEAD
 This step can be automated with a 'for' loop at the shell prompt.  Try :
 ::
 
