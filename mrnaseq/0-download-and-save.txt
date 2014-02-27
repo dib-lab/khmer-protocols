@@ -68,7 +68,7 @@ use 'cd' to find the right directory, and then::
 to download the files.  Then type 'quit'.  
 
 You can also use 'curl' to download files one at a time from Web or FTP sites.
-For example, to save a file by from a website, you could use::
+For example, to save a file from a website, you could use::
 
    cd /mnt
    curl -O http://path/to/file/on/website
