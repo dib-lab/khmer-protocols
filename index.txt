@@ -19,15 +19,15 @@ at:
 
 If you need to reference these protocols, please cite::
 
-   Brown, C. Titus; Scott, Camille; Crusoe, Michael; Sheneman, Leigh;
+   Brown, C. Titus; Sheneman, Leigh; Scott, Camille; Crusoe, Michael; 
    Rosenthal, Josh; Adina Howe (2013): khmer-protocols documentation.
    figshare. http://dx.doi.org/10.6084/m9.figshare.878460
 
 Helpful instructions:
 ---------------------
 
-See :doc:`amazon/index` for information on Amazon instances,
-and :doc:`../docs/command-line` for notes on command-line conventions.
+* :doc:`amazon/index` -- information on Amazon instances
+* :doc:`../docs/command-line` -- command-line conventions for the khmer protocols
 
 Protocols:
 ----------

@@ -1,7 +1,7 @@
 ================================================
 1. Quality Trimming and Filtering Your Sequences
 ================================================
-
+.. shell:: start
 Boot up an m1.xlarge machine from Amazon Web Services; this has about
 15 GB of RAM, and 2 CPUs, and will be enough to complete the assembly
 of the Nematostella data set.
@@ -14,14 +14,21 @@ of the Nematostella data set.
 Install software
 ----------------
 
-Install `khmer <http://khmer.readthedocs.org>`__::
+Install `khmer <http://khmer.readthedocs.org>`__ :
+::
 
    cd /usr/local/share
    git clone https://github.com/ged-lab/khmer.git -b protocols-v0.8.5
    cd khmer
    make install
 
-Install `Trimmomatic <http://www.usadellab.org/cms/?page=trimmomatic>`__::
+Or::
+
+   pip install git+https://github.com/ged-lab/khmer.git@protocols-v0.8.3#egg=khmer
+
+
+Install `Trimmomatic <http://www.usadellab.org/cms/?page=trimmomatic>`__ :
+::
 
    cd /root
    curl -O http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.30.zip
@@ -30,14 +37,16 @@ Install `Trimmomatic <http://www.usadellab.org/cms/?page=trimmomatic>`__::
    cp trimmomatic-0.30.jar /usr/local/bin
    cp -r adapters /usr/local/share/adapters
 
-Install `libgtextutils and fastx <http://hannonlab.cshl.edu/fastx_toolkit/>`__::
+Install `libgtextutils and fastx <http://hannonlab.cshl.edu/fastx_toolkit/>`__ :
+::
+
 
    cd /root
    curl -O http://hannonlab.cshl.edu/fastx_toolkit/libgtextutils-0.6.1.tar.bz2
    tar xjf libgtextutils-0.6.1.tar.bz2 
    cd libgtextutils-0.6.1/
    ./configure && make && make install
-
+   
    cd /root
    curl -O http://hannonlab.cshl.edu/fastx_toolkit/fastx_toolkit-0.0.13.2.tar.bz2
    tar xjf fastx_toolkit-0.0.13.2.tar.bz2
@@ -48,6 +57,8 @@ In each of these cases, we're downloading the software -- you can use
 google to figure out what each package is and does if we don't discuss
 it below.  We're then unpacking it, sometimes compiling it (which we
 can discuss later), and then installing it for general use.
+
+
 
 Find your data
 --------------
@@ -73,12 +84,13 @@ Link your data into a working directory
 
 Rather than *copying* the files into the working directory, let's just
 *link* them in -- this creates a reference so that UNIX knows where to
-find them but doesn't need to actually move them around. ::
+find them but doesn't need to actually move them around. :
+::
 
    cd /mnt
    mkdir work
    cd work
-
+   
    ln -fs /data/*.fastq.gz .
 
 (The 'ln' command is what does the linking.)
@@ -188,16 +200,18 @@ Automating things a bit
 
 OK, once you've done this once or twice, it gets kind of tedious, doesn't it?
 I've written a script to write these commands out automatically.  Run it
-like so::
+like so :
+::
 
    cd /mnt/work
    python /usr/local/share/khmer/sandbox/write-trimmomatic.py > trim.sh
 
-Run this, and then look at 'trim.sh' using the 'more' command -- ::
+Run this, and then look at 'trim.sh' using the 'more' command --::
 
    more trim.sh
 
-If it looks like it contains the right commands, you can run it by doing::
+If it looks like it contains the right commands, you can run it by doing :
+::
 
    bash trim.sh
 
@@ -208,6 +222,8 @@ If it looks like it contains the right commands, you can run it by doing::
    'more /usr/local/share/khmer/sandbox/write-trimmomatic.py' -- to get
    some idea of how this works.
 
+
+
 Quality trim each pair of files
 -------------------------------
 
@@ -216,7 +232,7 @@ a bunch of '.se.fq.gz' files.  The former are files that contain paired,
 interleaved sequences; the latter contain single-ended, non-interleaved
 sequences.
 
-Next, for each of these files, run::
+Next, for each of these files, run ::
 
    gunzip -c <filename> | fastq_quality_filter -Q33 -q 30 -p 50 | gzip -9c > <filename>.qc.fq.gz
 
@@ -233,13 +249,14 @@ quality score encodings.
 Automating this step
 ~~~~~~~~~~~~~~~~~~~~
 
-This step can be automated with a 'for' loop at the shell prompt.  Try::
+This step can be automated with a 'for' loop at the shell prompt.  Try :
+::
 
    for i in *.pe.fq.gz *.se.fq.gz
    do
-        echo working with $i
-	newfile="$(basename $i .fq.gz)"
-	gunzip -c $i | fastq_quality_filter -Q33 -q 30 -p 50 | gzip -9c > "${newfile}.qc.fq.gz"
+      echo working with $i
+   newfile="$(basename $i .fq.gz)"
+   gunzip -c $i | fastq_quality_filter -Q33 -q 30 -p 50 | gzip -9c > "${newfile}.qc.fq.gz"
    done
 
 What this loop does is:
@@ -268,12 +285,14 @@ You run it on an interleaved file that may have some orphans, and it
 produces .pe and .se files afterwards, containing pairs and orphans
 respectively.
 
-To run it on all of the pe qc files, do::
+To run it on all of the pe qc files, do :
+::
 
    for i in *.pe.qc.fq.gz
    do
       /usr/local/share/khmer/scripts/extract-paired-reads.py $i
    done
+
 
 Finishing up
 ------------
@@ -293,17 +312,20 @@ data, for *each* of the original input files, you'll have::
 Yikes!  What to do?
 
 Well, first, you can get rid of the original data.  You already have it on a
-disk somewhere, right? ::
+disk somewhere, right? :
+::
 
    rm *.fastq.gz
 
 Next, you can get rid of the 'pe.fq.gz' and 'se.fq.gz' files, since you
-only want the QC files.  So::
+only want the QC files.  So :
+::
 
    rm *.pe.fq.gz *.se.fq.gz
 
 And, finally, you can toss the pe.qc.fq.gz files, because you've turned *those*
-into .pe and .se files. ::
+into .pe and .se files. :
+::
 
    rm *.pe.qc.fq.gz
 
@@ -326,7 +348,8 @@ Renaming files
 --------------
 
 I'm a fan of keeping the files named somewhat sensibly, and keeping them
-compressed.  Let's do some mass renaming::
+compressed.  Let's do some mass renaming :
+::
 
    for i in *.pe.qc.fq.gz.pe
    do
@@ -335,7 +358,8 @@ compressed.  Let's do some mass renaming::
       gzip $newfile
    done
 
-and also some mass combining::
+and also some mass combining :
+::
 
    for i in *.pe.qc.fq.gz.se
    do
@@ -346,7 +370,9 @@ and also some mass combining::
      rm $i combine
    done
 
-and finally, make the end product files read-only::
+
+and finally, make the end product files read-only :
+::
 
    chmod u-w *.qc.fq.gz
 
@@ -363,6 +389,8 @@ doing this::
    mkdir save
    mv *.qc.fq.gz save
    du -sk save
+
+.. shell:: stop
 
 This puts the data you want to save into a subdirectory named 'save', and
 calculates the size.

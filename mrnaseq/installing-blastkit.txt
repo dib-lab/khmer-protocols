@@ -1,7 +1,7 @@
 ===============================
 4. BLASTing your assembled data
 ===============================
-
+.. shell:: start
 One thing everyone wants to do is BLAST sequence data, right?  Here's a
 simple way to set up a stylish little BLAST server that lets you search
 your newly assembled sequences.
@@ -9,7 +9,8 @@ your newly assembled sequences.
 Installing blastkit
 -------------------
 
-Installing some prerequisites::
+Installing some prerequisites:
+::
 
    pip install pygr
    pip install whoosh
@@ -19,7 +20,8 @@ Installing some prerequisites::
    pip install git+https://github.com/ged-lab/screed.git
    apt-get -y install lighttpd
 
-and configure them::
+and configure them:
+::
 
    cd /etc/lighttpd/conf-enabled
    ln -fs ../conf-available/10-cgi.conf ./
@@ -28,7 +30,8 @@ and configure them::
 
    /etc/init.d/lighttpd restart
 
-Next, install BLAST::
+Next, install BLAST:
+::
 
    cd /root
 
@@ -37,7 +40,8 @@ Next, install BLAST::
    cp blast-2.2.24/bin/* /usr/local/bin
    cp -r blast-2.2.24/data /usr/local/blast-data
 
-And put in blastkit::
+And put in blastkit:
+::
 
    cd /root
    git clone https://github.com/ctb/blastkit.git -b ec2
@@ -48,7 +52,8 @@ And put in blastkit::
    chmod a+rxwt files
    chmod +x /root
 
-and run check.py::
+and run check.py:
+::
 
    cd /root/blastkit
    python ./check.py
@@ -59,12 +64,14 @@ Adding the data
 ---------------
 
 If you've just finished a transcriptome assembly (:doc:`3-big-assembly`) then
-you can do this to copy your newly generated assembly into the right place::
+you can do this to copy your newly generated assembly into the right place:
+::
 
    cp trinity_out_dir/Trinity.fasta /root/blastkit/db/db.fa
 
 Alternatively, you can grab my version of the assembly (from running this
-tutorial)::
+tutorial):
+::
 
    cd /root/blastkit
    curl -O https://s3.amazonaws.com/public.ged.msu.edu/trinity-nematostella-raw.fa.gz
@@ -75,7 +82,8 @@ Formatting the database
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 After you've done either of the above, format and install the database
-for blastkit::
+for blastkit:
+::
 
    cd /root/blastkit
    formatdb -i db/db.fa -o T -p F

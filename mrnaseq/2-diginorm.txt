@@ -1,7 +1,7 @@
 =================================
 2. Applying Digital Normalization
 =================================
-
+.. shell:: start
 .. note::
 
    You can start this tutorial with the contents of EC2/EBS snapshot
@@ -25,11 +25,13 @@ you can do::
 Run digital normalization
 -------------------------
 
-Apply digital normalization to the paired-end reads::
+Apply digital normalization to the paired-end reads:
+::
 
    /usr/local/share/khmer/scripts/normalize-by-median.py -p -k 20 -C 20 -N 4 -x 3e9 --savehash normC20k20.kh *.pe.qc.fq.gz
 
-and then to the single-end reads::
+and then to the single-end reads:
+::
 
    /usr/local/share/khmer/scripts/normalize-by-median.py -C 20 --loadhash normC20k20.kh --savehash normC20k20.kh *.se.qc.fq.gz
 
@@ -51,7 +53,8 @@ Trim off likely erroneous k-mers
 -------------------------------
 
 Now, run through all the reads and trim off low-abundance parts of
-high-coverage reads::
+high-coverage reads:
+::
 
    /usr/local/share/khmer/scripts/filter-abund.py -V normC20k20.kh *.keep
 
@@ -63,14 +66,16 @@ Rename files
 
 You'll have a bunch of 'keep.abundfilt' files -- let's make things prettier.
 
-First, let's break out the orphaned and still-paired reads::
+First, let's break out the orphaned and still-paired reads:
+::
 
    for i in *.pe.*.abundfilt;
    do 
       /usr/local/share/khmer/scripts/extract-paired-reads.py $i
    done
 
-We can combine the orphaned reads into a single file::
+We can combine the orphaned reads into a single file:
+::
 
    for i in *.se.qc.fq.gz.keep.abundfilt
    do
@@ -79,7 +84,8 @@ We can combine the orphaned reads into a single file::
       cat $i $pe_orphans | gzip -c > $newfile
    done
 
-We can also rename the remaining PE reads & compress those files::
+We can also rename the remaining PE reads & compress those files:
+::
 
    for i in *.abundfilt.pe
    do
@@ -99,7 +105,8 @@ away! ::
    6Hour_CGATGT_L002_R1_005.se.qc.fq.gz.keep
    6Hour_CGATGT_L002_R1_005.se.qc.fq.gz.keep.abundfilt
 
-So, finally, let's get rid of a lot of the old files ::
+So, finally, let's get rid of a lot of the old files :
+::
 
    rm *.se.qc.fq.gz.keep.abundfilt
    rm *.pe.qc.fq.gz.keep.abundfilt.se
@@ -123,5 +130,7 @@ digitally normalized (keep) abundance-trimmed (abundfilt) FASTQ (fq)
 gzipped (gz) sequences.
 
 Save all these files to a new volume, and get ready to assemble!
+
+.. shell:: stop
 
 Next: :doc:`3-big-assembly`.
