@@ -1,12 +1,13 @@
 ===============================
 5. Building transcript families
 ===============================
-
+.. shell:: start
 Install khmer, screed, and BLAST.  (See :doc:`1-quality` and
 :doc:`installing-blastkit`).  I would suggest using an m1.large or
 m1.xlarge machine.
 
-You'll also need to install some eel-pond scripts::
+You'll also need to install some eel-pond scripts:
+::
 
    cd /usr/local/share
    git clone https://github.com/ctb/eel-pond.git
@@ -18,7 +19,8 @@ Copy in your data
 
 You need your assembled transcriptome (from
 e.g. :doc:`3-big-assembly`).  Put it in /mnt as
-'trinity-nematostella-raw.fa.gz'::
+'trinity-nematostella-raw.fa.gz':
+::
 
    cd /mnt
    gzip -c work/trinity_out_dir/Trinity.fasta > trinity-nematostella-raw.fa.gz
@@ -34,13 +36,14 @@ Run khmer partitioning
 
 Partitioning runs a de Bruijn graph-based clustering algorithm that will
 cluster your transcripts by transitive sequence overlap.  That is, it will
-group transcripts into transcript families based on shared sequence. ::
-
-   /usr/local/share/khmer/scripts/do-partition.py -x 1e9 -N 4 --threads 4 nema trinity-nematostella-raw.fa.gz
+group transcripts into transcript families based on shared sequence. :
+::
+   python /usr/local/share/khmer/scripts/do-partition.py -x 1e9 -N 4 --threads 4 nema trinity-nematostella-raw.fa.gz
 
 This should take about 15 minutes, and outputs a file ending in '.part'
 that contains the partition assignments.  Now, group and rename the
-sequences::
+sequences:
+::
 
    python /usr/local/share/eel-pond/rename-with-partitions.py nema trinity-nematostella-raw.fa.gz.part
    mv trinity-nematostella-raw.fa.gz.part.renamed.fasta.gz trinity-nematostella.renamed.fa.gz
@@ -75,5 +78,7 @@ Some explanation:
   (will) have more.
 
 * 'len' is the sequence length.
+
+.. shell:: stop
 
 Next: :doc:`6-annotating-transcript-families`
