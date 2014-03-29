@@ -26,7 +26,6 @@
    ln -fs /data/*.fastq.gz .
    cd /mnt/work
    python /usr/local/share/khmer/sandbox/write-trimmomatic.py > trim.sh
-   more trim.sh
    bash trim.sh
    for i in *.pe.fq.gz *.se.fq.gz
    do

@@ -2,7 +2,7 @@
 The Eel Pond mRNAseq Protocol
 =============================
 
-:author: Titus Brown, Camille Scott, and Leigh Sheneman.
+:author: C. Titus Brown, Camille Scott, and Leigh Sheneman.
 
 This is a lightweight protocol for assembling up to a few hundred
 million mRNAseq reads, annotating the resulting assembly, and doing

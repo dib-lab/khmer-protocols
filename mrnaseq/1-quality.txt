@@ -1,7 +1,9 @@
 ================================================
 1. Quality Trimming and Filtering Your Sequences
 ================================================
-.. shell:: start
+
+.. shell start
+
 Boot up an m1.xlarge machine from Amazon Web Services; this has about
 15 GB of RAM, and 2 CPUs, and will be enough to complete the assembly
 of the Nematostella data set.
@@ -17,15 +19,12 @@ Install software
 Install `khmer <http://khmer.readthedocs.org>`__ :
 ::
 
+   
    cd /usr/local/share
    git clone https://github.com/ged-lab/khmer.git -b protocols-v0.8.5
    cd khmer
+   python setup.py install
    make install
-
-Or::
-
-   pip install git+https://github.com/ged-lab/khmer.git@protocols-v0.8.3#egg=khmer
-
 
 Install `Trimmomatic <http://www.usadellab.org/cms/?page=trimmomatic>`__ :
 ::
@@ -166,7 +165,7 @@ For *each* of these pairs, run the following::
    java -jar /usr/local/bin/trimmomatic-0.30.jar PE <R1 FILE> <R2 FILE> s1_pe s1_se s2_pe s2_se ILLUMINACLIP:/usr/local/share/adapters/TruSeq3-PE.fa:2:30:10
 
    # interleave the remaining paired-end files
-   /usr/local/share/khmer/scripts/interleave-reads.py s1_pe s2_pe | gzip -9c > ../<SAMPLE NAME>.pe.fq.gz
+   interleave-reads.py s1_pe s2_pe | gzip -9c > ../<SAMPLE NAME>.pe.fq.gz
 
    # combine the single-ended files
    cat s1_se s2_se | gzip -9c > ../<SAMPLE NAME>.se.fq.gz
@@ -290,7 +289,7 @@ To run it on all of the pe qc files, do :
 
    for i in *.pe.qc.fq.gz
    do
-      /usr/local/share/khmer/scripts/extract-paired-reads.py $i
+      extract-paired-reads.py $i
    done
 
 
@@ -390,7 +389,7 @@ doing this::
    mv *.qc.fq.gz save
    du -sk save
 
-.. shell:: stop
+.. shell stop
 
 This puts the data you want to save into a subdirectory named 'save', and
 calculates the size.
