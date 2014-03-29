@@ -27,6 +27,12 @@ you can do::
 Run digital normalization
 -------------------------
 
+.. Fix the working directory location:
+
+.. ::
+
+   cd /mnt/work
+
 Apply digital normalization to the paired-end reads:
 ::
 
