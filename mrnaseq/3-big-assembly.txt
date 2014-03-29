@@ -96,3 +96,23 @@ You can now copy it over via Dropbox, or set it up for BLAST (see
 .. shell stop
 
 Next: :doc:`5-building-transcript-families` (or :doc:`installing-blastkit`).
+
+.. shell start
+
+.. for testing purposes:
+
+.. ::
+
+   cd /root
+   curl -O ftp://ftp.ncbi.nih.gov/blast/executables/release/2.2.24/blast-2.2.24-x64-linux.tar.gz
+   tar xzf blast-2.2.24-x64-linux.tar.gz
+   cp blast-2.2.24/bin/* /usr/local/bin
+   cp -r blast-2.2.24/data /usr/local/blast-data
+   cd /mnt
+   mkdir blast
+   cd blast
+   curl -O ftp://ftp.ncbi.nih.gov/refseq/M_musculus/mRNA_Prot/mouse.protein.faa.gz
+   gunzip mouse.protein.faa.gz
+   formatdb -i mouse.protein.faa -o T -p T
+   cp ../work/trinity_out_dir/Trinity.fasta .
+   blastall -i Trinity.fasta -d mouse.protein.faa -p blastx -e 1e-6 -o trinity.x.mouse
