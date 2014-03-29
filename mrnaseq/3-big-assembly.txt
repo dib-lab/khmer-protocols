@@ -1,7 +1,8 @@
 ==============================
 3. Running the Actual Assembly
 ==============================
-.. shell:: start
+
+.. shell start
 
 All of the below should be run in screen, probably...  You will want
 at least 15 GB of RAM, maybe more.
@@ -66,7 +67,7 @@ seqs to one of 'em. :
    cd /mnt/work
    for i in *.pe.qc.keep.abundfilt.fq.gz
    do
-   python /usr/local/share/khmer/scripts/split-paired-reads.py $i
+      split-paired-reads.py $i
    done
    
    cat *.1 > left.fq
@@ -92,6 +93,6 @@ you'll have an assembled transcriptome in trinity_out_dir/Trinity.fasta.
 You can now copy it over via Dropbox, or set it up for BLAST (see
 :doc:`installing-blastkit`).
 
-.. shell:: stop
+.. shell stop
 
 Next: :doc:`5-building-transcript-families` (or :doc:`installing-blastkit`).
