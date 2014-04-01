@@ -36,12 +36,12 @@ Run digital normalization
 Apply digital normalization to the paired-end reads:
 ::
 
-   normalize-by-median.py -p -k 20 -C 20 -N 4 -x 3e9 --savehash normC20k20.kh *.pe.qc.fq.gz
+   normalize-by-median.py -p -k 20 -C 20 -N 4 -x 3e9 --savetable normC20k20.kh *.pe.qc.fq.gz
 
 and then to the single-end reads:
 ::
 
-   normalize-by-median.py -C 20 --loadhash normC20k20.kh --savehash normC20k20.kh *.se.qc.fq.gz
+   normalize-by-median.py -C 20 --loadtable normC20k20.kh --savetable normC20k20.kh *.se.qc.fq.gz
 
 Note the '-p' in the first normalize-by-median command -- when run on
 PE data, that ensures that no paired ends are orphaned.  However, it
