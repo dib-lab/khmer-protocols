@@ -21,8 +21,9 @@ Install `khmer <http://khmer.readthedocs.org>`__ :
 
    
    cd /usr/local/share
-   git clone https://github.com/ged-lab/khmer.git -b protocols-v0.8.5
+   git clone https://github.com/ged-lab/khmer.git
    cd khmer
+   git checkout v1.0-rc1
    python setup.py install
    make install
 
