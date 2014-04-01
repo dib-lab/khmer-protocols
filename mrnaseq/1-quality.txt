@@ -23,9 +23,8 @@ Install `khmer <http://khmer.readthedocs.org>`__ :
    cd /usr/local/share
    git clone https://github.com/ged-lab/khmer.git
    cd khmer
-   git checkout v1.0-rc4
+   git checkout v1.0-rc6
    python setup.py install
-   make install
 
 Install `Trimmomatic <http://www.usadellab.org/cms/?page=trimmomatic>`__ :
 ::
