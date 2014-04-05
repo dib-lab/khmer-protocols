@@ -26,10 +26,13 @@ Install software
    rm -f /root/libgtextutils-*.bz2
    rm -f /root/fastx_toolkit-*.bz2
 
+.. ::
+
+   echo 1-quality INSTALL `date` > times.out
+
 Install `khmer <http://khmer.readthedocs.org>`__ :
 ::
 
-   
    cd /usr/local/share
    git clone https://github.com/ged-lab/khmer.git
    cd khmer
@@ -219,6 +222,10 @@ Run this, and then look at 'trim.sh' using the 'more' command --::
 
    more trim.sh
 
+.. ::
+
+   echo 1-quality TRIM `date` > times.out
+
 If it looks like it contains the right commands, you can run it by doing :
 ::
 
@@ -258,6 +265,10 @@ quality score encodings.
 Automating this step
 ~~~~~~~~~~~~~~~~~~~~
 
+.. ::
+
+   echo 1-quality FILTER `date` > times.out
+
 This step can be automated with a 'for' loop at the shell prompt.  Try :
 ::
 
@@ -294,6 +305,10 @@ You run it on an interleaved file that may have some orphans, and it
 produces .pe and .se files afterwards, containing pairs and orphans
 respectively.
 
+.. ::
+
+   echo 1-quality EXTRACT `date` > times.out
+
 To run it on all of the pe qc files, do :
 ::
 
@@ -302,6 +317,9 @@ To run it on all of the pe qc files, do :
       extract-paired-reads.py $i
    done
 
+.. ::
+
+   echo 1-quality DONE `date` > times.out
 
 Finishing up
 ------------
