@@ -20,8 +20,9 @@ Install software
 
 .. ::
 
+   echo Removing previous installs, if any.
    rm -fr /usr/local/share/khmer
-   rm -f /root/Trimmomatic-*.zip
+   rm -fr /root/Trimmomatic-*
    rm -f /root/libgtextutils-*.bz2
    rm -f /root/fastx_toolkit-*.bz2
 
