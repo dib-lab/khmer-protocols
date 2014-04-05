@@ -1,6 +1,12 @@
 8. Differential expression (with EBSeq)
 =======================================
-.. shell:: start
+
+.. shell start
+
+.. ::
+
+   rm -fr /mnt/ebseq
+
 .. note::
 
    You can also start with the data on snap-1025bf17; mount it as /data
@@ -31,6 +37,10 @@ Go to /mnt and make a new directory:
    cd ebseq
    cp ../rsem/0-vs-6-hour.matrix .
 
+.. ::
+
+   echo 8-differential-expression ebseq `date` >> /root/times.out
+
 Next, run EBSeq:
 ::
 
@@ -45,6 +55,10 @@ understand what's in the output file -- you're most interested in the
 PPDE (posterior probability that a transcript is differentially
 expressed) and the PostFC (posterior fold change) columns, columns 4
 and 5.
+
+.. ::
+
+   echo 8-differential-expression annotate `date` >> /root/times.out
 
 Finally, let's extract differentially expressed genes, and combine
 them with the annotations in your transcripts file. :
@@ -79,7 +93,8 @@ on the demo data set will produce an image as below
 
 ...and that's all, folks!
 
-.. shell:: stop
+.. ::
 
+   echo 8-differential-expression done `date` >> /root/times.out
 
-
+.. shell stop

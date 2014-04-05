@@ -1,10 +1,18 @@
 ===============================
 5. Building transcript families
 ===============================
-.. shell:: start
+
+.. shell start
+
 Install khmer, screed, and BLAST.  (See :doc:`1-quality` and
 :doc:`installing-blastkit`).  I would suggest using an m1.large or
 m1.xlarge machine.
+
+.. ::
+
+   rm -fr /usr/local/share/eel-pond
+   rm -f /mnt/trinity-nematostella-raw.fa.gz
+   echo 5-building-transcript-families install `date` >> /root/times.out
 
 You'll also need to install some eel-pond scripts:
 ::
@@ -34,11 +42,20 @@ of the Nematostella assembly::
 Run khmer partitioning
 ======================
 
+.. ::
+
+   echo 5-building-transcript-families partition `date` >> /root/times.out
+
 Partitioning runs a de Bruijn graph-based clustering algorithm that will
 cluster your transcripts by transitive sequence overlap.  That is, it will
-group transcripts into transcript families based on shared sequence. :
+group transcripts into transcript families based on shared sequence.
 ::
-   python /usr/local/share/khmer/scripts/do-partition.py -x 1e9 -N 4 --threads 4 nema trinity-nematostella-raw.fa.gz
+
+   do-partition.py -x 1e9 -N 4 --threads 4 nema trinity-nematostella-raw.fa.gz
+
+.. ::
+
+   echo 5-building-transcript-families rename `date` >> /root/times.out
 
 This should take about 15 minutes, and outputs a file ending in '.part'
 that contains the partition assignments.  Now, group and rename the
@@ -79,6 +96,6 @@ Some explanation:
 
 * 'len' is the sequence length.
 
-.. shell:: stop
+.. shell stop
 
 Next: :doc:`6-annotating-transcript-families`

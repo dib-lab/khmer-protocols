@@ -1,7 +1,21 @@
 ============================================================
 6. Annotating transcript families
 ============================================================
-.. shell:: start
+
+.. shell start
+
+.. ::
+
+   rm -fr /root/blast-2.2.*
+   rm -f /mnt/mouse.protein.faa
+   rm -f /mnt/trinity-nematostella.renamed.fa
+   rm -f /mnt/nema.x.mouse
+   rm -f /mnt/mouse.x.nema
+   rm -f /mnt/nema.x.mouse.homol
+   rm -f /mnt/nema.x.mouse.ortho
+   rm -f /mnt/mouse.protein.faa_screed
+   echo 6-annotating-transcript-families start `date` >> /root/times.out
+
 You can start with the 'trinity-nematostella.renamed.fa.gz' file from the
 previous page (:doc:`5-building-transcript-families`) _or_ download
 a precomputed one::
@@ -53,6 +67,10 @@ Now, grab the latest mouse RefSeq:
    curl -O ftp://ftp.ncbi.nih.gov/refseq/M_musculus/mRNA_Prot/mouse.protein.faa.gz
    gunzip mouse.protein.faa.gz
 
+.. ::
+
+   echo 6-annotating-transcript-families blast `date` >> /root/times.out
+
 Format both as BLAST databases:
 ::
 
@@ -69,6 +87,10 @@ you probably want to run it in screen:
 
 Assigning names to sequences
 ============================
+
+.. ::
+
+   echo 6-annotating-transcript-families homolortho `date` >> /root/times.out
 
 Now, calculate putative homology (best BLAST hit) and orthology
 (reciprocal best hits):
@@ -123,8 +145,10 @@ programs may not be able to open it.)  You can do::
 to copy them locally, if you have set up Dropbox (see:
 :doc:`../amazon/installing-dropbox`).
 
-.. mouse foo
+.. ::
 
-.. shell:: stop
+   echo 6-annotating-transcript-families done `date` >> /root/times.out
+
+.. shell stop
 
 Next: :doc:`7-expression-analysis`.
