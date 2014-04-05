@@ -16,6 +16,15 @@ of the Nematostella data set.
 Install software
 ----------------
 
+.. clean up previous installs if we're re-running this...
+
+.. ::
+
+  rm -fr /usr/local/share/khmer
+  rm -f /root/Trimmomatic-*.zip
+  rm -f /root/libgtextutils-*.bz2
+  rm -f /root/fastx_toolkit-*.bz2
+
 Install `khmer <http://khmer.readthedocs.org>`__ :
 ::
 
