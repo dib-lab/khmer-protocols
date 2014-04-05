@@ -20,10 +20,10 @@ Install software
 
 .. ::
 
-  rm -fr /usr/local/share/khmer
-  rm -f /root/Trimmomatic-*.zip
-  rm -f /root/libgtextutils-*.bz2
-  rm -f /root/fastx_toolkit-*.bz2
+   rm -fr /usr/local/share/khmer
+   rm -f /root/Trimmomatic-*.zip
+   rm -f /root/libgtextutils-*.bz2
+   rm -f /root/fastx_toolkit-*.bz2
 
 Install `khmer <http://khmer.readthedocs.org>`__ :
 ::
