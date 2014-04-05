@@ -32,8 +32,8 @@ Run digital normalization
 .. ::
 
    cd /mnt/work
-   rm *.abundfilt.pe.gz
-   rm *.keep.abundfilt.fq.gz
+   rm -f *.abundfilt.pe.gz
+   rm -f *.keep.abundfilt.fq.gz
 
 .. ::
 

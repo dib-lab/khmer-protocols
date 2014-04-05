@@ -6,6 +6,10 @@
 
 .. ::
 
+   echo 6-annotating-transcript-families START `date` >> /root/times.out
+
+.. ::
+
    rm -fr /root/blast-2.2.*
    rm -f /mnt/mouse.protein.faa
    rm -f /mnt/trinity-nematostella.renamed.fa
@@ -147,7 +151,7 @@ to copy them locally, if you have set up Dropbox (see:
 
 .. ::
 
-   echo 6-annotating-transcript-families done `date` >> /root/times.out
+   echo 6-annotating-transcript-families DONE `date` >> /root/times.out
 
 .. shell stop
 

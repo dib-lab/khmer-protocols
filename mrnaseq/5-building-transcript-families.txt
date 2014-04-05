@@ -96,6 +96,10 @@ Some explanation:
 
 * 'len' is the sequence length.
 
+.. ::
+
+   echo 5-building-transcript-families DONE `date` >> /root/times.out
+
 .. shell stop
 
 Next: :doc:`6-annotating-transcript-families`

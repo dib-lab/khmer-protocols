@@ -5,6 +5,9 @@
 
 .. ::
 
+   echo 8-differential-expression START `date` >> /root/times.out
+.. ::
+
    rm -fr /mnt/ebseq
 
 .. note::
@@ -95,6 +98,6 @@ on the demo data set will produce an image as below
 
 .. ::
 
-   echo 8-differential-expression done `date` >> /root/times.out
+   echo 8-differential-expression DONE `date` >> /root/times.out
 
 .. shell stop

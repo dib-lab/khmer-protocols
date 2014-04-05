@@ -5,6 +5,10 @@
 
 .. ::
 
+   echo 7-expression-analysis START `date` >> /root/times.out
+
+.. ::
+
    rm -fr /root/rsem*
    rm -fr /root/bowtie*
    rm -fr /mnt/rsem
@@ -163,7 +167,7 @@ order you want -- e.g. :
 
 .. ::
 
-   echo 7-expression-analysis done `date` >> /root/times.out
+   echo 7-expression-analysis DONE `date` >> /root/times.out
 
 .. shell stop
 
