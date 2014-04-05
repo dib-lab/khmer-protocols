@@ -33,10 +33,18 @@ Run digital normalization
 
    cd /mnt/work
 
+.. ::
+
+   echo 2-diginorm normalize1-pe `date` >> times.out
+
 Apply digital normalization to the paired-end reads:
 ::
 
    normalize-by-median.py -p -k 20 -C 20 -N 4 -x 3e9 --savetable normC20k20.kh *.pe.qc.fq.gz
+
+.. ::
+
+   echo 2-diginorm normalize1-se `date` >> times.out
 
 and then to the single-end reads:
 ::
@@ -60,6 +68,10 @@ for more information.)
 Trim off likely erroneous k-mers
 -------------------------------
 
+.. ::
+
+   echo 2-diginorm filter-abund `date` >> times.out
+
 Now, run through all the reads and trim off low-abundance parts of
 high-coverage reads:
 ::
@@ -73,6 +85,10 @@ Rename files
 ~~~~~~~~~~~~
 
 You'll have a bunch of 'keep.abundfilt' files -- let's make things prettier.
+
+.. ::
+
+   echo 2-diginorm extract `date` >> times.out
 
 First, let's break out the orphaned and still-paired reads:
 ::
@@ -112,6 +128,10 @@ away! ::
    6Hour_CGATGT_L002_R1_005.se.qc.fq.gz
    6Hour_CGATGT_L002_R1_005.se.qc.fq.gz.keep
    6Hour_CGATGT_L002_R1_005.se.qc.fq.gz.keep.abundfilt
+
+.. ::
+
+   echo 2-diginorm DONE `date` >> times.out
 
 So, finally, let's get rid of a lot of the old files :
 ::
