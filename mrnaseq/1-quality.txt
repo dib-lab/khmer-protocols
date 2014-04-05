@@ -419,6 +419,10 @@ doing this::
    mv *.qc.fq.gz save
    du -sk save
 
+.. ::
+
+   cp /mnt/work/*.qc.fq.gz /data
+
 .. shell stop
 
 This puts the data you want to save into a subdirectory named 'save', and
