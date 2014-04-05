@@ -7,6 +7,8 @@ Acceptance tests for khmer
 
 .. ::
 
+   rm -fr /mnt/blast
+   rm -fr /root/blast-2.2.*
    echo 3-big-assembly test `date` >> times.out
 
 .. ::

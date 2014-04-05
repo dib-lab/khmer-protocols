@@ -20,6 +20,8 @@ Installing Trinity
 
 .. ::
 
+   rm -fr /root/trinity* /root/bowtie* /root/samtools*
+   rm -fr /mnt/work/trinity_out_dir
    echo 3-big-assembly compileTrinity `date` >> times.out
 
 To install Trinity:
