@@ -28,7 +28,9 @@ Install software
 
 .. ::
 
-   echo 1-quality INSTALL `date` >> times.out
+   echo Clearing times.out
+   mv /root/times.out /root/times.out.bak
+   echo 1-quality INSTALL `date` >> /root/times.out
 
 Install `khmer <http://khmer.readthedocs.org>`__ :
 ::
@@ -224,7 +226,7 @@ Run this, and then look at 'trim.sh' using the 'more' command --::
 
 .. ::
 
-   echo 1-quality TRIM `date` >> times.out
+   echo 1-quality TRIM `date` >> /root/times.out
 
 If it looks like it contains the right commands, you can run it by doing :
 ::
@@ -267,7 +269,7 @@ Automating this step
 
 .. ::
 
-   echo 1-quality FILTER `date` >> times.out
+   echo 1-quality FILTER `date` >> /root/times.out
 
 This step can be automated with a 'for' loop at the shell prompt.  Try :
 ::
@@ -307,7 +309,7 @@ respectively.
 
 .. ::
 
-   echo 1-quality EXTRACT `date` >> times.out
+   echo 1-quality EXTRACT `date` >> /root/times.out
 
 To run it on all of the pe qc files, do :
 ::
@@ -319,7 +321,7 @@ To run it on all of the pe qc files, do :
 
 .. ::
 
-   echo 1-quality DONE `date` >> times.out
+   echo 1-quality DONE `date` >> /root/times.out
 
 Finishing up
 ------------

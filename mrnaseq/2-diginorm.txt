@@ -35,7 +35,7 @@ Run digital normalization
 
 .. ::
 
-   echo 2-diginorm normalize1-pe `date` >> times.out
+   echo 2-diginorm normalize1-pe `date` >> /root/times.out
 
 Apply digital normalization to the paired-end reads:
 ::
@@ -44,7 +44,7 @@ Apply digital normalization to the paired-end reads:
 
 .. ::
 
-   echo 2-diginorm normalize1-se `date` >> times.out
+   echo 2-diginorm normalize1-se `date` >> /root/times.out
 
 and then to the single-end reads:
 ::
@@ -70,7 +70,7 @@ Trim off likely erroneous k-mers
 
 .. ::
 
-   echo 2-diginorm filter-abund `date` >> times.out
+   echo 2-diginorm filter-abund `date` >> /root/times.out
 
 Now, run through all the reads and trim off low-abundance parts of
 high-coverage reads:
@@ -88,7 +88,7 @@ You'll have a bunch of 'keep.abundfilt' files -- let's make things prettier.
 
 .. ::
 
-   echo 2-diginorm extract `date` >> times.out
+   echo 2-diginorm extract `date` >> /root/times.out
 
 First, let's break out the orphaned and still-paired reads:
 ::
@@ -131,7 +131,7 @@ away! ::
 
 .. ::
 
-   echo 2-diginorm DONE `date` >> times.out
+   echo 2-diginorm DONE `date` >> /root/times.out
 
 So, finally, let's get rid of a lot of the old files :
 ::
