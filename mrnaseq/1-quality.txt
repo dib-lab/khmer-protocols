@@ -29,7 +29,7 @@ Install software
 .. ::
 
    echo Clearing times.out
-   mv /root/times.out /root/times.out.bak
+   mv -f /root/times.out /root/times.out.bak
    echo 1-quality INSTALL `date` >> /root/times.out
 
 Install `khmer <http://khmer.readthedocs.org>`__ :
