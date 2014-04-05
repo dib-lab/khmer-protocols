@@ -27,11 +27,12 @@ you can do::
 Run digital normalization
 -------------------------
 
-.. Fix the working directory location:
+.. Fix the working directory location; clean up some stuff
 
 .. ::
 
    cd /mnt/work
+   rm *.abundfilt.pe.gz
 
 .. ::
 
