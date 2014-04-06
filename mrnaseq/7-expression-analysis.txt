@@ -50,7 +50,7 @@ things to run:
 ::
 
    echo 'export PATH=$PATH:/root/rsem-1.2.8' >> ~/.bashrc
-   source ~/.bashrc
+   export PATH=$PATH:/root/rsem-1.2.8
 
 Installing bowtie
 -----------------
