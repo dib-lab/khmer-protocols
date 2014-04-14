@@ -142,8 +142,9 @@ So, finally, let's get rid of a lot of the old files :
    rm *.pe.qc.fq.gz.keep.abundfilt.se
    rm *.keep
    rm *.abundfilt
-   rm *.qc.fq.gz
    rm *.kh
+
+..   rm *.qc.fq.gz @CTB should we do?
 
 Gut check
 ~~~~~~~~~
