@@ -42,7 +42,7 @@ Select 'General purpose', 'm1.xlarge', and then 'Review and Launch'.
 
 Enter 'ami-7f340c16' into the search box and click "search".  Select
 it, and hit Continue.
-=======
+
 .. image:: images/ec2-4.png
    :width: 80%
 
