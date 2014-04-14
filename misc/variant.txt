@@ -1,9 +1,6 @@
 Variant calling
 ###############
 
-2. Variant calling
-------------------
-
 The below data is from one of Rich Lenski's LTEE papers, the one on
 `the evolution of citrate consumption in LTEE
 <http://www.nature.com/nature/journal/v489/n7417/full/nature11514.html>`__.
