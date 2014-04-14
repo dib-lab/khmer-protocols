@@ -148,7 +148,7 @@ So, finally, let's get rid of a lot of the old files :
 Gut check
 ~~~~~~~~~
 
-You should now have::
+You should now have the following files in your directory (after typing 'ls')::
 
    6Hour_CGATGT_L002_R1_005.pe.qc.keep.abundfilt.fq.gz
    6Hour_CGATGT_L002_R1_005.se.qc.keep.abundfilt.fq.gz
