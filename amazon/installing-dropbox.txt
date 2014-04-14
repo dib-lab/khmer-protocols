@@ -21,10 +21,11 @@ Make the Dropbox directory on /mnt and link it in::
 
    mkdir /mnt/Dropbox
    ln -fs /mnt/Dropbox /root
+   ln -fs /mnt/Dropbox /home/ubuntu
 
 and then run it::
 
-   ~/.dropbox-dist/dropboxd &
+   /root/.dropbox-dist/dropboxd &
 
 When you get a message saying "this client is not linked to any account",
 copy/paste the URL into browser and go log in.  Voila!
