@@ -419,9 +419,14 @@ doing this::
    mv *.qc.fq.gz save
    du -sk save
 
-.. ::
+If you are running with a data subset for a workshop, do
+::
 
    cp /mnt/work/*.qc.fq.gz /data
+
+to save the QC files for later use.
+
+.. @CTB fix ^^^
 
 .. shell stop
 

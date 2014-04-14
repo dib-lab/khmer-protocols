@@ -124,4 +124,8 @@ Now convert the BCF into VCF::
 
    bcftools view SRR098038.raw.bcf > SRR098038.vcf
 
-To look at the VCF file, take a look at this IPython notebook: `hw5-variant-solutions.ipynb <http://nbviewer.ipython.org/github/beacon-center/2013-intro-computational-science/blob/master/hw5-files/hw5-variant-solutions.ipynb>`__.
+You can check out the VCF file by using 'tail' to look at the bottom::
+
+   tail *.vcf
+
+To further analyze the VCF file, take a look at this IPython notebook: `hw5-variant-solutions.ipynb <http://nbviewer.ipython.org/github/beacon-center/2013-intro-computational-science/blob/master/hw5-files/hw5-variant-solutions.ipynb>`__.
