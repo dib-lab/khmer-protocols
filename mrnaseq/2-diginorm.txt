@@ -42,7 +42,7 @@ Run digital normalization
 Apply digital normalization to the paired-end reads:
 ::
 
-   normalize-by-median.py -p -k 20 -C 20 -N 4 -x 3e9 --savetable normC20k20.kh *.pe.qc.fq.gz
+   normalize-by-median.py -p -k 20 -C 20 -N 4 -x 3e8 --savetable normC20k20.kh *.pe.qc.fq.gz
 
 .. ::
 
