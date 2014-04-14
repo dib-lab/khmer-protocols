@@ -140,8 +140,8 @@ OPTIONAL: Evaluate the quality of your files with FastQC
 
 If you installed Dropbox, we can use FastQC to look at the quality of your sequences::
 
-   mkdir /root/Dropbox/fastqc
-   /usr/local/share/FastQC/fastqc *001.extract.fastq.gz --outdir=/root/Dropbox/fastqc
+   mkdir /home/ubuntu/Dropbox/fastqc
+   /usr/local/share/FastQC/fastqc *001.extract.fastq.gz --outdir=/home/ubuntu/Dropbox/fastqc
 
 The output will be placed under the 'fastqc' directory in your Dropbox
 on your local computer; look for the fastqc_report.html files, and
@@ -432,8 +432,8 @@ OPTIONAL: Evaluate the quality of your files with FastQC again
 If you installed Dropbox, we can once again use FastQC to look at the
 quality of your newly-trimmed sequences::
 
-   mkdir /root/Dropbox/fastqc
-   /usr/local/share/FastQC/fastqc *001.extract.pe.qc.fq.gz --outdir=/root/Dropbox/fastqc
+   mkdir /home/ubuntu/Dropbox/fastqc
+   /usr/local/share/FastQC/fastqc *001.extract.pe.qc.fq.gz --outdir=/home/ubuntu/Dropbox/fastqc
 
 Again, the output will be placed under the 'fastqc' directory in your
 Dropbox on your local computer; look for the fastqc_report.html files,
