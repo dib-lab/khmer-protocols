@@ -18,6 +18,13 @@ at least 15 GB of RAM, maybe more.
 Installing Trinity
 ------------------
 
+.. ::
+
+   rm -fr /root/trinity* /root/bowtie* /root/samtools*
+   rm -fr /mnt/work/trinity_out_dir
+   rm -f /mnt/work/*.1 /mnt/work/*.2
+   echo 3-big-assembly compileTrinity `date` >> /root/times.out
+
 To install Trinity:
 ::
 
@@ -32,6 +39,10 @@ To install Trinity:
 Install bowtie
 --------------
 
+.. ::
+
+   echo 3-big-assembly installBowtie `date` >> /root/times.out
+
 Download and install bowtie:
 ::
 
@@ -43,6 +54,10 @@ Download and install bowtie:
 
 Install samtools
 ----------------
+
+.. ::
+
+   echo 3-big-assembly installSamtools `date` >> /root/times.out
 
 Download and install samtools:
 ::
@@ -57,6 +72,10 @@ Download and install samtools:
 
 Build the files to assemble
 ---------------------------
+
+.. ::
+
+   echo 3-big-assembly extractReads `date` >> /root/times.out
 
 For paired-end data, Trinity expects two files, 'left' and 'right';
 there can be orphan sequences present, however.  So, below, we split
@@ -78,10 +97,14 @@ seqs to one of 'em. :
 Assembling with Trinity
 -----------------------
 
+.. ::
+
+   echo 3-big-assembly assemble `date` >> /root/times.out
+
 Run the assembler! :
 ::
 
-   /root/trinityrnaseq*/Trinity.pl --left left.fq --right right.fq --seqType fq -JM 10G
+   /root/trinityrnaseq*/Trinity --left left.fq --right right.fq --seqType fq -JM 10G
 
 Note that this last bit (10G) is the maximum amount of memory to use.  You
 can increase (or decrease) it based on what machine you rented.  This size
@@ -93,26 +116,10 @@ you'll have an assembled transcriptome in trinity_out_dir/Trinity.fasta.
 You can now copy it over via Dropbox, or set it up for BLAST (see
 :doc:`installing-blastkit`).
 
+.. ::
+
+   echo 3-big-assembly DONE `date` >> /root/times.out
+
 .. shell stop
 
 Next: :doc:`5-building-transcript-families` (or :doc:`installing-blastkit`).
-
-.. shell start
-
-.. for testing purposes:
-
-.. ::
-
-   cd /root
-   curl -O ftp://ftp.ncbi.nih.gov/blast/executables/release/2.2.24/blast-2.2.24-x64-linux.tar.gz
-   tar xzf blast-2.2.24-x64-linux.tar.gz
-   cp blast-2.2.24/bin/* /usr/local/bin
-   cp -r blast-2.2.24/data /usr/local/blast-data
-   cd /mnt
-   mkdir blast
-   cd blast
-   curl -O ftp://ftp.ncbi.nih.gov/refseq/M_musculus/mRNA_Prot/mouse.protein.faa.gz
-   gunzip mouse.protein.faa.gz
-   formatdb -i mouse.protein.faa -o T -p T
-   cp ../work/trinity_out_dir/Trinity.fasta .
-   blastall -i Trinity.fasta -d mouse.protein.faa -p blastx -e 1e-6 -o trinity.x.mouse

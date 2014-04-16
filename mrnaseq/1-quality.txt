@@ -4,9 +4,17 @@
 
 .. shell start
 
-Boot up an m1.xlarge machine from Amazon Web Services; this has about
-15 GB of RAM, and 2 CPUs, and will be enough to complete the assembly
-of the Nematostella data set.
+Boot up an m1.xlarge machine from Amazon Web Services running Ubuntu
+12.04 LTS (ami-59a4a230); this has about 15 GB of RAM, and 2 CPUs, and
+will be enough to complete the assembly of the Nematostella data set.
+
+On the new machine, run the following commands to update the base
+software and reboot the machine::
+
+   apt-get update
+   apt-get -y install screen git curl gcc make g++ python-dev unzip default-jre \
+              pkg-config libncurses5-dev r-base-core r-cran-gplots python-matplotlib\
+              sysstat && shutdown -r now
 
 .. note::
 
@@ -16,15 +24,37 @@ of the Nematostella data set.
 Install software
 ----------------
 
+.. clean up previous installs if we're re-running this...
+
+.. ::
+
+   echo Removing previous installs, if any.
+   rm -fr /usr/local/share/khmer
+   rm -fr /root/Trimmomatic-*
+   rm -f /root/libgtextutils-*.bz2
+   rm -f /root/fastx_toolkit-*.bz2
+
+.. ::
+
+   echo Clearing times.out
+   mv -f /root/times.out /root/times.out.bak
+   echo 1-quality INSTALL `date` >> /root/times.out
+
 Install `khmer <http://khmer.readthedocs.org>`__ :
 ::
 
-   
    cd /usr/local/share
-   git clone https://github.com/ged-lab/khmer.git -b protocols-v0.8.5
+   git clone https://github.com/ged-lab/khmer.git
    cd khmer
-   python setup.py install
+   git checkout v1.0
    make install
+
+Install `FastQC <http://www.bioinformatics.babraham.ac.uk/projects/fastqc/>`__::
+
+   cd /usr/local/share
+   curl -O http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.10.1.zip
+   unzip fastqc_v0.10.1.zip
+   chmod +x FastQC/fastqc
 
 Install `Trimmomatic <http://www.usadellab.org/cms/?page=trimmomatic>`__ :
 ::
@@ -112,6 +142,18 @@ your files aren't in /data; another is that they're not named *.fastq.gz.
 
    This will pull out the first 100,000 reads of each file (4 lines per record)
    and put them in the current directory, which should be /mnt/work.
+
+OPTIONAL: Evaluate the quality of your files with FastQC
+--------------------------------------------------------
+
+If you installed Dropbox, we can use FastQC to look at the quality of your sequences::
+
+   mkdir /home/ubuntu/Dropbox/fastqc
+   /usr/local/share/FastQC/fastqc *001.extract.fastq.gz --outdir=/home/ubuntu/Dropbox/fastqc
+
+The output will be placed under the 'fastqc' directory in your Dropbox
+on your local computer; look for the fastqc_report.html files, and
+double click on them to load them into your browser.
 
 Find the right Illumina adapters
 --------------------------------
@@ -209,6 +251,10 @@ Run this, and then look at 'trim.sh' using the 'more' command --::
 
    more trim.sh
 
+.. ::
+
+   echo 1-quality TRIM `date` >> /root/times.out
+
 If it looks like it contains the right commands, you can run it by doing :
 ::
 
@@ -248,6 +294,10 @@ quality score encodings.
 Automating this step
 ~~~~~~~~~~~~~~~~~~~~
 
+.. ::
+
+   echo 1-quality FILTER `date` >> /root/times.out
+
 This step can be automated with a 'for' loop at the shell prompt.  Try :
 ::
 
@@ -284,6 +334,10 @@ You run it on an interleaved file that may have some orphans, and it
 produces .pe and .se files afterwards, containing pairs and orphans
 respectively.
 
+.. ::
+
+   echo 1-quality EXTRACT `date` >> /root/times.out
+
 To run it on all of the pe qc files, do :
 ::
 
@@ -292,6 +346,9 @@ To run it on all of the pe qc files, do :
       extract-paired-reads.py $i
    done
 
+.. ::
+
+   echo 1-quality DONE `date` >> /root/times.out
 
 Finishing up
 ------------
@@ -377,6 +434,19 @@ and finally, make the end product files read-only :
 
 to make sure you don't accidentally delete something.
 
+OPTIONAL: Evaluate the quality of your files with FastQC again
+--------------------------------------------------------------
+
+If you installed Dropbox, we can once again use FastQC to look at the
+quality of your newly-trimmed sequences::
+
+   mkdir /home/ubuntu/Dropbox/fastqc
+   /usr/local/share/FastQC/fastqc *001.extract.pe.qc.fq.gz --outdir=/home/ubuntu/Dropbox/fastqc
+
+Again, the output will be placed under the 'fastqc' directory in your
+Dropbox on your local computer; look for the fastqc_report.html files,
+and double click on them to load them into your browser.
+
 Saving the files
 ----------------
 
@@ -388,6 +458,15 @@ doing this::
    mkdir save
    mv *.qc.fq.gz save
    du -sk save
+
+If you are running with a data subset for a workshop, do
+::
+
+   cp /mnt/work/*.qc.fq.gz /data
+
+to save the QC files for later use.
+
+.. @CTB fix ^^^
 
 .. shell stop
 
