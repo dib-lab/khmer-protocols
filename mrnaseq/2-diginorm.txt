@@ -42,7 +42,7 @@ Run digital normalization
 Apply digital normalization to the paired-end reads:
 ::
 
-   normalize-by-median.py -p -k 20 -C 20 -N 4 -x 3e9 --savetable normC20k20.kh *.pe.qc.fq.gz
+   normalize-by-median.py -p -k 20 -C 20 -N 4 -x 3e8 --savetable normC20k20.kh *.pe.qc.fq.gz
 
 .. ::
 
@@ -142,13 +142,14 @@ So, finally, let's get rid of a lot of the old files :
    rm *.pe.qc.fq.gz.keep.abundfilt.se
    rm *.keep
    rm *.abundfilt
-   rm *.qc.fq.gz
    rm *.kh
+
+..   rm *.qc.fq.gz @CTB should we do?
 
 Gut check
 ~~~~~~~~~
 
-You should now have::
+You should now have the following files in your directory (after typing 'ls')::
 
    6Hour_CGATGT_L002_R1_005.pe.qc.keep.abundfilt.fq.gz
    6Hour_CGATGT_L002_R1_005.se.qc.keep.abundfilt.fq.gz
