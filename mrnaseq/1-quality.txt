@@ -38,8 +38,15 @@ Install `khmer <http://khmer.readthedocs.org>`__ :
    cd /usr/local/share
    git clone https://github.com/ged-lab/khmer.git
    cd khmer
-   git checkout bug/hashtable_size_calculations_wrong
+   git checkout v1.0
    make install
+
+Install `FastQC <http://www.bioinformatics.babraham.ac.uk/projects/fastqc/>`__::
+
+   cd /usr/local/share
+   curl -O http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.10.1.zip
+   unzip fastqc_v0.10.1.zip
+   chmod +x FastQC/fastqc
 
 Install `Trimmomatic <http://www.usadellab.org/cms/?page=trimmomatic>`__ :
 ::
@@ -127,6 +134,18 @@ your files aren't in /data; another is that they're not named *.fastq.gz.
 
    This will pull out the first 100,000 reads of each file (4 lines per record)
    and put them in the current directory, which should be /mnt/work.
+
+OPTIONAL: Evaluate the quality of your files with FastQC
+--------------------------------------------------------
+
+If you installed Dropbox, we can use FastQC to look at the quality of your sequences::
+
+   mkdir /home/ubuntu/Dropbox/fastqc
+   /usr/local/share/FastQC/fastqc *001.extract.fastq.gz --outdir=/home/ubuntu/Dropbox/fastqc
+
+The output will be placed under the 'fastqc' directory in your Dropbox
+on your local computer; look for the fastqc_report.html files, and
+double click on them to load them into your browser.
 
 Find the right Illumina adapters
 --------------------------------
@@ -407,6 +426,19 @@ and finally, make the end product files read-only :
 
 to make sure you don't accidentally delete something.
 
+OPTIONAL: Evaluate the quality of your files with FastQC again
+--------------------------------------------------------------
+
+If you installed Dropbox, we can once again use FastQC to look at the
+quality of your newly-trimmed sequences::
+
+   mkdir /home/ubuntu/Dropbox/fastqc
+   /usr/local/share/FastQC/fastqc *001.extract.pe.qc.fq.gz --outdir=/home/ubuntu/Dropbox/fastqc
+
+Again, the output will be placed under the 'fastqc' directory in your
+Dropbox on your local computer; look for the fastqc_report.html files,
+and double click on them to load them into your browser.
+
 Saving the files
 ----------------
 
@@ -419,9 +451,14 @@ doing this::
    mv *.qc.fq.gz save
    du -sk save
 
-.. ::
+If you are running with a data subset for a workshop, do
+::
 
    cp /mnt/work/*.qc.fq.gz /data
+
+to save the QC files for later use.
+
+.. @CTB fix ^^^
 
 .. shell stop
 
