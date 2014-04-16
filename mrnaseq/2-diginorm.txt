@@ -27,21 +27,31 @@ you can do::
 Run digital normalization
 -------------------------
 
-.. Fix the working directory location:
+.. Fix the working directory location; clean up some stuff
 
 .. ::
 
    cd /mnt/work
+   rm -f *.abundfilt.pe.gz
+   rm -f *.keep.abundfilt.fq.gz
+
+.. ::
+
+   echo 2-diginorm normalize1-pe `date` >> /root/times.out
 
 Apply digital normalization to the paired-end reads:
 ::
 
-   normalize-by-median.py -p -k 20 -C 20 -N 4 -x 3e9 --savehash normC20k20.kh *.pe.qc.fq.gz
+   normalize-by-median.py -p -k 20 -C 20 -N 4 -x 3e8 --savetable normC20k20.kh *.pe.qc.fq.gz
+
+.. ::
+
+   echo 2-diginorm normalize1-se `date` >> /root/times.out
 
 and then to the single-end reads:
 ::
 
-   normalize-by-median.py -C 20 --loadhash normC20k20.kh --savehash normC20k20.kh *.se.qc.fq.gz
+   normalize-by-median.py -C 20 --loadtable normC20k20.kh --savetable normC20k20.kh *.se.qc.fq.gz
 
 Note the '-p' in the first normalize-by-median command -- when run on
 PE data, that ensures that no paired ends are orphaned.  However, it
@@ -60,6 +70,10 @@ for more information.)
 Trim off likely erroneous k-mers
 -------------------------------
 
+.. ::
+
+   echo 2-diginorm filter-abund `date` >> /root/times.out
+
 Now, run through all the reads and trim off low-abundance parts of
 high-coverage reads:
 ::
@@ -73,6 +87,10 @@ Rename files
 ~~~~~~~~~~~~
 
 You'll have a bunch of 'keep.abundfilt' files -- let's make things prettier.
+
+.. ::
+
+   echo 2-diginorm extract `date` >> /root/times.out
 
 First, let's break out the orphaned and still-paired reads:
 ::
@@ -113,6 +131,10 @@ away! ::
    6Hour_CGATGT_L002_R1_005.se.qc.fq.gz.keep
    6Hour_CGATGT_L002_R1_005.se.qc.fq.gz.keep.abundfilt
 
+.. ::
+
+   echo 2-diginorm DONE `date` >> /root/times.out
+
 So, finally, let's get rid of a lot of the old files :
 ::
 
@@ -120,13 +142,14 @@ So, finally, let's get rid of a lot of the old files :
    rm *.pe.qc.fq.gz.keep.abundfilt.se
    rm *.keep
    rm *.abundfilt
-   rm *.qc.fq.gz
    rm *.kh
+
+..   rm *.qc.fq.gz @CTB should we do?
 
 Gut check
 ~~~~~~~~~
 
-You should now have::
+You should now have the following files in your directory (after typing 'ls')::
 
    6Hour_CGATGT_L002_R1_005.pe.qc.keep.abundfilt.fq.gz
    6Hour_CGATGT_L002_R1_005.se.qc.keep.abundfilt.fq.gz

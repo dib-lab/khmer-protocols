@@ -1,0 +1,28 @@
+Acceptance tests for khmer
+==========================
+
+.. shell start
+
+.. for testing purposes:
+
+.. ::
+
+   rm -fr /mnt/blast
+   rm -fr /root/blast-2.2.*
+   echo 3-big-assembly test `date` >> /root/times.out
+
+.. ::
+
+   cd /root
+   curl -O ftp://ftp.ncbi.nih.gov/blast/executables/release/2.2.24/blast-2.2.24-x64-linux.tar.gz
+   tar xzf blast-2.2.24-x64-linux.tar.gz
+   cp blast-2.2.24/bin/* /usr/local/bin
+   cp -r blast-2.2.24/data /usr/local/blast-data
+   cd /mnt
+   mkdir blast
+   cd blast
+   curl -O ftp://ftp.ncbi.nih.gov/refseq/M_musculus/mRNA_Prot/mouse.protein.faa.gz
+   gunzip mouse.protein.faa.gz
+   formatdb -i mouse.protein.faa -o T -p T
+   cp ../work/trinity_out_dir/Trinity.fasta .
+   blastall -i Trinity.fasta -d mouse.protein.faa -p blastx -e 1e-6 -o trinity.x.mouse

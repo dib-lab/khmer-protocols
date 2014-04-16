@@ -1,6 +1,17 @@
 7. Expression analysis (with RSEM)
 ==================================
-.. shell:: start
+
+.. shell start
+
+.. ::
+
+   echo 7-expression-analysis START `date` >> /root/times.out
+
+.. ::
+
+   rm -fr /root/rsem*
+   rm -fr /root/bowtie*
+   rm -fr /mnt/rsem
 
 In addition to screed, khmer, and eel-pond, you'll also need to
 install bowtie (see :doc:`3-big-assembly`).
@@ -16,15 +27,14 @@ install bowtie (see :doc:`3-big-assembly`).
 Installing rsem
 ---------------
 
+.. ::
+
+   echo 7-expression-analysis install `date` >> /root/times.out
+
 We'll be using the `RSEM package <http://deweylab.biostat.wisc.edu/rsem/>`__
 to do some expression analysis, and `EBSeq
 <http://www.biostat.wisc.edu/~kendzior/EBSEQ/>`__ to do differential
 expression.  To install these packages, do:
-::
-
-   apt-get -y install r-base-core r-cran-gplots
-
-and then:
 ::
 
    cd /root
@@ -40,14 +50,13 @@ things to run:
 ::
 
    echo 'export PATH=$PATH:/root/rsem-1.2.8' >> ~/.bashrc
-   source ~/.bashrc
+   export PATH=$PATH:/root/rsem-1.2.8
 
 Installing bowtie
 -----------------
 
 If you didn't install bowtie on this machine already (e.g. as part of
-:doc:`3-big-assembly`), RSEM needs it; do:
-::
+:doc:`3-big-assembly`), RSEM needs it; do::
 
    cd /root
    curl -O -L http://sourceforge.net/projects/bowtie-bio/files/bowtie/0.12.7/bowtie-0.12.7-linux-x86_64.zip
@@ -57,6 +66,10 @@ If you didn't install bowtie on this machine already (e.g. as part of
 
 Prepare the reference
 ---------------------
+
+.. ::
+
+   echo 7-expression-analysis makeref `date` >> /root/times.out
 
 Go to a working directory on /mnt:
 ::
@@ -106,6 +119,10 @@ it so that your controls are first, etc.
 Run RSEM
 --------
 
+.. ::
+
+   echo 7-expression-analysis rsem `date` >> /root/times.out
+
 Now, for each one of the files in 'list.txt', run RSEM.  This will
 take a long time for lots of data, so definitely run this step in screen! :
 ::
@@ -143,7 +160,10 @@ order you want -- e.g. :
    analysis, i.e. comparing two conditions, which is why we only
    create the 0-vs-6 hour matrix, above.
 
-.. shell:: stop
+.. ::
+
+   echo 7-expression-analysis DONE `date` >> /root/times.out
+
+.. shell stop
 
 Next: :doc:`8-differential-expression`
-
