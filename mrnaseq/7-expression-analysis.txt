@@ -143,7 +143,7 @@ Gather results:
 
    rsem-generate-data-matrix [0-9].fq.genes.results 10.fq.genes.results > 0-vs-6-hour.matrix
 
-...and voila, you now a file, '0-vs-6-hour.matrix',
+...and voila, you now have a file, '0-vs-6-hour.matrix',
 which is a tab-separated file (that Excel can
 load) containing a matrix of gene expression levels in FPKM (rows) vs
 condition (columns).  The '1' condition will be the first file in
