@@ -1,0 +1,125 @@
+==============================
+3. Running the Actual Assembly
+==============================
+
+.. shell start
+
+All of the below should be run in screen, probably...  You will want
+at least 15 GB of RAM, maybe more.
+
+(If you start up a new machine, you'll need to go to
+:doc:`1-quality` and install khmer and screed.)
+
+.. note::
+
+   You can start this tutorial with the contents of EC2/EBS snapshot
+   snap-7b0b872e.
+
+Installing Trinity
+------------------
+
+.. ::
+
+   rm -fr /root/trinity* /root/bowtie* /root/samtools*
+   rm -fr /mnt/work/trinity_out_dir
+   rm -f /mnt/work/*.1 /mnt/work/*.2
+   echo 3-big-assembly compileTrinity `date` >> /root/times.out
+
+To install Trinity:
+::
+
+   cd /root
+   
+   curl -L http://sourceforge.net/projects/trinityrnaseq/files/latest/download?source=files > trinity.tar.gz
+   tar xzf trinity.tar.gz
+   cd trinityrnaseq*/
+   export FORCE_UNSAFE_CONFIGURE=1
+   make
+
+Install bowtie
+--------------
+
+.. ::
+
+   echo 3-big-assembly installBowtie `date` >> /root/times.out
+
+Download and install bowtie:
+::
+
+   cd /root
+   curl -O -L http://sourceforge.net/projects/bowtie-bio/files/bowtie/0.12.7/bowtie-0.12.7-linux-x86_64.zip
+   unzip bowtie-0.12.7-linux-x86_64.zip
+   cd bowtie-0.12.7
+   cp bowtie bowtie-build bowtie-inspect /usr/local/bin
+
+Install samtools
+----------------
+
+.. ::
+
+   echo 3-big-assembly installSamtools `date` >> /root/times.out
+
+Download and install samtools:
+::
+
+   cd /root
+   curl -L http://sourceforge.net/projects/samtools/files/latest/download?source=files >samtools.tar.bz2
+   tar xjf samtools.tar.bz2
+   mv samtools-* samtools-latest
+   cd samtools-latest/
+   make
+   cp samtools bcftools/bcftools misc/* /usr/local/bin
+
+Build the files to assemble
+---------------------------
+
+.. ::
+
+   echo 3-big-assembly extractReads `date` >> /root/times.out
+
+For paired-end data, Trinity expects two files, 'left' and 'right';
+there can be orphan sequences present, however.  So, below, we split
+all of our interleaved pair files in two, and then add the single-ended
+seqs to one of 'em. :
+::
+
+   cd /mnt/work
+   for i in *.pe.qc.keep.abundfilt.fq.gz
+   do
+      split-paired-reads.py $i
+   done
+   
+   cat *.1 > left.fq
+   cat *.2 > right.fq
+   
+   gunzip -c *.se.qc.keep.abundfilt.fq.gz >> left.fq
+
+Assembling with Trinity
+-----------------------
+
+.. ::
+
+   echo 3-big-assembly assemble `date` >> /root/times.out
+
+Run the assembler! :
+::
+
+   /root/trinityrnaseq*/Trinity --left left.fq --right right.fq --seqType fq -JM 10G
+
+Note that this last bit (10G) is the maximum amount of memory to use.  You
+can increase (or decrease) it based on what machine you rented.  This size
+works for the m1.xlarge machines.
+
+Once this completes (on the Nematostella data it might take about 12 hours),
+you'll have an assembled transcriptome in trinity_out_dir/Trinity.fasta.
+
+You can now copy it over via Dropbox, or set it up for BLAST (see
+:doc:`installing-blastkit`).
+
+.. ::
+
+   echo 3-big-assembly DONE `date` >> /root/times.out
+
+.. shell stop
+
+Next: :doc:`5-building-transcript-families` (or :doc:`installing-blastkit`).
