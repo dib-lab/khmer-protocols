@@ -1,0 +1,138 @@
+.. shell start
+
+::
+
+    apt-get update
+
+::
+
+    apt-get -y install screen git curl gcc make g++ python-dev unzip default-jre \
+           pkg-config libncurses5-dev r-base-core r-cran-gplots python-matplotlib\
+           sysstat && shutdown -r now
+::
+
+    cd /usr/local/share
+
+::
+
+    git clone https://github.com/ged-lab/khmer.git
+
+::
+
+    cd khmer
+
+::
+
+    git checkout v1.0
+
+::
+
+    make install
+
+::
+
+    cd /usr/local/share
+
+::
+
+    curl -O http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.10.1.zip
+
+::
+
+    unzip fastqc_v0.10.1.zip
+
+::
+
+    chmod +x FastQC/fastqc
+
+::
+
+    sudo -i
+
+::
+
+    cd /root
+
+::
+
+    curl -O http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.30.zip
+
+::
+
+    unzip Trimmomatic-0.30.zip
+
+::
+
+    cd Trimmomatic-0.30/
+
+::
+
+    cp trimmomatic-0.30.jar /usr/local/bin
+
+::
+
+    cp -r adapters /usr/local/share/adapters
+
+::
+
+    cd /root
+
+::
+
+    curl -O http://hannonlab.cshl.edu/fastx_toolkit/libgtextutils-0.6.1.tar.bz2
+
+::
+
+    tar xjf libgtextutils-0.6.1.tar.bz2
+
+::
+
+    cd libgtextutils-0.6.1/
+
+::
+
+    ./configure && make && make install
+
+::
+
+    cd /root
+
+::
+
+    curl -O http://hannonlab.cshl.edu/fastx_toolkit/fastx_toolkit-0.0.13.2.tar.bz2
+
+::
+
+    tar xjf fastx_toolkit-0.0.13.2.tar.bz2
+
+::
+
+    cd fastx_toolkit-0.0.13.2/
+
+::
+
+    ./configure && make && make install
+
+::
+
+    cd /root
+
+::
+
+    curl -O http://www.ebi.ac.uk/~zerbino/velvet/velvet_1.2.10.tgz
+
+::
+
+    tar xzf velvet_1.2.10.tgz
+
+::
+
+    cd velvet_1.2.10
+
+::
+
+    make MAXKMERLENGTH=51
+
+::
+
+    cp velvet? /usr/local/bin
