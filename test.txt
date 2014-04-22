@@ -2,6 +2,38 @@
 
 ::
 
+    cd /mnt
+
+::
+
+    mkdir data
+
+::
+
+    cd data
+
+::
+
+    curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR606/SRR606249/SRR606249_1.fastq.gz
+
+::
+
+    curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR606/SRR606249/SRR606249_2.fastq.gz
+
+::
+ 
+    cd /mnt
+
+::
+
+    mkdir work
+
+::
+
+    cd work 
+
+::
+
     for i in /data/*.fastq.gz
     do
         gunzip -c $i | head -1000000 | gzip > $(basename $i)
@@ -97,27 +129,7 @@
 
 ::
 
-    cd /root
-
-::
-
-    curl -O http://www.ebi.ac.uk/~zerbino/velvet/velvet_1.2.10.tgz
-
-::  
-
-    tar xzf velvet_1.2.10.tgz
-
-::
-
-     cd velvet_1.2.10
-
-::
-
-    make MAXKMERLENGTH=51
-
-::
-
-    cp velvet? /usr/local/bin
+    cd /mnt/work
 
 ::
 
@@ -147,7 +159,7 @@
 
 ::
  
-    python /usr/local/share/khmer/sandbox/multi-rename.py testasm  best.fa > test-assembly.fa
+    python /usr/local/share/khmer/sandbox/multi-rename.py testasm  best.fa > final-assembly.fa
 
 ::
 
