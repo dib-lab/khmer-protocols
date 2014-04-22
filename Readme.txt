@@ -62,5 +62,5 @@ cp velvet? /usr/local/bin
 Run test: 
 =========
 
-bash /root/literate-resting/scan.sh test.txt
+bash scan.sh test.txt
 bash test.txt.sh
