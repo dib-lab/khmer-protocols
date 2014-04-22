@@ -54,7 +54,7 @@ Generating a final set of contigs:
  
     touch testasm 
  
-    python /usr/local/share/khmer/sandbox/multi-rename.py testasm  best.fa > test-assembly.fa
+    python /usr/local/share/khmer/sandbox/multi-rename.py testasm  best.fa > final-assembly.fa
 
 After this, ‘final-assembly.fa’ will contain the final set of contigs:
 
