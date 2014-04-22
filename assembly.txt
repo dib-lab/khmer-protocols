@@ -1,5 +1,5 @@
 Install Velvet:
-===============
+================
 
     cd  /root
     curl -O http://www.ebi.ac.uk/~zerbino/velvet/velvet_1.2.10.tgz
@@ -59,4 +59,3 @@ Generating a final set of contigs:
 After this, ‘final-assembly.fa’ will contain the final set of contigs:
 
     python /usr/local/share/khmer/sandbox/assemstats3.py 500 *.velvet.*.d/contigs.fa 
-
