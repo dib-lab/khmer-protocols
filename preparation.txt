@@ -31,7 +31,11 @@ Install  Trimmomatic:
    cd Trimmomatic-0.30/
    cp trimmomatic-0.30.jar /usr/local/bin
    cp -r adapters /usr/local/share/adapters
+<<<<<<< HEAD
 
+=======
+   
+>>>>>>> 9a6b8015f9f82c2e84731057d09dd25fc0b01c24
 Install libgtextutils and fastx:
 ================================
 cd /root

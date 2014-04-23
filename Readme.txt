@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 Boot up an m1.xlarge machine from Amazon Web Services running Ubuntu 12.04 LTS (ami-59a4a230);
 This has about 15 GB of RAM, and 2 CPUs, and will be enough to complete the assembly of the Podar data set.
+=======
+Boot up an m1.xlarge machine from Amazon Web Services running Ubuntu 12.04 LTS (ami-59a4a230); 
+this has about 15 GB of RAM, and 2 CPUs, and will be enough to complete the assembly of the Podar data.
+>>>>>>> 9a6b8015f9f82c2e84731057d09dd25fc0b01c24
 
 On the new machine, run the following commands to update the base software and
  reboot the machine:
