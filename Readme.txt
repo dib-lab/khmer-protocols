@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 Boot up an m1.xlarge machine from Amazon Web Services running Ubuntu 12.04 LTS (ami-59a4a230);
 This has about 15 GB of RAM, and 2 CPUs, and will be enough to complete the assembly of the Podar data set.
 =======
