@@ -1,0 +1,17 @@
+normalize-by-median.py -p -k 20 -C 20 -N 4 -x 3e8 --savetable normC20k20.kh *.pe.qc.fq.gz
+normalize-by-median.py -C 20 --loadtable normC20k20.kh --savetable normC20k20.kh *.se.qc.fq.gz
+
+
+/usr/local/share/khmer/scripts/filter-abund.py -V normC20k20.kh *.keep
+
+for i in *.pe.qc.fq.gz.keep.abundfilt
+do
+   /usr/local/share/khmer/scripts/extract-paired-reads.py $i
+done
+
+/usr/local/share/khmer/scripts/normalize-by-median.py -C 5 -k 20 -N 4 -x 5e8 --savetable normC5k20.kh -p *.pe.qc.fq.gz.keep.abundfilt.pe
+
+/usr/local/share/khmer/scripts/normalize-by-median.py -C 5 --savetable normC5k20.kh --loadtable normC5k20.kh *.pe.qc.fq.gz.keep.abundfilt.se *.se.qc.fq.gz.keep.abundfilt
+
+gzip -9c SRR606249.pe.qc.fq.gz.keep.abundfilt.pe.keep > SRR606249.pe.kak.qc.fq.gz
+gzip -9c SRR606249.pe.qc.fq.gz.keep.abundfilt.se.keep SRR606249.se.qc.fq.gz.keep.abundfilt.keep > SRR606249.se.kak.qc.fq.gz
