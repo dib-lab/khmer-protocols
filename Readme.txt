@@ -21,6 +21,15 @@ cd khmer
 git checkout v1.0
 make install
 
+
+
+Install calc-best-assembly:
+============================
+
+cd /user/local/share
+git clone https://github.com/ged-lab/khmer/blob/protocols-v0.8.3/sandbox/calc-best-assembly.py
+
+
 Install FastQC:
 ===============
 cd /usr/local/share

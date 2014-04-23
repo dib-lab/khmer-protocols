@@ -17,7 +17,7 @@ Install Khmer:
     make install
 
 
-Install calc_best_assembly
+Install calc-best-assembly:
 ============================
     cd /user/local/share
     git clone https://github.com/ged-lab/khmer/blob/protocols-v0.8.3/sandbox/calc-best-assembly.py
