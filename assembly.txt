@@ -1,3 +1,7 @@
+At last! All that filtering and diginorming is done, and we can get down to the serious business of assembling. Huzzah!
+
+Let’s try assembling the sequences with Velvet assembler:
+
 Install Velvet:
 ================
 
