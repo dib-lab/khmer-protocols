@@ -1,7 +1,7 @@
 Apply digital normalization to the paired-end reads:
 ====================================================
 
-Normalize everything to a coverage of 20, starting with th (more valuable) PE reads; keep using '-p'.
+Normalize everything to a coverage of 20, starting with the (more valuable) PE reads; keep using '-p'.
 
 normalize-by-median.py -p -k 20 -C 20 -N 4 -x 3e8 --savetable normC20k20.kh *.pe.qc.fq.gz
 
