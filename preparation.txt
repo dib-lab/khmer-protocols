@@ -46,6 +46,15 @@ tar xjf fastx_toolkit-0.0.13.2.tar.bz2
 cd fastx_toolkit-0.0.13.2/
 ./configure && make && make install
 
+Install Velvet:
+===============
+cd /root
+curl -O http://www.ebi.ac.uk/~zerbino/velvet/velvet_1.2.10.tgz
+tar xzf velvet_1.2.10.tgz
+cd velvet_1.2.10
+make MAXKMERLENGTH=51
+cp velvet? /usr/local/bin
+
 Find your data:
 ===============
     cd /mnt/
