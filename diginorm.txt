@@ -1,4 +1,5 @@
 Apply digital normalization to the paired-end reads:
+====================================================
 
 Normalize everything to a coverage of 20, starting with th (more valuable) PE reads; keep using '-p'.
 
@@ -24,8 +25,8 @@ This produces .abundfilt files containing the trimmed sequences.
 
 The process of error trimming could have orphaned reads, so split the PE file into still-interleaved and non-interleaved reads:
 
-Rename files
-============
+Rename files:
+=============
 
 First, let’s break out the orphaned and still-paired reads:
 
