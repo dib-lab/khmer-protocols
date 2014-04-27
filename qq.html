@@ -1,0 +1,263 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>1. Quality Trimming and Filtering Your Sequences &mdash; khmer-protocols 0.8.4 documentation</title>
+    
+    <link rel="stylesheet" href="_static/labibi.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.8.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="khmer-protocols 0.8.4 documentation" href="index.html" />
+    <link rel="next" title="2. Running digital normalization" href="2-diginorm.html" />
+    <link rel="prev" title="The Kalamazoo Metagenome Assembly protocol" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="2-diginorm.html" title="2. Running digital normalization"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="The Kalamazoo Metagenome Assembly protocol"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">khmer-protocols 0.8.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="quality-trimming-and-filtering-your-sequences">
+<h1>1. Quality Trimming and Filtering Your Sequences<a class="headerlink" href="#quality-trimming-and-filtering-your-sequences" title="Permalink to this headline">¶</a></h1>
+<p>12.04 LTS (ami-59a4a230); this has about 15 GB of RAM, and 2 CPUs, and
+will be enough to complete the assembly of the example data set.</p>
+<p>On the new machine, run the following commands to update the base
+software and reboot the machine:</p>
+<div class="highlight-python"><div class="highlight"><pre>apt-get update
+apt-get -y install screen git curl gcc make g++ python-dev unzip default-jre \
+           pkg-config libncurses5-dev r-base-core r-cran-gplots python-matplotlib\
+           sysstat &amp;&amp; shutdown -r now
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Some of these commands may take a very long time.  Please see
+<tt class="xref doc docutils literal"><span class="pre">../amazon/using-screen</span></tt>.</p>
+</div>
+<div class="section" id="install-software">
+<h2>Install software<a class="headerlink" href="#install-software" title="Permalink to this headline">¶</a></h2>
+<p>Install <a class="reference external" href="http://khmer.readthedocs.org/">khmer</a>:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo -i
+cd /usr/local/share
+git clone https://github.com/ged-lab/khmer.git
+cd khmer
+git checkout v1.0
+make install
+</pre></div>
+</div>
+<p>Install <a class="reference external" href="http://www.usadellab.org/cms/?page=trimmomatic">Trimmomatic</a>:</p>
+<div class="highlight-python"><div class="highlight"><pre>cd /root
+curl -O http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.30.zip
+unzip Trimmomatic-0.30.zip
+cd Trimmomatic-0.30/
+cp trimmomatic-0.30.jar /usr/local/bin
+cp -r adapters /usr/local/share/adapters
+</pre></div>
+</div>
+<p>Install <a class="reference external" href="http://hannonlab.cshl.edu/fastx_toolkit/">libgtextutils and fastx</a>:</p>
+<div class="highlight-python"><div class="highlight"><pre>cd /root
+curl -O http://hannonlab.cshl.edu/fastx_toolkit/libgtextutils-0.6.1.tar.bz2
+tar xjf libgtextutils-0.6.1.tar.bz2
+cd libgtextutils-0.6.1/
+./configure &amp;&amp; make &amp;&amp; make install
+
+cd /root
+curl -O http://hannonlab.cshl.edu/fastx_toolkit/fastx_toolkit-0.0.13.2.tar.bz2
+tar xjf fastx_toolkit-0.0.13.2.tar.bz2
+cd fastx_toolkit-0.0.13.2/
+./configure &amp;&amp; make &amp;&amp; make install
+</pre></div>
+</div>
+<p>In each of these cases, we&#8217;re downloading the software &#8211; you can use
+google to figure out what each package is and does if we don&#8217;t discuss
+it below.  We&#8217;re then unpacking it, sometimes compiling it (which we
+can discuss later), and then installing it for general use.</p>
+</div>
+<div class="section" id="create-a-working-directory">
+<h2>create a working directory:<a class="headerlink" href="#create-a-working-directory" title="Permalink to this headline">¶</a></h2>
+<p>Let&#8217;s create a place to work:</p>
+<blockquote>
+<div>cd /mnt
+mkdir work
+cd work</div></blockquote>
+</div>
+<div class="section" id="find-your-data">
+<h2>Find Your Data:<a class="headerlink" href="#find-your-data" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div>cd /mnt/
+mkdir data
+cd data
+curl -O <a class="reference external" href="ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR606/SRR606249/SRR606249_1.fastq.gz">ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR606/SRR606249/SRR606249_1.fastq.gz</a>
+curl -O <a class="reference external" href="ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR606/SRR606249/SRR606249_2.fastq.gz">ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR606/SRR606249/SRR606249_2.fastq.gz</a></div></blockquote>
+</div>
+<div class="section" id="linking-your-data">
+<h2>Linking Your Data:<a class="headerlink" href="#linking-your-data" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>Create your work directory and link your data to it.</dt>
+<dd>cd /mnt
+cd work
+ln -fs /data/<a href="#id1"><span class="problematic" id="id2">*</span></a>.fastq.gz</dd>
+</dl>
+<p>Note This protocol takes many hours (days!) to run, so you might not want to run it on all the data the first time. If you’re using the example data, you can work with a subset of it by running this command instead of the ln -fs command above:</p>
+<blockquote>
+<div><p>for i in /data/<a href="#id3"><span class="problematic" id="id4">*</span></a>.fastq.gz
+do</p>
+<blockquote>
+<div>gunzip -c $i | head -1000000 | gzip &gt; $(basename $i)</div></blockquote>
+<p>done</p>
+</div></blockquote>
+</div>
+<div class="section" id="trim-your-data">
+<h2>Trim Your Data:<a class="headerlink" href="#trim-your-data" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div>java -jar /usr/local/bin/trimmomatic-0.30.jar PE <a href="#id17"><span class="problematic" id="id18">SRR606249_</span></a>?.fastq.gz  s1_pe s1_se s2_pe s2_se ILLUMINACLIP:/usr/local/share/adapters/TruSeq3-PE.fa:2:30:10</div></blockquote>
+<dl class="docutils">
+<dt># Interleave the remaining paired-end files</dt>
+<dd>/usr/local/share/khmer/scripts/interleave-reads.py s1_pe s2_pe | gzip -9c &gt;  SRR606249.pe.fq.gz</dd>
+<dt># Combine the single-ended files</dt>
+<dd><p class="first">cat s1_se s2_se | gzip -9c &gt; SRR606249.se.fq.gz</p>
+<p>for i in <a href="#id5"><span class="problematic" id="id6">*</span></a>.pe.fq.gz <a href="#id7"><span class="problematic" id="id8">*</span></a>.se.fq.gz
+do</p>
+<blockquote>
+<div>echo working with $i
+newfile=&#8221;$(basename $i .fq.gz)&#8221;
+gunzip -c $i | fastq_quality_filter -Q33 -q 30 -p 50 | gzip -9c &gt; &#8220;${newfile}.qc.fq.gz&#8221;</div></blockquote>
+<p>done</p>
+<p>for i in <a href="#id9"><span class="problematic" id="id10">*</span></a>.pe.qc.fq.gz
+do</p>
+<blockquote>
+<div>extract-paired-reads.py $i</div></blockquote>
+<p>done</p>
+<p>for i in <a href="#id11"><span class="problematic" id="id12">*</span></a>.pe.qc.fq.gz.pe  //it ask for override??
+do</p>
+<blockquote>
+<div>newfile=&#8221;$(basename $i .pe.qc.fq.gz.pe).pe.qc.fq&#8221;
+mv $i $newfile
+gzip $newfile</div></blockquote>
+<p>done</p>
+<p>for i in <a href="#id13"><span class="problematic" id="id14">*</span></a>.pe.qc.fq.gz.se
+do</p>
+<blockquote>
+<div>otherfile=&#8221;$(basename $i .pe.qc.fq.gz.se).se.qc.fq.gz&#8221;
+gunzip -c $otherfile &gt; combine
+cat $i &gt;&gt; combine
+gzip -c combine &gt; $otherfile
+rm $i combine</div></blockquote>
+<p class="last">done</p>
+</dd>
+<dt># Make it hard to delete the files you just created</dt>
+<dd>chmod u-w <a href="#id15"><span class="problematic" id="id16">*</span></a>.qc.fq.gz</dd>
+</dl>
+<p>Done!  Now you have two files: SRR606249.pe.qc.fq.gz, SRR606249.se.qc.fq.gz.</p>
+<p>The &#8216;.pe&#8217; file are interleaved paired-end; you can take a look at them like so:</p>
+<div class="highlight-python"><div class="highlight"><pre>gunzip -c SRR606249.pe.qc.fq.gz | head
+</pre></div>
+</div>
+<p>The &#8216;.se&#8217; files is a single-ended file, where the reads have been
+orphaned because we discarded stuff.</p>
+<p>All TWO files are in FASTQ format.</p>
+<hr class="docutils" />
+<p>Next: <a class="reference internal" href="2-diginorm.html"><em>2. Running digital normalization</em></a></p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">1. Quality Trimming and Filtering Your Sequences</a><ul>
+<li><a class="reference internal" href="#install-software">Install software</a></li>
+<li><a class="reference internal" href="#create-a-working-directory">create a working directory:</a></li>
+<li><a class="reference internal" href="#find-your-data">Find Your Data:</a></li>
+<li><a class="reference internal" href="#linking-your-data">Linking Your Data:</a></li>
+<li><a class="reference internal" href="#trim-your-data">Trim Your Data:</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">The Kalamazoo Metagenome Assembly protocol</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="2-diginorm.html"
+                        title="next chapter">2. Running digital normalization</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/1-quality.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="2-diginorm.html" title="2. Running digital normalization"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="The Kalamazoo Metagenome Assembly protocol"
+             >previous</a> |</li>
+        <li><a href="index.html">khmer-protocols 0.8.4 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, C. Titus Brown et al..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
