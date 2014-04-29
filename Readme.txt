@@ -7,4 +7,4 @@ Run test:
 
 
 bash /root/literate-resting/scan.sh test.txt
-bash test.txt.sh
+bash Ptest.txt.sh
