@@ -45,10 +45,6 @@ then::
 Preparing the data
 ==================
 
-Start in the assembly work directory::
-
-   cd /mnt/assembly
-
 Each assembler takes in data in a slightly different format.  Velvet
 is the most flexible: it can take in paired-end and orphaned reads,
 in FASTA or FASTQ format, gzipped or not.  However, SPADes requires
@@ -102,15 +98,17 @@ I just run a bunch of 'k's, and evaluate the results.
 
 So, let's just do that::
 
-   for i in *.pe.fq.gz; do
-      name=$(basename $i .pe.fq.gz);
-      pefile=$name.pe.fq.gz
-      sefile=$name.se.fq.gz;
-      for k in {19..51..2}; do
-         echo "velveth $name.velvet.$k.d $k -fastq.gz -shortPaired $pefile -short $sefile && \
-              velvetg $name.velvet.$k.d -exp_cov auto -cov_cutoff auto"
-      done
-   done >> do-assembly.sh
+    for i in *.pe.fq.gz;
+    do
+        name=$(basename $i .pe.fq.gz);
+        pefile=$name.pe.fq.gz
+        sefile=$name.se.fq.gz;
+        for k in {19..51..2};
+        do
+            echo "velveth $name.velvet.$k.d $k -fastq.gz -shortPaired $pefile -short $sefile && \
+            velvetg $name.velvet.$k.d -exp_cov auto -cov_cutoff auto"
+        done
+    done >> do-assembly.sh
 
 Setting up IDBA runs
 --------------------
@@ -150,7 +148,7 @@ Getting stats for the assemblies
 
 To get some basic stats for the assemblies, run::
 
-   python /usr/local/share/khmer/sandbox/assemstats3.py 500 *.velvet.*.d/contigs.fa *idba.d/scaffold.fa *.spades.d/contigs.fasta
+    python /usr/local/share/khmer/sandbox/calc-best-assembly.py -q  *velvet.*.d/contigs.fa  -o best.fa
 
 This will yield something like::
 
@@ -191,25 +189,14 @@ bad idea.)  To pick the best assembly, we're going to choose the one
 that 
 foo ::
 
-   for i in {0..1000};
-   do
-	groupid=$(printf kak.group%04d $i);
-	if [ -e ${groupid}.pe.fq.gz ]; then
-	   echo $groupid
-	fi
-   done > grouplist.txt
-
-   for group in $(cat grouplist.txt)
-   do
-      python /usr/local/share/khmer/sandbox/calc-best-assembly.py -q $group.{*velvet.*.d/contigs.fa,*idba.d/scaffold.fa,*spades.d/contigs.fasta} -o $group.best.fa
-   done > best-assemblies.txt
-
-   python /usr/local/share/khmer/sandbox/multi-rename.py testasm *.best.fa > final-assembly.fa
+    touch testasm 
+ 
+    python /usr/local/share/khmer/sandbox/multi-rename.py testasm  best.fa > final-assembly.fa
 
 After this, 'final-assembly.fa' will contain the final set of contigs,
 with each contig renamed to 'testasm.N'.  To get stats::
 
-   python /usr/local/share/khmer/sandbox/assemstats3.py 500 final-assembly.fa
+    python /usr/local/share/khmer/sandbox/assemstats3.py 500 *.velvet.*.d/contigs.fa 
 
 Note, 'best-assemblies.txt' contains the list of "best" assembly file names,
 if you want to know which ones were picked.

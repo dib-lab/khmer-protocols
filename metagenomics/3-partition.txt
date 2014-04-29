@@ -51,7 +51,7 @@ This should take about 15 minutes, and will produce '.part' files.  These
 are now FASTQ files that contain partition annotations.  For example, check
 out::
 
-   head SRR492065.pe.kak.qc.fq.gz.below.part
+   head SRR606249.pe.kak.qc.fq.gz.below.fq.part
 
 Extracting the partitions into groups
 =====================================

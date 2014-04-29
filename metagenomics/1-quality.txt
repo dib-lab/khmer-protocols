@@ -1,9 +1,7 @@
 ================================================
 1. Quality Trimming and Filtering Your Sequences
 ================================================
-
-Boot up an m1.xlarge machine from Amazon Web Services running Ubuntu
-12.04 LTS (ami-59a4a230); this has about 15 GB of RAM, and 2 CPUs, and
+Boot up an m1.xlarge machine from Amazon Web Services running Ubuntu 12.04 LTS (ami-59a4a230); this has about 15 GB of RAM, and 2 CPUs, and
 will be enough to complete the assembly of the example data set.
 
 On the new machine, run the following commands to update the base
@@ -14,10 +12,6 @@ software and reboot the machine::
               pkg-config libncurses5-dev r-base-core r-cran-gplots python-matplotlib\
               sysstat && shutdown -r now
 
-.. note::
-
-   The raw data for this tutorial is available as public snapshot
-   snap-05633504 on EC2/EBS.
 
 .. note::
 
@@ -29,123 +23,136 @@ Install software
 
 Install `khmer <http://khmer.readthedocs.org/>`__::
 
-   cd /usr/local/share
-   git clone --branch protocols-v0.8.5 https://github.com/ged-lab/khmer.git
-   cd khmer
-   make install
+    sudo -i
+    cd /usr/local/share
+    git clone https://github.com/ged-lab/khmer.git
+    cd khmer
+    git checkout v1.0
+    make install
 
 .. @@ ping.
 
 Install `Trimmomatic <http://www.usadellab.org/cms/?page=trimmomatic>`__::
 
-   cd /root
-   curl -O http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.30.zip
-   unzip Trimmomatic-0.30.zip
-   cd Trimmomatic-0.30/
-   cp trimmomatic-0.30.jar /usr/local/bin
-   cp -r adapters /usr/local/share/adapters
+    cd /root
+    curl -O http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.30.zip
+    unzip Trimmomatic-0.30.zip
+    cd Trimmomatic-0.30/
+    cp trimmomatic-0.30.jar /usr/local/bin
+    cp -r adapters /usr/local/share/adapters
+
 
 Install `libgtextutils and fastx <http://hannonlab.cshl.edu/fastx_toolkit/>`__::
 
-   cd /root
-   curl -O http://hannonlab.cshl.edu/fastx_toolkit/libgtextutils-0.6.1.tar.bz2
-   tar xjf libgtextutils-0.6.1.tar.bz2 
-   cd libgtextutils-0.6.1/
-   ./configure && make && make install
+    cd /root
+    curl -O http://hannonlab.cshl.edu/fastx_toolkit/libgtextutils-0.6.1.tar.bz2
+    tar xjf libgtextutils-0.6.1.tar.bz2
+    cd libgtextutils-0.6.1/
+    ./configure && make && make install
 
-   cd /root
-   curl -O http://hannonlab.cshl.edu/fastx_toolkit/fastx_toolkit-0.0.13.2.tar.bz2
-   tar xjf fastx_toolkit-0.0.13.2.tar.bz2
-   cd fastx_toolkit-0.0.13.2/
-   ./configure && make && make install
+    cd /root
+    curl -O http://hannonlab.cshl.edu/fastx_toolkit/fastx_toolkit-0.0.13.2.tar.bz2
+    tar xjf fastx_toolkit-0.0.13.2.tar.bz2
+    cd fastx_toolkit-0.0.13.2/
+    ./configure && make && make install
+
 
 In each of these cases, we're downloading the software -- you can use
 google to figure out what each package is and does if we don't discuss
 it below.  We're then unpacking it, sometimes compiling it (which we
 can discuss later), and then installing it for general use.
 
-Create a working directory
-==========================
+create a working directory:
+===========================
 
-Let's create a place to work::
+let's create a place to work::
 
    cd /mnt
-   mkdir assembly
-   cd assembly
+   mkdir work 
+   cd work 
 
-Link in the data
-================
+Find Your Data:
+==============
+Download Podar dataset :: 
 
-The tutorial data is from `Sharon et al. 2013
-<http://www.ncbi.nlm.nih.gov/pubmed/22936250>`__; it's two data points
-from an infant gut sample.
 
-If you want to play along with this data (guaranteed to work -- highly
-advised on a first runthrough!), please see
-:doc:`../mrnaseq/0-download-and-save` and follow the instructions to
-(a) create a volume from snapshot snap-05633504 and (b) mount it as
-/data.
+    cd /mnt/
+    mkdir data
+    cd data
+    curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR606/SRR606249/SRR606249_1.fastq.gz
+    curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR606/SRR606249/SRR606249_2.fastq.gz
 
-Once you've done that, check that 'ls /data' shows exactly four FASTQ
-files, and then type::
+Linking Your Data:
+==================
+Create your work directory and link your data to it::
+ 
+    cd /mnt
+    cd work
+    ln -fs /data/*.fastq.gz
 
-   ln -fs /data/SRR49206?_?.fastq.gz .
+Note This protocol takes many hours (days!) to run, so you might not want to run it on all the data the first time. If you’re using the example data, you can work with a subset of it by running this command instead of the ln -fs command above:
 
-This links the data into the /mnt/assembly directory.
+    for i in /data/*.fastq.gz
+    do
+        gunzip -c $i | head -1000000 | gzip > $(basename $i)
+    done
 
-Trim and quality filter
-=======================
 
-Trim the first data set (~20 minutes)::
 
-   mkdir trim
-   cd trim
+Trim Your Data:
+===============
 
-   java -jar /usr/local/bin/trimmomatic-0.30.jar PE ../SRR492065_?.fastq.gz s1_pe s1_se s2_pe s2_se ILLUMINACLIP:/usr/local/share/adapters/TruSeq3-PE.fa:2:30:10
+Trim your data ::
+    java -jar /usr/local/bin/trimmomatic-0.30.jar PE SRR606249_?.fastq.gz  s1_pe s1_se s2_pe s2_se ILLUMINACLIP:/usr/local/share/adapters/TruSeq3-PE.fa:2:30:10
 
-   /usr/local/share/khmer/scripts/interleave-reads.py s?_pe > combined.fq
+# Interleave the remaining paired-end files
+    /usr/local/share/khmer/scripts/interleave-reads.py s1_pe s2_pe | gzip -9c >  SRR606249.pe.fq.gz
 
-   fastq_quality_filter -Q33 -q 30 -p 50 -i combined.fq > combined-trim.fq
-   fastq_quality_filter -Q33 -q 30 -p 50 -i s1_se > s1_se.trim
-   fastq_quality_filter -Q33 -q 30 -p 50 -i s2_se > s2_se.trim
-   /usr/local/share/khmer/scripts/extract-paired-reads.py combined-trim.fq
+# Combine the single-ended files
+    cat s1_se s2_se | gzip -9c > SRR606249.se.fq.gz
 
-   gzip -9c combined-trim.fq.pe > ../SRR492065.pe.qc.fq.gz
-   gzip -9c combined-trim.fq.se s1_se.trim s2_se.trim > ../SRR492065.se.qc.fq.gz
+    for i in *.pe.fq.gz *.se.fq.gz
+    do
+        echo working with $i
+        newfile="$(basename $i .fq.gz)"
+        gunzip -c $i | fastq_quality_filter -Q33 -q 30 -p 50 | gzip -9c > "${newfile}.qc.fq.gz"
+    done
 
-   cd ../
-   rm -fr trim
+    for i in *.pe.qc.fq.gz
+    do
+        extract-paired-reads.py $i
+    done
 
-Trim the second data set (~20 minutes)::
+    for i in *.pe.qc.fq.gz.pe  //it ask for override??
+    do
+        newfile="$(basename $i .pe.qc.fq.gz.pe).pe.qc.fq"
+        mv $i $newfile
+        gzip $newfile
+    done
 
-   mkdir trim
-   cd trim
 
-   java -jar /usr/local/bin/trimmomatic-0.30.jar PE ../SRR492066_?.fastq.gz s1_pe s1_se s2_pe s2_se ILLUMINACLIP:/usr/local/share/adapters/TruSeq3-PE.fa:2:30:10
+    for i in *.pe.qc.fq.gz.se
+    do
+        otherfile="$(basename $i .pe.qc.fq.gz.se).se.qc.fq.gz"
+        gunzip -c $otherfile > combine
+        cat $i >> combine
+        gzip -c combine > $otherfile
+        rm $i combine
+    done
 
-   /usr/local/share/khmer/scripts/interleave-reads.py s?_pe > combined.fq
+# Make it hard to delete the files you just created
+    chmod u-w *.qc.fq.gz
 
-   fastq_quality_filter -Q33 -q 30 -p 50 -i combined.fq > combined-trim.fq
-   fastq_quality_filter -Q33 -q 30 -p 50 -i s1_se > s1_se.trim
-   fastq_quality_filter -Q33 -q 30 -p 50 -i s2_se > s2_se.trim
-   /usr/local/share/khmer/scripts/extract-paired-reads.py combined-trim.fq
+Done!  Now you have two files: SRR606249.pe.qc.fq.gz, SRR606249.se.qc.fq.gz.
 
-   gzip -9c combined-trim.fq.pe > ../SRR492066.pe.qc.fq.gz
-   gzip -9c combined-trim.fq.se s1_se.trim s2_se.trim > ../SRR492066.se.qc.fq.gz
+The '.pe' file are interleaved paired-end; you can take a look at them like so::
 
-   cd ../
-   rm -fr trim
+   gunzip -c SRR606249.pe.qc.fq.gz | head
 
-Done!  Now you have four files: SRR492065.pe.qc.fq.gz, SRR492065.se.qc.fq.gz, SRR492066.pe.qc.fq.gz, and SRR492066.se.qc.fq.gz.
-
-The '.pe' files are interleaved paired-end; you can take a look at them like so::
-
-   gunzip -c SRR492065.pe.qc.fq.gz | head
-
-The other two are single-ended files, where the reads have been
+The '.se' files is a single-ended file, where the reads have been
 orphaned because we discarded stuff.
 
-All four files are in FASTQ format.
+All TWO files are in FASTQ format.
 
 ----
 
