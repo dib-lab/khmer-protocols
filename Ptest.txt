@@ -201,16 +201,6 @@
 
 ::
 
-    for i in {0..1000};
-    do
-        groupid=$(printf kak.group%04d $i);
-        if [ -e ${groupid}.pe.fq.gz ]; then
-            echo $groupid
-        fi
-    done > grouplist.txt
-
-::
-
         python /usr/local/share/khmer/sandbox/calc-best-assembly.py -q *.*velvet.*.d/contigs.fa -o best.fa
 
 ::
