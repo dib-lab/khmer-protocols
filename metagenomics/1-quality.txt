@@ -123,9 +123,10 @@ Trim your data ::
         extract-paired-reads.py $i
     done
 
-    for i in *.pe.qc.fq.gz.pe  //it ask for override??
+    for i in *.pe.qc.fq.gz.pe 
     do
         newfile="$(basename $i .pe.qc.fq.gz.pe).pe.qc.fq"
+        rm *.pe.fq.gz 
         mv $i $newfile
         gzip $newfile
     done
