@@ -148,7 +148,7 @@ Getting stats for the assemblies
 
 To get some basic stats for the assemblies, run::
 
-    python /usr/local/share/khmer/sandbox/calc-best-assembly.py -q  *velvet.*.d/contigs.fa  -o best.fa
+    python /usr/local/share/khmer/sandbox/calc-best-assembly.py -q  *velvet.*.d/contigs.fa  *.spades.d/contigs.fasta *.idba.d/scaffold.fa  -o best.fa
 
 This will yield something like::
 
@@ -196,7 +196,7 @@ foo ::
 After this, 'final-assembly.fa' will contain the final set of contigs,
 with each contig renamed to 'testasm.N'.  To get stats::
 
-    python /usr/local/share/khmer/sandbox/assemstats3.py 500 *.velvet.*.d/contigs.fa 
+    python /usr/local/share/khmer/sandbox/assemstats3.py 500 *velvet.*.d/contigs.fa  *.spades.d/contigs.fasta *.idba.d/scaffold.fa
 
 Note, 'best-assemblies.txt' contains the list of "best" assembly file names,
 if you want to know which ones were picked.
