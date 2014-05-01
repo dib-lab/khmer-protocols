@@ -1,0 +1,259 @@
+.. shell start
+
+
+::
+
+    cd /mnt
+
+::
+
+    mkdir data
+
+::
+
+    cd data
+
+::
+
+    curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR606/SRR606249/SRR606249_1.fastq.gz
+
+::
+
+    curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR606/SRR606249/SRR606249_2.fastq.gz
+
+::
+ 
+    cd /mnt
+
+::
+
+    mkdir work
+
+::
+
+    cd work 
+
+::
+
+    for i in /data/*.fastq.gz
+    do
+        gunzip -c $i | head -1000000 | gzip > $(basename $i)
+    done
+
+::
+
+    java -jar /usr/local/bin/trimmomatic-0.30.jar PE SRR606249_?.fastq.gz  s1_pe s1_se s2_pe s2_se ILLUMINACLIP:/usr/local/share/adapters/TruSeq3-PE.fa:2:30:10
+  
+
+::
+
+    /usr/local/share/khmer/scripts/interleave-reads.py s1_pe s2_pe | gzip -9c >  SRR606249.pe.fq.gz
+
+::
+
+    cat s1_se s2_se | gzip -9c > SRR606249.se.fq.gz
+
+::
+
+    for i in *.pe.fq.gz *.se.fq.gz
+    do
+        echo working with $i
+        newfile="$(basename $i .fq.gz)"
+        gunzip -c $i | fastq_quality_filter -Q33 -q 30 -p 50 | gzip -9c > "${newfile}.qc.fq.gz"
+    done
+
+::
+
+    for i in *.pe.qc.fq.gz
+    do
+        extract-paired-reads.py $i
+    done
+
+::
+
+    for i in *.pe.qc.fq.gz.pe  
+    do
+       newfile="$(basename $i .pe.qc.fq.gz.pe).pe.qc.fq"
+       rm *.pe.qc.fq.gz 
+       mv $i $newfile
+       gzip $newfile
+    done
+
+::
+
+    for i in *.pe.qc.fq.gz.se
+    do
+        otherfile="$(basename $i .pe.qc.fq.gz.se).se.qc.fq.gz"
+        gunzip -c $otherfile > combine
+        cat $i >> combine
+        gzip -c combine > $otherfile
+        rm $i combine
+    done
+
+::
+ 
+    chmod u-w *.qc.fq.gz
+
+::
+
+    normalize-by-median.py -p -k 20 -C 20 -N 4 -x 3e8 --savetable normC20k20.kh *.pe.qc.fq.gz
+
+::
+
+    normalize-by-median.py -C 20 --loadtable normC20k20.kh --savetable normC20k20.kh *.se.qc.fq.gz
+
+::
+
+    /usr/local/share/khmer/scripts/filter-abund.py -V normC20k20.kh *.keep
+
+::
+
+    for i in *.pe.qc.fq.gz.keep.abundfilt
+    do
+        /usr/local/share/khmer/scripts/extract-paired-reads.py $i
+    done
+
+::
+
+    /usr/local/share/khmer/scripts/normalize-by-median.py -C 5 -k 20 -N 4 -x 5e8 --savetable normC5k20.kh -p *.pe.qc.fq.gz.keep.abundfilt.pe
+
+::
+
+    /usr/local/share/khmer/scripts/normalize-by-median.py -C 5 --savetable normC5k20.kh --loadtable normC5k20.kh *.pe.qc.fq.gz.keep.abundfilt.se *.se.qc.fq.gz.keep.abundfilt
+
+::
+
+    gzip -9c SRR606249.pe.qc.fq.gz.keep.abundfilt.pe.keep > SRR606249.pe.kak.qc.fq.gz
+
+::
+
+    gzip -9c SRR606249.pe.qc.fq.gz.keep.abundfilt.se.keep SRR606249.se.qc.fq.gz.keep.abundfilt.keep > SRR606249.se.kak.qc.fq.gz
+
+::
+
+    cd /mnt/work
+
+::
+
+    python /usr/local/share/khmer/sandbox/filter-below-abund.py normC5k20.kh *.fq.gz
+
+::
+
+    for i in *.below
+    do
+        mv $i $i.fq
+    done
+
+::
+
+    /usr/local/share/khmer/scripts/do-partition.py -k 32 -x 1e9 --threads 4 kak *.kak.qc.fq.gz.below.fq
+
+::
+
+    head SRR606249.pe.kak.qc.fq.gz.below.fq.part
+
+::
+
+    /usr/local/share/khmer/scripts/extract-partitions.py -X 100000 kak *.part
+
+::
+
+    for i in kak*.fq
+    do
+        /usr/local/share/khmer/scripts/extract-paired-reads.py $i
+        name=$(basename $i .fq)
+        mv ${name}.fq.pe ${name}.pe.fq
+        mv ${name}.fq.se ${name}.se.fq
+   done
+
+::
+
+    gunzip *.pe.fq *.se.fq
+
+::
+
+    rm -f do-assembly.sh
+
+::
+
+   for i in *.pe.fq.gz
+   do
+       gunzip -c $i > $(basename $i .gz)
+   done
+
+::
+
+    for i in *.pe.fq
+    do
+        name=$(basename $i .fq).fa
+        python /usr/local/share/khmer/sandbox/fastq-to-fasta.py $i > $name
+    done
+
+::
+
+    for i in *.pe.fq.gz; 
+    do
+        name=$(basename $i .pe.fq.gz);
+        pefile=$name.pe.fq.gz
+        sefile=$name.se.fq.gz;
+        for k in {19..51..2}; 
+        do
+            echo "velveth $name.velvet.$k.d $k -fastq.gz -shortPaired $pefile -short $sefile && \
+           velvetg $name.velvet.$k.d -exp_cov auto -cov_cutoff auto"
+        done
+    done >> do-assembly.sh
+
+::
+
+    for i in *.pe.fa
+    do
+        name=$(basename $i .pe.fa);
+        echo "idba_ud --pre_correction -r $i -o $name.idba.d"
+    done >> do-assembly.sh
+
+::
+
+    for i in *.pe.fq
+    do
+        name=$(basename $i .pe.fq);
+        echo "spades.py --sc --pe1-12 $name.pe.fq.gz -o $name.spades.d"
+    done >> do-assembly.sh
+
+::
+
+    bash do-assembly.sh
+
+::
+
+    touch testasm
+
+::
+
+    python /usr/local/share/khmer/sandbox/assemstats3.py 500 *velvet.*.d/contigs.fa  *.spades.d/contigs.fasta *.idba.d/scaffold.fa
+
+::
+
+    python  /usr/local/share/khmer/sandbox/calc-best-assembly.py -q  *velvet.*.d/contigs.fa  *.spades.d/contigs.fasta *.idba.d/scaffold.fa  -o best.fa
+
+::
+
+    python /usr/local/share/khmer/sandbox/multi-rename.py testasm best.fa > Pfinal-assembly.fa
+
+::
+
+    python /usr/local/share/khmer/sandbox/assemstats3.py 500 Pfinal-assembly.fa
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
