@@ -176,6 +176,21 @@
 
 ::
 
+   for i in *.pe.fq.gz
+   do
+       gunzip -c $i > $(basename $i .gz)
+   done
+
+::
+
+    for i in *.pe.fq
+    do
+        name=$(basename $i .fq).fa
+        python /usr/local/share/khmer/sandbox/fastq-to-fasta.py $i > $name
+    done
+
+::
+
     for i in *.pe.fq.gz; 
     do
         name=$(basename $i .pe.fq.gz);
@@ -190,6 +205,22 @@
 
 ::
 
+    for i in *.pe.fa
+    do
+        name=$(basename $i .pe.fa);
+        echo "idba_ud --pre_correction -r $i -o $name.idba.d"
+    done >> do-assembly.sh
+
+::
+
+    for i in *.pe.fq
+    do
+        name=$(basename $i .pe.fq);
+        echo "spades.py --sc --pe1-12 $name.pe.fq.gz -o $name.spades.d"
+    done >> do-assembly.sh
+
+::
+
     bash do-assembly.sh
 
 ::
@@ -198,11 +229,11 @@
 
 ::
 
-    python /usr/local/share/khmer/sandbox/assemstats3.py 500 *.velvet.*.d/contigs.fa 
+    python /usr/local/share/khmer/sandbox/assemstats3.py 500 *velvet.*.d/contigs.fa  *.spades.d/contigs.fasta *.idba.d/scaffold.fa
 
 ::
 
-   python /usr/local/share/khmer/sandbox/calc-best-assembly.py -q *.*velvet.*.d/contigs.fa -o best.fa
+    python  /usr/local/share/khmer/sandbox/calc-best-assembly.py -q  *velvet.*.d/contigs.fa  *.spades.d/contigs.fasta *.idba.d/scaffold.fa  -o best.fa
 
 ::
 

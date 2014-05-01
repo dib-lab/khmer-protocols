@@ -6,5 +6,5 @@ Run test:
 =========
 
 
-bash /root/literate-resting/scan.sh Ptest.txt
-bash Ptest.txt.sh
+bash /root/literate-resting/scan.sh Run.txt
+bash Run.txt.sh
