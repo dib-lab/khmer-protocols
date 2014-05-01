@@ -74,6 +74,7 @@
     for i in *.pe.qc.fq.gz.pe  
     do
        newfile="$(basename $i .pe.qc.fq.gz.pe).pe.qc.fq"
+       rm *.pe.qc.fq.gz 
        mv $i $newfile
        gzip $newfile
     done
@@ -201,7 +202,7 @@
 
 ::
 
-        python /usr/local/share/khmer/sandbox/calc-best-assembly.py -q *.*velvet.*.d/contigs.fa -o best.fa
+   python /usr/local/share/khmer/sandbox/calc-best-assembly.py -q *.*velvet.*.d/contigs.fa -o best.fa
 
 ::
 
