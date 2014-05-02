@@ -102,10 +102,12 @@ Note This protocol takes many hours (days!) to run, so you might not want to run
 Trim Your Data:
 ===============
 
-Trim your data __::
+# Trim your data __:: 
+    
     java -jar /usr/local/bin/trimmomatic-0.30.jar PE SRR606249_?.fastq.gz  s1_pe s1_se s2_pe s2_se ILLUMINACLIP:/usr/local/share/adapters/TruSeq3-PE.fa:2:30:10
 
-# Interleave the remaining paired-end files
+# Interleave the remaining paired-end files __::
+
     /usr/local/share/khmer/scripts/interleave-reads.py s1_pe s2_pe | gzip -9c >  SRR606249.pe.fq.gz
 
 # Combine the single-ended files
