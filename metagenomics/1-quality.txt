@@ -120,6 +120,8 @@ Trim Your Data:
 
     cat s1_se s2_se | gzip -9c > SRR606249.se.fq.gz
 
+::
+
     for i in *.pe.fq.gz *.se.fq.gz
     do
         echo working with $i
@@ -127,10 +129,14 @@ Trim Your Data:
         gunzip -c $i | fastq_quality_filter -Q33 -q 30 -p 50 | gzip -9c > "${newfile}.qc.fq.gz"
     done
 
+::
+
     for i in *.pe.qc.fq.gz
     do
         extract-paired-reads.py $i
     done
+
+::
 
     for i in *.pe.qc.fq.gz.pe 
     do
@@ -140,6 +146,7 @@ Trim Your Data:
         gzip $newfile
     done
 
+::
 
     for i in *.pe.qc.fq.gz.se
     do
