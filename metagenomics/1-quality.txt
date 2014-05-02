@@ -65,7 +65,7 @@ can discuss later), and then installing it for general use.
 create a working directory:
 ===========================
 
-let's create a place to work __::
+let's create a place to work :: 
 
    cd /mnt
    mkdir work 
@@ -73,8 +73,7 @@ let's create a place to work __::
 
 Find Your Data:
 ==============
-Download Podar dataset __:: 
-
+Download Podar dataset ::  
 
     cd /mnt/
     mkdir data
@@ -84,13 +83,13 @@ Download Podar dataset __::
 
 Linking Your Data:
 ==================
-Create your work directory and link your data to it __::
+Create your work directory and link your data to it ::
  
     cd /mnt
     cd work
     ln -fs /data/*.fastq.gz
 
-Note This protocol takes many hours (days!) to run, so you might not want to run it on all the data the first time. If you’re using the example data, you can work with a subset of it by running this command instead of the ln -fs command above:
+Note This protocol takes many hours (days!) to run, so you might not want to run it on all the data the first time. If you’re using the example data, you can work with a subset of it by running this command instead of the ln -fs command above ::
 
     for i in /data/*.fastq.gz
     do
@@ -102,14 +101,26 @@ Note This protocol takes many hours (days!) to run, so you might not want to run
 Trim Your Data:
 ===============
 
-Trim your data __::
+# Trim your data
+
+:: 
+    
     java -jar /usr/local/bin/trimmomatic-0.30.jar PE SRR606249_?.fastq.gz  s1_pe s1_se s2_pe s2_se ILLUMINACLIP:/usr/local/share/adapters/TruSeq3-PE.fa:2:30:10
 
 # Interleave the remaining paired-end files
+
+::
+
     /usr/local/share/khmer/scripts/interleave-reads.py s1_pe s2_pe | gzip -9c >  SRR606249.pe.fq.gz
 
 # Combine the single-ended files
+
+
+::
+
     cat s1_se s2_se | gzip -9c > SRR606249.se.fq.gz
+
+::
 
     for i in *.pe.fq.gz *.se.fq.gz
     do
@@ -118,10 +129,14 @@ Trim your data __::
         gunzip -c $i | fastq_quality_filter -Q33 -q 30 -p 50 | gzip -9c > "${newfile}.qc.fq.gz"
     done
 
+::
+
     for i in *.pe.qc.fq.gz
     do
         extract-paired-reads.py $i
     done
+
+::
 
     for i in *.pe.qc.fq.gz.pe 
     do
@@ -131,6 +146,7 @@ Trim your data __::
         gzip $newfile
     done
 
+::
 
     for i in *.pe.qc.fq.gz.se
     do
@@ -142,6 +158,9 @@ Trim your data __::
     done
 
 # Make it hard to delete the files you just created
+
+::
+
     chmod u-w *.qc.fq.gz
 
 Done!  Now you have two files: SRR606249.pe.qc.fq.gz, SRR606249.se.qc.fq.gz.
