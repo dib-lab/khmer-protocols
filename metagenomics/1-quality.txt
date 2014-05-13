@@ -18,6 +18,9 @@ software and reboot the machine::
    Some of these commands may take a very long time.  Please see
    :doc:`../amazon/using-screen`.
 
+
+.. start shell
+
 Install software
 ================
 
