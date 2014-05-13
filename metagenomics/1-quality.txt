@@ -19,7 +19,7 @@ software and reboot the machine::
    :doc:`../amazon/using-screen`.
 
 
-.. start shell
+.. shell start
 
 Install software
 ================
