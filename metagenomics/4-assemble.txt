@@ -191,7 +191,6 @@ bad idea.)  To pick the best assembly, we're going to choose the one
 that 
 foo ::
 
-    touch testasm 
  
     python /usr/local/share/khmer/sandbox/multi-rename.py testasm  best.fa > final-assembly.fa
 
