@@ -16,6 +16,8 @@
 Start with the QC'ed files from :doc:`2-diginorm` or copy them into a
 working directory; you should be in /mnt/assembly below.
 
+.. shell start
+
 Simple partitioning
 ===================
 
