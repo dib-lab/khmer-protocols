@@ -18,6 +18,9 @@ software and reboot the machine::
    Some of these commands may take a very long time.  Please see
    :doc:`../amazon/using-screen`.
 
+
+.. shell start
+
 Install software
 ================
 
@@ -27,7 +30,7 @@ Install `khmer <http://khmer.readthedocs.org/>`__::
     cd /usr/local/share
     git clone https://github.com/ged-lab/khmer.git
     cd khmer
-    git checkout v1.0
+    git checkout v1.0.1
     make install
 
 .. @@ ping.
