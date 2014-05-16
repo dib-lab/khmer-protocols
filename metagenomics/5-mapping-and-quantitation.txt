@@ -10,6 +10,9 @@
       SRR606249.pe.qc.fq.gz
       final-assembly.fa
 
+.. shell start
+
+
    Just do::
 
       cd /mnt/work/
