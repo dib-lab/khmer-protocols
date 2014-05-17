@@ -2,14 +2,8 @@
 6. Annotating your metagenome with Prokka
 =========================================
 
-.. note::
+.. ::
 
-   You can start from this point by taking the assembly from
-   the data on snapshot snap-8f89b092.  Just do::
-
-      mkdir /mnt/assembly
-      cd /mnt/assembly
-      cp /data/final-assembly.fa .
 
 
 Installing Prokka
@@ -96,16 +90,13 @@ Install `Infernal <http://infernal.janelia.org/>`__::
 Running Prokka
 ==============
 
-Now, make a new directory::
+.. shell start
 
-   cd /mnt
-   mkdir annot
-   cd annot
 
-Copy in the assembly and remove all the sequences with 'N's in them (since
+Remove all the sequences with 'N's in them (since
 prodigal fails if there are too many, and prokka uses prodigal)::
 
-   python /usr/local/share/khmer/sandbox/remove-N.py /mnt/assembly/final-assembly.fa metagenome.fa
+   python /usr/local/share/khmer/sandbox/remove-N.py final-assembly.fa metagenome.fa
 
 Now, run Prokka::
 
