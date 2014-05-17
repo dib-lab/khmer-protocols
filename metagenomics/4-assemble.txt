@@ -55,6 +55,7 @@ to do some conversions.
 
 First, let's gunzip all of the pe.fq files (for SPADes)::
 
+   cd /mnt/work/
    for i in *.pe.fq.gz
    do
       gunzip -c $i > $(basename $i .gz)
