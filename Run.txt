@@ -225,10 +225,6 @@
 
 ::
 
-    touch testasm
-
-::
-
     python /usr/local/share/khmer/sandbox/assemstats3.py 500 *velvet.*.d/contigs.fa  *.spades.d/contigs.fasta *.idba.d/scaffold.fa
 
 ::
@@ -237,23 +233,68 @@
 
 ::
 
-    python /usr/local/share/khmer/sandbox/multi-rename.py testasm best.fa > Pfinal-assembly.fa
+    python /usr/local/share/khmer/sandbox/multi-rename.py testasm best.fa > final-assembly.fa
 
 ::
 
-    python /usr/local/share/khmer/sandbox/assemstats3.py 500 Pfinal-assembly.fa
+    python /usr/local/share/khmer/sandbox/assemstats3.py 500 final-assembly.fa
+
+::
+
+    cd /mnt/work/
+
+::
+
+    bowtie-build metagenome.fa metagenome
+
+::
+
+    gunzip -c SRR606249.pe.qc.fq.gz | bowtie -p 4 -q metagenome - > SRR606249.map
 
 
+::
+
+    python /usr/local/share/khmer/sandbox/make-coverage.py metagenome.fa SRR606249.map
 
 
+::
 
+    mv metagenome.fa.cov metagenome.SRR606249.fa
 
+::
 
+    python /usr/local/share/khmer/sandbox/remove-N.py  final-assembly.fa metagenome.fa
 
+::
 
+    /mnt/prokka-1.7/bin/prokka metagenome.fa --outdir metag --prefix testasm --metagenome
 
+::
 
+    cp /mnt/work/metag/testasm.faa /root/blastkit/db/db-prot.fa
 
+::
 
+    cd /root/blastkit
 
+::
 
+    curl -O http://athyra.idyll.org/~t/testasm.faa
+
+::
+
+    mv testasm.faa db/db-prot.fa
+
+::
+
+::
+
+    cd /root/blastkit
+
+::
+
+    formatdb -i db/db-prot.fa -o T -p T
+
+::
+
+    python index-db.py db/db-prot.fa
