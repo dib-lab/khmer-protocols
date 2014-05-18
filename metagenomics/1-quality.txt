@@ -90,7 +90,8 @@ Create your work directory and link your data to it ::
  
     cd /mnt
     cd work
-    ln -fs /data/*.fastq.gz
+    ln -fs /mnt/data/SRR606249_1.fastq.gz
+    ln -fs /mnt/data/SRR606249_2.fastq.gz 
 
 Note This protocol takes many hours (days!) to run, so you might not want to run it on all the data the first time. If you’re using the example data, you can work with a subset of it by running this command instead of the ln -fs command above ::
 

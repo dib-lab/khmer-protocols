@@ -60,7 +60,7 @@ If you've just finished annotating a metagenome assembly
 (:doc:`6-annotating`) then
 you can do this to copy your newly generated assembly into the right place::
 
-   cp /mnt/annot/metag/testasm.faa /root/blastkit/db/db-prot.fa
+   cp /mnt/work/metag/testasm.faa /root/blastkit/db/db-prot.fa
 
 Alternatively, you can grab our version of the assembly (from running this
 tutorial)::
