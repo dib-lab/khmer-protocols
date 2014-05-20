@@ -1,6 +1,8 @@
 Variant calling
 ###############
+ 
 
+We are using Podar dataset from ... 
 
 Install software
 ~~~~~~~~~~~~~~~~
@@ -38,7 +40,8 @@ Download the reference genome and the resequencing reads::
 
    cd /mnt
 
-   curl -O http://athyra.idyll.org/~t/ref.fa
+   curl -O http://athyra.idyll.org/~t/ref.fa // still need to update the reference genome
+
    curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR606/SRR606249/SRR606249_1.fastq.gz
    curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR606/SRR606249/SRR606249_2.fastq.gz
 
