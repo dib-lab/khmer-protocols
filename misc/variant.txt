@@ -1,9 +1,6 @@
 Variant calling
 ###############
 
-The below data is from one of Rich Lenski's LTEE papers, the one on
-`the evolution of citrate consumption in LTEE
-<http://www.nature.com/nature/journal/v489/n7417/full/nature11514.html>`__.
 
 Install software
 ~~~~~~~~~~~~~~~~
@@ -41,10 +38,9 @@ Download the reference genome and the resequencing reads::
 
    cd /mnt
 
-   curl -O http://athyra.idyll.org/~t/REL606.fa.gz
-   gunzip REL606.fa.gz
-
-   curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR098/SRR098038/SRR098038.fastq.gz
+   curl -O http://athyra.idyll.org/~t/ref.fa
+   curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR606/SRR606249/SRR606249_1.fastq.gz
+   curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR606/SRR606249/SRR606249_2.fastq.gz
 
 Note, this last URL is the "Fastq files (FTP)" link from the European
 Nucleotide Archive (ENA) for this sample:
@@ -58,42 +54,47 @@ reference genome::
 
    cd /mnt
 
-   bwa index REL606.fa 
+   bwa index ref.fa 
 
 Now, do the mapping of the raw reads to the reference genome::
 
-   bwa aln REL606.fa SRR098038.fastq.gz  > SRR098038.sai
 
-Make a SAM file (this would be done with 'sampe' if these were paired-end
+   bwa aln ref.fa SRR606249_1.fastq.gz  > SRR606249_1.sai
+ 
+   bwa aln ref.fa SRR606249_2.fastq.gz  > SRR606249_2.sai
+
+
+Make a SAM file (this would be done with 'samse' if these were single
 reads)::
 
-   bwa samse REL606.fa SRR098038.sai SRR098038.fastq.gz > SRR098038.sam
+   bwa sampe ref.fa SRR606249_1.sai SRR606249_2.sai  SRR606249_1.fastq.gz SRR606249_2.fastq.gz> SRR606249.sam
+
 
 This file contains all of the information about where each read hits
 on the reference.
 
 Next, index the reference genome with samtools::
 
-   samtools faidx REL606.fa
+   samtools faidx ref.fa
 
 Convert the SAM into a BAM file::
 
-   samtools import REL606.fa.fai SRR098038.sam SRR098038.bam
+   samtools import ref.fa.fai SRR606249.sam SRR606249.bam
 
 Sort the BAM file::
 
-   samtools sort SRR098038.bam SRR098038.sorted
+   samtools sort SRR606249.bam SRR606249.sorted
 
 And index the sorted BAM file::
 
-   samtools index SRR098038.sorted.bam
+   samtools index SRR606249.sorted.bam
 
 At this point you can visualize with tview or Tablet.
 
 'samtools tview' is a text interface that you use from the command
 line; run it like so::
 
-   samtools tview SRR098038.sorted.bam REL606.fa
+   samtools tview SRR606249.sorted.bam ref.fa
 
 The '.'s are places where the reads align perfectly in the forward direction,
 and the ','s are places where the reads align perfectly in the reverse
@@ -107,8 +108,8 @@ position 553093 in the BAM file.
 For the `Tablet viewer <http://bioinf.scri.ac.uk/tablet/>`__, click on
 the link and get it installed on your local computer.  Then, start it
 up as an application.  To open your alignments in Tablet, you'll need
-three files on your local computer: ``REL606.fa``, ``SRR098042.sorted.bam``,
-and ``SRR098042.sorted.bam.bai``.  You can copy them over using Dropbox,
+three files on your local computer: ``ref.fa``, ``SRR606249.sorted.bam``,
+and ``SRR606249.sorted.bam.bai``.  You can copy them over using Dropbox,
 for example.
 
 Calling SNPs
@@ -116,13 +117,13 @@ Calling SNPs
 
 You can use samtools to call SNPs like so::
 
-   samtools mpileup -uD -f REL606.fa SRR098038.sorted.bam | bcftools view -bvcg - > SRR098038.raw.bcf
+   samtools mpileup -uD -f ref.fa SRR606249.sorted.bam | bcftools view -bvcg - > SRR606249.raw.bcf
 
 (See the 'mpileup' docs `here <http://samtools.sourceforge.net/mpileup.shtml>`__.)
 
 Now convert the BCF into VCF::
 
-   bcftools view SRR098038.raw.bcf > SRR098038.vcf
+   bcftools view SRR606249.raw.bcf > SRR606249.vcf
 
 You can check out the VCF file by using 'tail' to look at the bottom::
 
