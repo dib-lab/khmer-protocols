@@ -102,17 +102,15 @@ So, can you recover the abundances?  Of course you can!
 
 Run the command to pull all of the reads for each group from 'all.fq'
 into reinflated files::
-
-
  
 python /usr/local/share/khmer/scripts/sweep-reads-buffered.py -x 3e8 --db kak.group*.fq --query SRR606249.?e.qc.fq.gZ
 
-Finally, split the resulting ``.sweep3`` files into PE/SE::
+Finally, split the resulting ``.sweep`` files into PE/SE::
 
-   for i in kak*.sweep3
+   for i in kak*.sweep
    do
       /usr/local/share/khmer/scripts/extract-paired-reads.py $i
-      name=$(basename $i .fq.sweep3)
+      name=$(basename $i .fq.sweep)
       mv $i.pe ${name}.nodn.pe.fq
       mv $i.se ${name}.nodn.se.fq
    done
