@@ -193,8 +193,10 @@ that
 foo ::
 
  
-    python /usr/local/share/khmer/sandbox/multi-rename.py testasm  best.fa > final-assembly.fa
+    python /usr/local/share/khmer/sandbox/multi-rename.py testasm  best.fa > assembly.fa
 
+   fold assembly.fa > final-assembly.fa
+   
 After this, 'final-assembly.fa' will contain the final set of contigs,
 with each contig renamed to 'testasm.N'.  To get stats::
 

@@ -45,9 +45,6 @@ Download the reference genome and the resequencing reads::
    curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR606/SRR606249/SRR606249_1.fastq.gz
    curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR606/SRR606249/SRR606249_2.fastq.gz
 
-Note, this last URL is the "Fastq files (FTP)" link from the European
-Nucleotide Archive (ENA) for this sample:
-http://www.ebi.ac.uk/ena/data/view/SRR098042.
 
 Do the mapping
 ~~~~~~~~~~~~~~
