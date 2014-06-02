@@ -87,7 +87,7 @@ And install `GNU parallel <@@>`__:
    tar xjf parallel-latest.tar.bz2
    cd parallel-*
    ./configure && make && make install
-   cd /mnt/assembly
+   cd /mnt/work/
 
 Setting up Velvet runs
 ----------------------
