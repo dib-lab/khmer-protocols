@@ -80,7 +80,7 @@ Let's make sure the file is empty first::
 
    rm -f do-assembly.sh
 
-And install `GNU parallel <@@>`__:
+And install `GNU parallel <http://www.gnu.org/software/parallel/>`__::
 
    cd /root
    curl -O http://ftp.gnu.org/gnu/parallel/parallel-latest.tar.bz2

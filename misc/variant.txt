@@ -130,3 +130,10 @@ You can check out the VCF file by using 'tail' to look at the bottom::
    tail *.vcf
 
 To further analyze the VCF file, take a look at this IPython notebook: `hw5-variant-solutions.ipynb <http://nbviewer.ipython.org/github/beacon-center/2013-intro-computational-science/blob/master/hw5-files/hw5-variant-solutions.ipynb>`__.
+
+Other resources
+---------------
+
+5 things to know about the samtools mpileup tool: http://massgenomics.org/2012/03/5-things-to-know-about-samtools-mpileup.html
+
+VCF file format specification: http://www.1000genomes.org/wiki/Analysis/Variant%20Call%20Format/vcf-variant-call-format-version-41
