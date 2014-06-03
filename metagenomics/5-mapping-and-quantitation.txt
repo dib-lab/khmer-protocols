@@ -48,7 +48,7 @@ assembled sequences with the mapping abundance.  This will allow MG-RAST
 to properly weight annotation calls.
 
 To do this, we will need to make two copies of the annotated assembly
- with the first (SRR606249) abundances. ::
+with the first (SRR606249) abundances. ::
 
 
    python /usr/local/share/khmer/sandbox/make-coverage.py metagenome.fa SRR606249.map
