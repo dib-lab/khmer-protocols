@@ -93,13 +93,13 @@ extract the PE reads as before
 
 ::
 
-   for i in kak*.fq
-   do
-      /usr/local/share/khmer/scripts/extract-paired-reads.py $i
-      name=$(basename $i .fq)
-      mv ${name}.fq.pe ${name}.pe.fq
-      mv ${name}.fq.se ${name}.se.fq                                           
-   done
+    for i in kak*.fq
+    do
+       /usr/local/share/khmer/scripts/extract-paired-reads.py $i
+       name=$(basename $i .fq)
+       mv ${name}.fq.pe ${name}.pe.fq
+       mv ${name}.fq.se ${name}.se.fq                                           
+    done
 
 And, finally, compress them
 
@@ -120,25 +120,25 @@ So, can you recover the abundances?  Of course you can!
 Run the command to pull all of the reads for each group from 'all.fq'
 into reinflated files
 
-..
+::
  
    python /usr/local/share/khmer/scripts/sweep-files.py -x 3e8 --db kak.group*.fq --query SRR606249-extract.?e.qc.fq.gz
 
 Finally, split the resulting ``.sweep`` files into PE/SE
 
-..
+::
 
    for i in kak*.sweep
    do
-      /usr/local/share/khmer/scripts/extract-paired-reads.py $i
-      name=$(basename $i .fq.sweep)
-      mv $i.pe ${name}.nodn.pe.fq
-      mv $i.se ${name}.nodn.se.fq
+       /usr/local/share/khmer/scripts/extract-paired-reads.py $i
+       name=$(basename $i .fq.sweep)
+       mv $i.pe ${name}.nodn.pe.fq
+       mv $i.se ${name}.nodn.se.fq
    done
 
 and compress
 
-..
+::
 
    gzip *.nodn.se.fq *.nodn.pe.fq
 
@@ -146,12 +146,13 @@ Cleaning up
 ===========
 
 At this point, you have quite a few intermediate files, all of
-which can be removed::
+which can be removed
+
+::
 
    rm *.part
    rm kak.group*.fq
-   rm all.fq
-   rm *.sweep3
+   rm *.sweep
    rm *.kh
    rm *.below.fq
 

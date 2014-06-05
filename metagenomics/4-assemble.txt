@@ -211,6 +211,8 @@ that is best:
  
     python /usr/local/share/khmer/sandbox/multi-rename.py testasm  best.fa > assembly.fa
 
+::
+
     fold assembly.fa > final-assembly.fa
    
 After this, 'final-assembly.fa' will contain the final set of contigs,
