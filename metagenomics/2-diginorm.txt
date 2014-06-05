@@ -7,15 +7,7 @@
    Make sure you're running in screen!
 
 Start with the QC'ed files from :doc:`1-quality` or copy them into a
-working directory; you should start this in /mnt/assembly.
-
-.. note
-
-   You can start from this point by taking the following files from
-   the data on snapshot snap-8f89b092
-
-      SRR606249.pe.qc.fq.gz
-      SRR606249.se.qc.fq.gz
+working directory; 
 
 .. shell start
 
@@ -23,11 +15,16 @@ Run a first round of digital normalization
 ==========================================
 
 Normalize everything to a coverage of 20, starting with the (more valuable)
-PE reads; keep pairs using '-p'::
+PE reads; keep pairs using '-p':
 
-    normalize-by-median.py -p -k 20 -C 20 -N 4 -x 3e8 --savetable normC20k20.kh *.pe.qc.fq.gz
+::
 
-...and continuing into the (less valuable but maybe still useful) SE reads::
+    cd /mnt/work
+    normalize-by-median.py -p -k 20 -C 20 -N 4 -x 3e8 --savetable normC20k20.kh  *.pe.qc.fq.gz
+
+and continuing into the (less valuable but maybe still useful) SE reads::
+
+::
 
     normalize-by-median.py -C 20 --loadtable normC20k20.kh --savetable normC20k20.kh *.se.qc.fq.gz
 
@@ -39,7 +36,9 @@ Error-trim your data
 
 Use 'filter-abund' to trim off any k-mers that are abundance-1 in
 high-coverage reads.  The -V option is used to make this work better
-for variable coverage data sets::
+for variable coverage data sets:
+
+::
 
    /usr/local/share/khmer/scripts/filter-abund.py -V normC20k20.kh *.keep
 
@@ -47,7 +46,9 @@ for variable coverage data sets::
 This produces .abundfilt files containing the trimmed sequences.
 
 The process of error trimming could have orphaned reads, so split the
-PE file into still-interleaved and non-interleaved reads::
+PE file into still-interleaved and non-interleaved reads:
+
+::
 
     for i in *.pe.qc.fq.gz.keep.abundfilt
     do
@@ -63,46 +64,59 @@ Normalize down to C=5
 =====================
 
 Now that we've eliminated many more erroneous k-mers, let's ditch some more
-high-coverage data.  First, normalize the paired-end reads::
+high-coverage data.  First, normalize the paired-end reads ::
 
-    /usr/local/share/khmer/scripts/normalize-by-median.py -C 5 -k 20 -N 4 -x 5e8 --savetable normC5k20.kh -p *.pe.qc.fq.gz.keep.abundfilt.pe
+::
+    
+   /usr/local/share/khmer/scripts/normalize-by-median.py -C 5 -k 20 -N 4 -x 5e8 --savetable normC5k20.kh -p *.pe.qc.fq.gz.keep.abundfilt.pe
 
-and then do the remaining single-ended reads::
+and then do the remaining single-ended reads:
 
-    /usr/local/share/khmer/scripts/normalize-by-median.py -C 5 --savetable normC5k20.kh --loadtable normC5k20.kh *.pe.qc.fq.gz.keep.abundfilt.se *.se.qc.fq.gz.keep.abundfilt
+::
+    
+   /usr/local/share/khmer/scripts/normalize-by-median.py -C 5 --savetable normC5k20.kh --loadtable normC5k20.kh *.pe.qc.fq.gz.keep.abundfilt.se *.se.qc.fq.gz.keep.abundfilt
 
 
 Compress and combine the files
 ==============================
 
 Now let's tidy things up.  Here are the paired files (kak =
-keep/abundfilt/keep)::
+keep/abundfilt/keep) 
 
-    gzip -9c SRR606249.pe.qc.fq.gz.keep.abundfilt.pe.keep > SRR606249.pe.kak.qc.fq.gz
+::
 
-and the single-ended files::
+    gzip -9c SRR606249-extract.pe.qc.fq.gz.keep.abundfilt.pe.keep > SRR606249-extract.pe.kak.qc.fq.gz
 
-    gzip -9c SRR606249.pe.qc.fq.gz.keep.abundfilt.se.keep SRR606249.se.qc.fq.gz.keep.abundfilt.keep > SRR606249.se.kak.qc.fq.gz
+and the single-ended files 
 
-You can now remove all of these various files::
+::
 
-   SRR606249.pe.qc.fq.gz.keep
-   SRR606249.pe.qc.fq.gz.keep.abundfilt
-   SRR606249.pe.qc.fq.gz.keep.abundfilt.pe
-   SRR606249.pe.qc.fq.gz.keep.abundfilt.pe.keep
-   SRR606249.pe.qc.fq.gz.keep.abundfilt.se
-   SRR606249.pe.qc.fq.gz.keep.abundfilt.se.keep
+    gzip -9c SRR606249-extract.pe.qc.fq.gz.keep.abundfilt.se.keep SRR606249-extract.se.qc.fq.gz.keep.abundfilt.keep > SRR606249-extract.se.kak.qc.fq.gz
 
-by typing::
+You can now remove all of these various files 
 
-   rm *.keep *.abundfilt *.pe *.se
+..::
+
+   SRR606249-extract.pe.qc.fq.gz.keep
+   SRR606249-extract.pe.qc.fq.gz.keep.abundfilt
+   SRR606249-extract.pe.qc.fq.gz.keep.abundfilt.pe
+   SRR606249-extract.pe.qc.fq.gz.keep.abundfilt.pe.keep
+   SRR606249-extract.pe.qc.fq.gz.keep.abundfilt.se
+   SRR606249-extract.pe.qc.fq.gz.keep.abundfilt.se.keep
+
+by typing
+ 
+::
+
+    rm *.keep *.abundfilt *.pe *.se
+
 
 If you are *not* doing partitioning (see :doc:`3-partition`), you may
-also want to remove the k-mer hash tables::
+also want to remove the k-mer hash tables ..::
 
    rm *.kh
 
-If you *are* running partitioning, you can remove the ``normC20k20.kh`` file::
+If you *are* running partitioning, you can remove the ``normC20k20.kh`` file..::
 
    rm normC20k20.kh
 
@@ -111,11 +125,13 @@ but you will need the ``normC5k20.kh`` file.
 Read stats
 ==========
 
-Try running::
+Try running
+
+::
 
    /usr/local/share/khmer/sandbox/readstats.py *.kak.qc.fq.gz *.?e.qc.fq.gz
 
-after a long wait, you'll see ::
+after a long wait, you'll see ..::
 
    ---------------
    861769600 bp / 8617696 seqs; 100.0 average length -- SRR606249.pe.qc.fq.gz

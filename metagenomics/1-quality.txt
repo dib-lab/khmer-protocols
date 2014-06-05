@@ -65,64 +65,55 @@ google to figure out what each package is and does if we don't discuss
 it below.  We're then unpacking it, sometimes compiling it (which we
 can discuss later), and then installing it for general use.
 
-create a working directory:
-===========================
 
-let's create a place to work :: 
+Find Your Data and Create Your Work Directory:
+===============================================
 
-   cd /mnt
-   mkdir work 
-   cd work 
+::
+   cd /mnt/ 
+   mkdir data
 
-Find Your Data:
-==============
-Download Podar dataset ::  
+::
 
-    cd /mnt/
-    mkdir data
     cd data
-    curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR606/SRR606249/SRR606249_1.fastq.gz
-    curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR606/SRR606249/SRR606249_2.fastq.gz
 
-Linking Your Data:
-==================
-Create your work directory and link your data to it ::
+::
+    
+    curl -O http://athyra.idyll.org/~mahmoud4/SRR606249-extract_1.fq
+    curl -O http://athyra.idyll.org/~mahmoud4/SRR606249-extract_2.fq
+
+
+#Create your work directory and link your data to it 
+
+::
  
     cd /mnt
+    mkdir work 
     cd work
-    ln -fs /mnt/data/SRR606249_1.fastq.gz
-    ln -fs /mnt/data/SRR606249_2.fastq.gz 
-
-Note This protocol takes many hours (days!) to run, so you might not want to run it on all the data the first time. If you’re using the example data, you can work with a subset of it by running this command instead of the ln -fs command above ::
-
-    for i in /data/*.fastq.gz
-    do
-        gunzip -c $i | head -1000000 | gzip > $(basename $i)
-    done
-
-
+    ln -fs /mnt/data/SRR606249-extract_1.fq
+    ln -fs /mnt/data/SRR606249-extract_2.fq 
 
 Trim Your Data:
 ===============
 
-# Trim your data
-
-:: 
-    
-    java -jar /usr/local/bin/trimmomatic-0.30.jar PE SRR606249_?.fastq.gz  s1_pe s1_se s2_pe s2_se ILLUMINACLIP:/usr/local/share/adapters/TruSeq3-PE.fa:2:30:10
-
-# Interleave the remaining paired-end files
 
 ::
 
-    /usr/local/share/khmer/scripts/interleave-reads.py s1_pe s2_pe | gzip -9c >  SRR606249.pe.fq.gz
+    java -jar /usr/local/bin/trimmomatic-0.30.jar PE SRR606249-extract_?.fq s1_pe s1_se s2_pe s2_se ILLUMINACLIP:/usr/local/share/adapters/TruSeq3-PE.fa:2:30:10
+
+
+#Interleave the remaining paired-end files
+
+::
+
+    /usr/local/share/khmer/scripts/interleave-reads.py s1_pe s2_pe | gzip -9c >  SRR606249-extract.pe.fq.gz
 
 # Combine the single-ended files
 
 
 ::
 
-    cat s1_se s2_se | gzip -9c > SRR606249.se.fq.gz
+    cat s1_se s2_se | gzip -9c > SRR606249-extract.se.fq.gz
 
 ::
 
@@ -167,11 +158,13 @@ Trim Your Data:
 
     chmod u-w *.qc.fq.gz
 
-Done!  Now you have two files: SRR606249.pe.qc.fq.gz, SRR606249.se.qc.fq.gz.
+Done!  Now you have two files: SRR606249-extract.pe.qc.fq.gz, SRR606249-extract.se.qc.fq.gz.
 
-The '.pe' file are interleaved paired-end; you can take a look at them like so __::
+The '.pe' file are interleaved paired-end; you can take a look at them like so 
 
-   gunzip -c SRR606249.pe.qc.fq.gz | head
+::
+
+   gunzip -c SRR606249-extract.pe.qc.fq.gz | head
 
 The '.se' files is a single-ended file, where the reads have been
 orphaned because we discarded stuff.

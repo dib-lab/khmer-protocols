@@ -29,9 +29,14 @@ well for big chunks of data, we might have remedies, so please
 meantime, here is a simple procedure.
 
 First, eliminate highly repetitive k-mers that could join multiple species
-and rename the files appropriately::
+and rename the files appropriately
 
+::
+ 
+   cd /mnt/work
    python /usr/local/share/khmer/sandbox/filter-below-abund.py normC5k20.kh *.fq.gz
+
+::
 
    for i in *.below
    do
@@ -41,26 +46,34 @@ and rename the files appropriately::
 .. note::
 
    You will need the normC5k20.kh file from :doc:`2-diginorm` for this
-   step.  If you don't have it, you can regenerate it like so::
+   step.  If you don't have it, you can regenerate it like so
+
+..
 
       /usr/local/share/khmer/scripts/load-into-counting.py -k 20 -N 4 -x 5e8 normC5k20.kh *.qc.fq.gz
 
-Next, run partitioning::
+Next, run partitioning
+
+::
 
    /usr/local/share/khmer/scripts/do-partition.py -k 32 -x 1e9 --threads 4 kak *.kak.qc.fq.gz.below.fq
    
 This should take about 15 minutes, and will produce '.part' files.  These
 are now FASTQ files that contain partition annotations.  For example, check
-out::
+out
 
-   head SRR606249.pe.kak.qc.fq.gz.below.fq.part
+::
+
+   head SRR606249-extract.pe.kak.qc.fq.gz.below.fq.part
 
 Extracting the partitions into groups
 =====================================
 
 Generally there are *lots* of partitions, and for convenience sake we
 group them into group files that can be assembled in small chunks.
-To do this, run::
+To do this, run
+
+::
 
    /usr/local/share/khmer/scripts/extract-partitions.py -X 100000 kak *.part
 
@@ -76,7 +89,9 @@ Separating groups into PE and SE
 ================================
 
 We still want to track paired and single-ended reads, so let's go ahead and
-extract the PE reads as before::
+extract the PE reads as before
+
+::
 
    for i in kak*.fq
    do
@@ -86,7 +101,9 @@ extract the PE reads as before::
       mv ${name}.fq.se ${name}.se.fq                                           
    done
 
-And, finally, compress them::
+And, finally, compress them
+
+::
 
    gzip *.pe.fq *.se.fq
 
@@ -101,11 +118,15 @@ abundances in there.
 So, can you recover the abundances?  Of course you can! 
 
 Run the command to pull all of the reads for each group from 'all.fq'
-into reinflated files::
- 
-python /usr/local/share/khmer/scripts/sweep-reads-buffered.py -x 3e8 --db kak.group*.fq --query SRR606249.?e.qc.fq.gZ
+into reinflated files
 
-Finally, split the resulting ``.sweep`` files into PE/SE::
+..
+ 
+   python /usr/local/share/khmer/scripts/sweep-files.py -x 3e8 --db kak.group*.fq --query SRR606249-extract.?e.qc.fq.gz
+
+Finally, split the resulting ``.sweep`` files into PE/SE
+
+..
 
    for i in kak*.sweep
    do
@@ -115,7 +136,9 @@ Finally, split the resulting ``.sweep`` files into PE/SE::
       mv $i.se ${name}.nodn.se.fq
    done
 
-and compress::
+and compress
+
+..
 
    gzip *.nodn.se.fq *.nodn.pe.fq
 
