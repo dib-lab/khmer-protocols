@@ -2,7 +2,7 @@
 The Kalamazoo Metagenome Assembly protocol
 ==========================================
 
-:author: Adina Howe and Titus Brown
+:author: Sherine Awad, Adina Howe and Titus Brown
 
 This is a protocol for assembling low- and medium-diversity
 metagenomes. Marine sediment and soil data sets may not be assemblable
