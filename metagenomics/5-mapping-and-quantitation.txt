@@ -4,7 +4,7 @@ Mapping and abundance quantitation
 .. shell start
 
 
-   Just do 
+Just do 
 
 ::
 
@@ -64,7 +64,7 @@ sequence in every file -- try
 
    head -4 metagenome.SRR606249-extract.fa
 
-and you should see:
+and you should see
 
    >testasm.1[cov=259]
    CAATTTATTTAAATTTTTCTACGATTCCAACA...

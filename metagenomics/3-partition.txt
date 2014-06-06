@@ -14,7 +14,7 @@
    Make sure you're running in screen!
 
 Start with the QC'ed files from :doc:`2-diginorm` or copy them into a
-working directory; you should be in /mnt/assembly below.
+working directory.
 
 .. shell start
 
@@ -35,9 +35,6 @@ and rename the files appropriately
  
    cd /mnt/work
    python /usr/local/share/khmer/sandbox/filter-below-abund.py normC5k20.kh *.fq.gz
-
-::
-
    for i in *.below
    do
       mv $i $i.fq
@@ -46,9 +43,7 @@ and rename the files appropriately
 .. note::
 
    You will need the normC5k20.kh file from :doc:`2-diginorm` for this
-   step.  If you don't have it, you can regenerate it like so
-
-..
+   step.  If you don't have it, you can regenerate it like so::
 
       /usr/local/share/khmer/scripts/load-into-counting.py -k 20 -N 4 -x 5e8 normC5k20.kh *.qc.fq.gz
 
@@ -117,9 +112,6 @@ abundances in there.
 
 So, can you recover the abundances?  Of course you can! 
 
-Run the command to pull all of the reads for each group from 'all.fq'
-into reinflated files
-
 ::
  
    python /usr/local/share/khmer/scripts/sweep-files.py -x 3e8 --db kak.group*.fq --query SRR606249-extract.?e.qc.fq.gz
@@ -130,10 +122,11 @@ Finally, split the resulting ``.sweep`` files into PE/SE
 
    for i in kak*.sweep
    do
-       /usr/local/share/khmer/scripts/extract-paired-reads.py $i
-       name=$(basename $i .fq.sweep)
-       mv $i.pe ${name}.nodn.pe.fq
-       mv $i.se ${name}.nodn.se.fq
+       sweep=$(basename $i .fq)
+       mv $i $sweep.fq 
+       /usr/local/share/khmer/scripts/extract-paired-reads.py kak*.sweep.fq 
+       mv $sweep.fq.pe ${sweep}.nodn.pe.fq
+       mv $sweep.fq.se ${sweep}.nodn.se.fq
    done
 
 and compress
@@ -152,7 +145,7 @@ which can be removed
 
    rm *.part
    rm kak.group*.fq
-   rm *.sweep
+   rm *.sweep.*
    rm *.kh
    rm *.below.fq
 

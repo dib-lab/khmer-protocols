@@ -15,18 +15,18 @@ Run a first round of digital normalization
 ==========================================
 
 Normalize everything to a coverage of 20, starting with the (more valuable)
-PE reads; keep pairs using '-p':
+PE reads; keep pairs using '-p'
 
 ::
 
-    cd /mnt/work
-    normalize-by-median.py -p -k 20 -C 20 -N 4 -x 3e8 --savetable normC20k20.kh  *.pe.qc.fq.gz
+   cd /mnt/work
+   normalize-by-median.py -p -k 20 -C 20 -N 4 -x 3e8 --savetable normC20k20.kh  *.pe.qc.fq.gz
 
-and continuing into the (less valuable but maybe still useful) SE reads::
+and continuing into the (less valuable but maybe still useful) SE reads
 
 ::
 
-    normalize-by-median.py -C 20 --loadtable normC20k20.kh --savetable normC20k20.kh *.se.qc.fq.gz
+   normalize-by-median.py -C 20 --loadtable normC20k20.kh --savetable normC20k20.kh *.se.qc.fq.gz
 
 This produces a set of '.keep' files, as well as a normC20k20.kh
 database file.
@@ -46,13 +46,13 @@ for variable coverage data sets:
 This produces .abundfilt files containing the trimmed sequences.
 
 The process of error trimming could have orphaned reads, so split the
-PE file into still-interleaved and non-interleaved reads:
+PE file into still-interleaved and non-interleaved reads
 
 ::
 
     for i in *.pe.qc.fq.gz.keep.abundfilt
     do
-        /usr/local/share/khmer/scripts/extract-paired-reads.py $i
+       /usr/local/share/khmer/scripts/extract-paired-reads.py $i
     done
 
 This leaves you with PE files (.pe.qc.fq.gz.keep.abundfilt.pe) and
@@ -64,17 +64,17 @@ Normalize down to C=5
 =====================
 
 Now that we've eliminated many more erroneous k-mers, let's ditch some more
-high-coverage data.  First, normalize the paired-end reads ::
+high-coverage data.  First, normalize the paired-end reads 
 
 ::
     
-   /usr/local/share/khmer/scripts/normalize-by-median.py -C 5 -k 20 -N 4 -x 5e8 --savetable normC5k20.kh -p *.pe.qc.fq.gz.keep.abundfilt.pe
+   normalize-by-median.py -C 5 -k 20 -N 4 -x 5e8 --savetable normC5k20.kh -p *.pe.qc.fq.gz.keep.abundfilt.pe
 
-and then do the remaining single-ended reads:
+and then do the remaining single-ended reads
 
 ::
     
-   /usr/local/share/khmer/scripts/normalize-by-median.py -C 5 --savetable normC5k20.kh --loadtable normC5k20.kh *.pe.qc.fq.gz.keep.abundfilt.se *.se.qc.fq.gz.keep.abundfilt
+   normalize-by-median.py -C 5 --savetable normC5k20.kh --loadtable normC5k20.kh *.pe.qc.fq.gz.keep.abundfilt.se *.se.qc.fq.gz.keep.abundfilt
 
 
 Compress and combine the files
@@ -93,9 +93,7 @@ and the single-ended files
 
     gzip -9c SRR606249-extract.pe.qc.fq.gz.keep.abundfilt.se.keep SRR606249-extract.se.qc.fq.gz.keep.abundfilt.keep > SRR606249-extract.se.kak.qc.fq.gz
 
-You can now remove all of these various files 
-
-..::
+You can now remove all of these various files:: 
 
    SRR606249-extract.pe.qc.fq.gz.keep
    SRR606249-extract.pe.qc.fq.gz.keep.abundfilt
@@ -112,11 +110,11 @@ by typing
 
 
 If you are *not* doing partitioning (see :doc:`3-partition`), you may
-also want to remove the k-mer hash tables ..::
+also want to remove the k-mer hash tables::
 
    rm *.kh
 
-If you *are* running partitioning, you can remove the ``normC20k20.kh`` file..::
+If you *are* running partitioning, you can remove the ``normC20k20.kh`` file::
 
    rm normC20k20.kh
 
@@ -131,7 +129,7 @@ Try running
 
    /usr/local/share/khmer/sandbox/readstats.py *.kak.qc.fq.gz *.?e.qc.fq.gz
 
-after a long wait, you'll see ..::
+after a long wait, you'll see::
 
    ---------------
    861769600 bp / 8617696 seqs; 100.0 average length -- SRR606249.pe.qc.fq.gz

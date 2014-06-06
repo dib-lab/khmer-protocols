@@ -33,11 +33,11 @@ And also `IDBA <https://code.google.com/p/hku-idba/>`__::
    ./configure && make
    cp bin/idba_ud /usr/local/bin
 
-And also `SPADes <http://bioinf.spbau.ru/spades/>`__.  First__::
+And also `SPADes <http://bioinf.spbau.ru/spades/>`__.  First::
 
    apt-get -y install cmake
 
-then__::
+then::
 
    wget http://spades.bioinf.spbau.ru/release2.5.1/SPAdes-2.5.1.tar.gz
    tar -xzf SPAdes-2.5.1.tar.gz
@@ -150,7 +150,7 @@ And also set up a bunch of SPADes runs
 Running the assemblies
 ----------------------
 
-Now, run them all in parallel __:: 
+Now, run them all in parallel:: 
 
    parallel -j 4 < do-assembly.sh
 
@@ -205,7 +205,7 @@ Next, for each partition of input reads, let's pick one assembly to
 represent the partition.  (An alternative would be to use something like
 minimus2 to merge assemblies, but we think assembling assemblies is a
 bad idea.)  To pick the best assembly, we're going to choose the one
-that is best: 
+that is best 
 
 ::
  
