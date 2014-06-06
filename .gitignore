@@ -39,3 +39,4 @@ Thumbs.db
 _build
 *~
 /.project
+*.sh
