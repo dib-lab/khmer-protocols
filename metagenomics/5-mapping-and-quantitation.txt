@@ -15,8 +15,8 @@ Just do
 Let's do some simple mapping to do abundance estimation in final assembly.
 
 
-Bowtie mapping
-==============
+Bowtie Mapping
+---------------
 
 Let's start by installing `bowtie <http://bowtie-bio.sourceforge.net/index.shtml>`__::
 
@@ -37,7 +37,7 @@ and then do the mapping
 
 ::
 
-   gunzip -c SRR606249-extract.pe.qc.fq.gz | bowtie -p 4 -q metagenome - > SRR606249-extract.map
+   gunzip -c *.pe.qc.fq.gz | bowtie -p 4 -q metagenome - > metgenome.map
 
 At the moment, there seems to be no good way to do automated differential
 analysis of two samples, so we'll just show you how to annotate the
@@ -45,16 +45,16 @@ assembled sequences with the mapping abundance.  This will allow MG-RAST
 to properly weight annotation calls.
 
 To do this, we will need to make two copies of the annotated assembly
-with the first (SRR606249) abundances.
+with the first abundances.
 
 
 ::
 
-   python /usr/local/share/khmer/sandbox/make-coverage.py metagenome.fa SRR606249-extract.map
+   python /usr/local/share/khmer/sandbox/make-coverage.py metagenome.fa metagenome.map
 
 ::
 
-   mv metagenome.fa.cov metagenome.SRR606249-extract.fa
+   mv metagenome.fa.cov metagenome.metagenome.fa
 
 
 What you will see now is that there's a [cov] annotation for each
@@ -62,7 +62,7 @@ sequence in every file -- try
 
 ::
 
-   head -4 metagenome.SRR606249-extract.fa
+   head -4 metagenome.metagenome.fa
 
 and you should see
 
