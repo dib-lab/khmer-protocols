@@ -11,8 +11,8 @@ working directory;
 
 .. shell start
 
-Run a first round of digital normalization
-==========================================
+Run a First Round of Digital Normalization
+------------------------------------------
 
 Normalize everything to a coverage of 20, starting with the (more valuable)
 PE reads; keep pairs using '-p'
@@ -31,8 +31,8 @@ and continuing into the (less valuable but maybe still useful) SE reads
 This produces a set of '.keep' files, as well as a normC20k20.kh
 database file.
 
-Error-trim your data
-====================
+Error-trim Our Data
+--------------------
 
 Use 'filter-abund' to trim off any k-mers that are abundance-1 in
 high-coverage reads.  The -V option is used to make this work better
@@ -60,8 +60,8 @@ two sets of SE files (.se.qc.fq.gz.keep.abundfilt and
 .pe.qc.fq.gz.keep.abundfilt.se).  (Yes, the naming scheme does make
 sense.  Trust me.)
 
-Normalize down to C=5
-=====================
+Normalize Down to C=5
+---------------------
 
 Now that we've eliminated many more erroneous k-mers, let's ditch some more
 high-coverage data.  First, normalize the paired-end reads 
@@ -77,30 +77,30 @@ and then do the remaining single-ended reads
    normalize-by-median.py -C 5 --savetable normC5k20.kh --loadtable normC5k20.kh *.pe.qc.fq.gz.keep.abundfilt.se *.se.qc.fq.gz.keep.abundfilt
 
 
-Compress and combine the files
-==============================
+Compress and Combine the Files
+------------------------------
 
 Now let's tidy things up.  Here are the paired files (kak =
 keep/abundfilt/keep) 
 
 ::
 
-    gzip -9c SRR606249-extract.pe.qc.fq.gz.keep.abundfilt.pe.keep > SRR606249-extract.pe.kak.qc.fq.gz
+    gzip -9c *.pe.qc.fq.gz.keep.abundfilt.pe.keep > *.pe.kak.qc.fq.gz
 
 and the single-ended files 
 
 ::
 
-    gzip -9c SRR606249-extract.pe.qc.fq.gz.keep.abundfilt.se.keep SRR606249-extract.se.qc.fq.gz.keep.abundfilt.keep > SRR606249-extract.se.kak.qc.fq.gz
+    gzip -9c *.pe.qc.fq.gz.keep.abundfilt.se.keep *.se.qc.fq.gz.keep.abundfilt.keep > *.se.kak.qc.fq.gz
 
 You can now remove all of these various files:: 
 
-   SRR606249-extract.pe.qc.fq.gz.keep
-   SRR606249-extract.pe.qc.fq.gz.keep.abundfilt
-   SRR606249-extract.pe.qc.fq.gz.keep.abundfilt.pe
-   SRR606249-extract.pe.qc.fq.gz.keep.abundfilt.pe.keep
-   SRR606249-extract.pe.qc.fq.gz.keep.abundfilt.se
-   SRR606249-extract.pe.qc.fq.gz.keep.abundfilt.se.keep
+   *.pe.qc.fq.gz.keep
+   *.pe.qc.fq.gz.keep.abundfilt
+   *.pe.qc.fq.gz.keep.abundfilt.pe
+   *.pe.qc.fq.gz.keep.abundfilt.pe.keep
+   *.pe.qc.fq.gz.keep.abundfilt.se
+   *.pe.qc.fq.gz.keep.abundfilt.se.keep
 
 by typing
  
@@ -120,8 +120,8 @@ If you *are* running partitioning, you can remove the ``normC20k20.kh`` file::
 
 but you will need the ``normC5k20.kh`` file.
 
-Read stats
-==========
+Read Stats
+----------
 
 Try running
 

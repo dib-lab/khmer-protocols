@@ -18,8 +18,8 @@ working directory.
 
 .. shell start
 
-Simple partitioning
-===================
+Simple Partitioning
+-------------------
 
 Partitioning is a rather complex process -- nowhere near as nice and
 simple as digital normalization.  However, we do have a simple script
@@ -34,7 +34,7 @@ and rename the files appropriately
 ::
  
    cd /mnt/work
-   python /usr/local/share/khmer/sandbox/filter-below-abund.py normC5k20.kh *.fq.gz
+   python /usr/local/share/khmer/sandbox/filter-below-abund.py normC5k20.kh *.kak.*.fq.gz 
    for i in *.below
    do
       mv $i $i.fq
@@ -55,14 +55,11 @@ Next, run partitioning
    
 This should take about 15 minutes, and will produce '.part' files.  These
 are now FASTQ files that contain partition annotations.  For example, check
-out
+out::
+   head *.pe.kak.qc.fq.gz.below.fq.part
 
-::
-
-   head SRR606249-extract.pe.kak.qc.fq.gz.below.fq.part
-
-Extracting the partitions into groups
-=====================================
+Extracting the Partitions Into Groups
+--------------------------------------
 
 Generally there are *lots* of partitions, and for convenience sake we
 group them into group files that can be assembled in small chunks.
@@ -80,8 +77,8 @@ Here, the '-X' sets the number of sequences stuck into a group file.
 By default the -X parameter is 1 million, which would put all of the
 sequences into a single file for this data set.
 
-Separating groups into PE and SE
-================================
+Separating Groups Into PE and SE
+--------------------------------
 
 We still want to track paired and single-ended reads, so let's go ahead and
 extract the PE reads as before
@@ -102,8 +99,8 @@ And, finally, compress them
 
    gzip *.pe.fq *.se.fq
 
-Reinflating partitions (optional)
-=================================
+Reinflating Partitions (Optional)
+---------------------------------
 
 At this point it's worth noting that the partitions are *normalized*,
 that is, diginormed.  That makes it hard to use them for abundance
@@ -114,7 +111,7 @@ So, can you recover the abundances?  Of course you can!
 
 ::
  
-   python /usr/local/share/khmer/scripts/sweep-files.py -x 3e8 --db kak.group*.fq --query SRR606249-extract.?e.qc.fq.gz
+   python /usr/local/share/khmer/scripts/sweep-files.py -x 3e8 --db kak.group*.fq --query *.?e.qc.fq.gz
 
 Finally, split the resulting ``.sweep`` files into PE/SE
 
@@ -135,8 +132,8 @@ and compress
 
    gzip *.nodn.se.fq *.nodn.pe.fq
 
-Cleaning up
-===========
+Cleaning Up
+------------
 
 At this point, you have quite a few intermediate files, all of
 which can be removed

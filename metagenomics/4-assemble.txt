@@ -9,8 +9,8 @@ Let's start with some collection of group files in ``/mnt/assembly``.
 
 .. shell start
 
-Install some assemblers
-=======================
+Install Some Assemblers
+------------------------
 
 Let's try assembling the sequences with three different assemblers: Velvet,
 IDBA, and SPADes.
@@ -44,8 +44,8 @@ then::
    cd SPAdes-2.5.1
    PREFIX=/usr/local ./spades_compile.sh
 
-Preparing the data
-==================
+Preparing the Data
+-------------------
 
 Each assembler takes in data in a slightly different format.  Velvet
 is the most flexible: it can take in paired-end and orphaned reads,
@@ -73,8 +73,8 @@ and convert them all into FASTA (for IDBA)
       python /usr/local/share/khmer/sandbox/fastq-to-fasta.py $i > $name
    done
 
-Setting up the assemblies
-=========================
+Setting Up the Assemblies
+-------------------------
 
 We're going to set up a bunch of assemblies in a script called
 'do-assembly.sh'.  This will let us execute them in parallel if we
@@ -95,8 +95,8 @@ And install `GNU parallel <http://www.gnu.org/software/parallel/>`__::
    ./configure && make && make install
    cd /mnt/work/
 
-Setting up Velvet runs
-----------------------
+Setting Up Velvet Runs
+-----------------------
 
 I personally really like the Velvet assembler as a first cut
 assembler, since it yields pretty good results in a wide variety of
@@ -121,7 +121,7 @@ So, let's just do that
         done
     done >> do-assembly.sh
 
-Setting up IDBA runs
+Setting Up IDBA Runs
 --------------------
 
 Set up a bunch of IDBA runs
@@ -134,7 +134,7 @@ Set up a bunch of IDBA runs
       echo "idba_ud --pre_correction -r $i -o $name.idba.d"
    done >> do-assembly.sh
 
-Setting up SPADes runs
+Setting Up SPADes runs
 ----------------------
 
 And also set up a bunch of SPADes runs
@@ -147,7 +147,7 @@ And also set up a bunch of SPADes runs
       echo "spades.py --sc --pe1-12 $name.pe.fq.gz -o $name.spades.d"
    done >> do-assembly.sh
 
-Running the assemblies
+Running the Assemblies
 ----------------------
 
 Now, run them all in parallel:: 
@@ -160,8 +160,8 @@ or, if you're memory limited, one by one
 
    bash do-assembly.sh
 
-Getting stats for the assemblies
-================================
+Getting Stats For the Assemblies
+--------------------------------
 
 To get some basic stats for the assemblies, run
 
@@ -198,8 +198,8 @@ This will yield something like:
    34      660289  83231   idba.dn.d/scaffold.fa
    45      666147  41120   idba.nodn.d/scaffold.fa
 
-Generating a final set of contigs
-=================================
+Generating a Final Set of Contigs
+----------------------------------
 
 Next, for each partition of input reads, let's pick one assembly to
 represent the partition.  (An alternative would be to use something like
