@@ -177,7 +177,7 @@ htmlhelp_basename = 'labibidoc'
 html_context = {
    "google_analytics_id" : 'UA-43434100-1',
    "disqus_shortname" : 'khmer-protocols',
-   "github_base_account" : 'ged-lab',
+#   "github_base_account" : 'ged-lab',
    "github_project" : 'khmer-protocols',
 }
 
