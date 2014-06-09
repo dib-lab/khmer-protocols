@@ -22,7 +22,7 @@ software and reboot the machine::
 .. shell start
 
 Install software
-================
+----------------
 
 Install `khmer <http://khmer.readthedocs.org/>`__::
 
@@ -65,64 +65,87 @@ google to figure out what each package is and does if we don't discuss
 it below.  We're then unpacking it, sometimes compiling it (which we
 can discuss later), and then installing it for general use.
 
-create a working directory:
-===========================
 
-let's create a place to work :: 
+Find Your Data
+--------------
 
-   cd /mnt
-   mkdir work 
-   cd work 
-
-Find Your Data:
-==============
-Download Podar dataset ::  
-
-    cd /mnt/
+::
+   
+    cd /mnt/ 
     mkdir data
     cd data
-    curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR606/SRR606249/SRR606249_1.fastq.gz
-    curl -O ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR606/SRR606249/SRR606249_2.fastq.gz
+    curl -O http://athyra.idyll.org/~mahmoud4/R1-extract.fastq.gz
+    curl -O http://athyra.idyll.org/~mahmoud4/R2-extract.fastq.gz
 
-Linking Your Data:
-==================
-Create your work directory and link your data to it ::
+
+Create Your Work Directory and Link Your Data 
+---------------------------------------------
+
+::
  
     cd /mnt
+    mkdir work 
     cd work
-    ln -fs /mnt/data/SRR606249_1.fastq.gz
-    ln -fs /mnt/data/SRR606249_2.fastq.gz 
+    ln -fs /mnt/data/*.fastq.gz .
+ 
+Trim Your Data
+---------------
 
-Note This protocol takes many hours (days!) to run, so you might not want to run it on all the data the first time. If you’re using the example data, you can work with a subset of it by running this command instead of the ln -fs command above ::
+#Run Trimmomatic::
 
-    for i in /data/*.fastq.gz
-    do
-        gunzip -c $i | head -1000000 | gzip > $(basename $i)
-    done
+java -jar /usr/local/bin/trimmomatic-0.30.jar PE <R1 FILE> <R2 FILE> s1_pe s1_se s2_pe s2_se ILLUMINACLIP:/usr/local/share/adapters/TruSeq3-PE.fa:2:30:10
+
+# interleave the remaining paired-end files::
+interleave-reads.py s1_pe s2_pe | gzip -9c > ../<SAMPLE NAME>.pe.fq.gz
+
+# combine the single-ended files::
+cat s1_se s2_se | gzip -9c > ../<SAMPLE NAME>.se.fq.gz
 
 
+To get a basic idea of what’s going on, please read the ‘#’ comments above, but, briefly, this set of commands:
 
-Trim Your Data:
-===============
+* creates a temporary directory, ‘trim/’
+* runs ‘Trimmomatic’ in that directory to trim off the adapters, and then puts remaining pairs (most of them!) in s1_pe and s2_pe, and any orphaned singletons in s1_se and s2_se.
+* interleaves the paired ends and puts them back in the working directory
+* combines the orphaned reads and puts them back in the working directory
+At the end of this you will have new files ending in ‘.pe.fq.gz’ and ‘.se.fq.gz’, representing the paired and orphaned quality trimmed reads, respectively.
 
-# Trim your data
+Automating Things abit
+-----------------------
 
-:: 
-    
-    java -jar /usr/local/bin/trimmomatic-0.30.jar PE SRR606249_?.fastq.gz  s1_pe s1_se s2_pe s2_se ILLUMINACLIP:/usr/local/share/adapters/TruSeq3-PE.fa:2:30:10
+OK, once you’ve done this once or twice, it gets kind of tedious, doesn’t it? I’ve written a script to write these commands out automatically. Run it and then look at ‘trim.sh’ using the ‘more’ command –
 
-# Interleave the remaining paired-end files
+::
+    cd /mnt/work
+    python /usr/local/share/khmer/sandbox/write-trimmomatic.py > trim.sh 
+    more trim.sh
+
+If it looks like it contains the right commands, you can run it by doing 
 
 ::
 
-    /usr/local/share/khmer/scripts/interleave-reads.py s1_pe s2_pe | gzip -9c >  SRR606249.pe.fq.gz
+    bash trim.sh
 
-# Combine the single-ended files
+..:: Note This is a prime example of scripting to make your life much easier and less error prone. Take a look at this file sometime – ‘more /usr/local/share/khmer/sandbox/write-trimmomatic.py’ – to get some idea of how this works.
+
+Quality Trim Each Pair of Files
+--------------------------------
+
+After you run this, you should have a bunch of ‘.pe.fq.gz’ files and a bunch of ‘.se.fq.gz’ files. The former are files that contain paired, interleaved sequences; the latter contain single-ended, non-interleaved sequences.
+
+Next, for each of these files, run::
+
+gunzip -c <filename> | fastq_quality_filter -Q33 -q 30 -p 50 | gzip -9c > <filename>.qc.fq.gz 
+
+This uncompresses each file, removes poor-quality sequences, and then recompresses it. Note that (following Short-read quality evaluation) you can also trim to a specific length by putting in a ‘fastx_trimmer -Q33 -l 70 |‘ into the mix.
+
+If fastq_quality_filter complains about invalid quality scores, try removing the -Q33 in the command; Illumina has blessed us with multiple quality score encodings.
+
+Automating This Step
+---------------------
 
 
-::
-
-    cat s1_se s2_se | gzip -9c > SRR606249.se.fq.gz
+This step can be automated with a ‘for’ loop at the shell prompt. Try :
 
 ::
 
@@ -132,6 +155,21 @@ Trim Your Data:
         newfile="$(basename $i .fq.gz)"
         gunzip -c $i | fastq_quality_filter -Q33 -q 30 -p 50 | gzip -9c > "${newfile}.qc.fq.gz"
     done
+What this loop does is:
+
+* for every file ending in pe.fq.gz and se.fq.gz,
+* print out a message with the filename,
+* construct a name ‘newfile’ that omits the trailing .fq.gz
+* uncompresses the original file, passes it through fastq, recompresses it, and saves it as ‘newfile’.qc.fq.gz
+
+Extracting Paired Ends From The Interleaved Files
+--------------------------------------------------
+
+The fastx utilities that we’re using to do quality trimming aren’t paired-end aware; they’re removing individual sequences. Because the pe files are interleaved, this means that there may now be some orphaned sequences in there. Downstream, we will want to pay special attention to the remaining paired sequences, so we want to separate out the pe and se files. How do we go about that? Another script, of course!
+
+The khmer script ‘extract-paired-reads.py’ does exactly that. You run it on an interleaved file that may have some orphans, and it produces .pe and .se files afterwards, containing pairs and orphans respectively.
+
+To run it on all of the pe qc files, do:
 
 ::
 
@@ -140,15 +178,21 @@ Trim Your Data:
         extract-paired-reads.py $i
     done
 
-::
+Renaming Files
+---------------
+I’m a fan of keeping the files named somewhat sensibly, and keeping them compressed. Let’s do some mass renaming:
 
+::
+    
     for i in *.pe.qc.fq.gz.pe 
     do
         newfile="$(basename $i .pe.qc.fq.gz.pe).pe.qc.fq"
-        rm *.pe.fq.gz 
+        rm *.pe.qc.fq.gz
         mv $i $newfile
         gzip $newfile
     done
+
+and also some mass combining:
 
 ::
 
@@ -161,17 +205,16 @@ Trim Your Data:
         rm $i combine
     done
 
-# Make it hard to delete the files you just created
+then make it hard to delete the files you just created
 
 ::
 
     chmod u-w *.qc.fq.gz
 
-Done!  Now you have two files: SRR606249.pe.qc.fq.gz, SRR606249.se.qc.fq.gz.
+Done!  Now you have two files: SRR606249-extract.pe.qc.fq.gz, SRR606249-extract.se.qc.fq.gz.
 
-The '.pe' file are interleaved paired-end; you can take a look at them like so __::
+The '.pe' file are interleaved paired-end; you can take a look at them like so 
 
-   gunzip -c SRR606249.pe.qc.fq.gz | head
 
 The '.se' files is a single-ended file, where the reads have been
 orphaned because we discarded stuff.

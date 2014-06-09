@@ -1,29 +1,16 @@
+Mapping and abundance quantitation
 =====================================
-5. Mapping and abundance quantitation
-=====================================
-
-.. note::
-
-   You can start from this point by taking the following files from
-   the data on snapshot snap-8f89b092::
-
-      SRR606249.pe.qc.fq.gz
-      final-assembly.fa
 
 .. shell start
 
 
-   Just do::
-
-      cd /mnt/work/
-      cp final-assembly.fa metagenome.fa 
 
 
 Let's do some simple mapping to do abundance estimation in final assembly.
 
 
-Bowtie mapping
-==============
+Bowtie Mapping
+---------------
 
 Let's start by installing `bowtie <http://bowtie-bio.sourceforge.net/index.shtml>`__::
 
@@ -33,14 +20,18 @@ Let's start by installing `bowtie <http://bowtie-bio.sourceforge.net/index.shtml
    cd bowtie-0.12.7
    cp bowtie bowtie-build bowtie-inspect /usr/local/bin
 
-Next, build a bowtie reference from the assembly::
+Next, build a bowtie reference from the assembly 
+
+::
 
    cd /mnt/work/
-   bowtie-build metagenome.fa metagenome
+   bowtie-build final-assembly.fa metagenome
 
-and then do the mapping::
+and then do the mapping
 
-   gunzip -c SRR606249.pe.qc.fq.gz | bowtie -p 4 -q metagenome - > SRR606249.map
+::
+
+   gunzip -c *.pe.qc.fq.gz | bowtie -p 4 -q metagenome - > metagenome.map
 
 At the moment, there seems to be no good way to do automated differential
 analysis of two samples, so we'll just show you how to annotate the
@@ -48,19 +39,26 @@ assembled sequences with the mapping abundance.  This will allow MG-RAST
 to properly weight annotation calls.
 
 To do this, we will need to make two copies of the annotated assembly
-with the first (SRR606249) abundances. ::
+with the first abundances.
 
 
-   python /usr/local/share/khmer/sandbox/make-coverage.py metagenome.fa SRR606249.map
-   mv metagenome.fa.cov metagenome.SRR606249.fa
+::
+
+   python /usr/local/share/khmer/sandbox/make-coverage.py final-assembly.fa metagenome.map
+
+::
+
+   mv final-assembly.fa.cov metagenome.fa
 
 
 What you will see now is that there's a [cov] annotation for each
-sequence in every file -- try::
+sequence in every file -- try 
 
-   head -4 metagenome.SRR606249.fa
+::
 
-and you should see::
+   head -4 metagenome.fa
+
+and you should see
 
    >testasm.1[cov=259]
    CAATTTATTTAAATTTTTCTACGATTCCAACA...
@@ -72,3 +70,4 @@ abundance-annotated assembly, although there's no good way to do
 comparative analysis yet.
 
 Next: :doc:`6-annotating`
+
