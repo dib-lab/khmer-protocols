@@ -115,6 +115,7 @@ Automating Things abit
 OK, once you’ve done this once or twice, it gets kind of tedious, doesn’t it? I’ve written a script to write these commands out automatically. Run it and then look at ‘trim.sh’ using the ‘more’ command –
 
 ::
+
     cd /mnt/work
     python /usr/local/share/khmer/sandbox/write-trimmomatic.py > trim.sh 
     more trim.sh
@@ -125,7 +126,7 @@ If it looks like it contains the right commands, you can run it by doing
 
     bash trim.sh
 
-..:: Note This is a prime example of scripting to make your life much easier and less error prone. Take a look at this file sometime – ‘more /usr/local/share/khmer/sandbox/write-trimmomatic.py’ – to get some idea of how this works.
+.. note:: This is a prime example of scripting to make your life much easier and less error prone. Take a look at this file sometime – ‘more /usr/local/share/khmer/sandbox/write-trimmomatic.py’ – to get some idea of how this works.
 
 Quality Trim Each Pair of Files
 --------------------------------
