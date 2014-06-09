@@ -85,13 +85,13 @@ keep/abundfilt/keep)
 
 ::
 
-    gzip -9c *.pe.qc.fq.gz.keep.abundfilt.pe.keep > *.pe.kak.qc.fq.gz
+    gzip -9c *.pe.qc.fq.gz.keep.abundfilt.pe.keep > extract.pe.kak.qc.fq.gz
 
 and the single-ended files 
 
 ::
 
-    gzip -9c *.pe.qc.fq.gz.keep.abundfilt.se.keep *.se.qc.fq.gz.keep.abundfilt.keep > *.se.kak.qc.fq.gz
+    gzip -9c *.pe.qc.fq.gz.keep.abundfilt.se.keep *.se.qc.fq.gz.keep.abundfilt.keep > extract.se.kak.qc.fq.gz
 
 You can now remove all of these various files:: 
 
