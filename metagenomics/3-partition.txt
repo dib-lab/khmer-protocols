@@ -2,14 +2,14 @@
 3. Partitioning
 ===============
 
-.. note
+.. note::
 
    Partitioning may not be needed or useful for data sets with low or
    medium richness.  You can proceed to :doc:`4-assemble` and use the
    pe.qc.fq.gz and se.fq.fq.gz files from :doc:`2-diginorm` in place of
    XXX. @@
 
-.. note
+.. note::
 
    Make sure you're running in screen!
 

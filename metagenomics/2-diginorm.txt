@@ -2,7 +2,7 @@
 2. Running digital normalization
 ================================
 
-.. note
+.. note::
 
    Make sure you're running in screen!
 
