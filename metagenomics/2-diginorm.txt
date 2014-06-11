@@ -40,7 +40,7 @@ for variable coverage data sets:
 
 ::
 
-   /usr/local/share/khmer/scripts/filter-abund.py -V normC20k20.kh *.keep
+   filter-abund.py -V normC20k20.kh *.keep
 
 
 This produces .abundfilt files containing the trimmed sequences.
@@ -52,7 +52,7 @@ PE file into still-interleaved and non-interleaved reads
 
     for i in *.pe.qc.fq.gz.keep.abundfilt
     do
-       /usr/local/share/khmer/scripts/extract-paired-reads.py $i
+       extract-paired-reads.py $i
     done
 
 This leaves you with PE files (.pe.qc.fq.gz.keep.abundfilt.pe) and
@@ -84,14 +84,25 @@ Now let's tidy things up.  Here are the paired files (kak =
 keep/abundfilt/keep) 
 
 ::
+   
+    for i in *.abundfilt.pe
+    do
+        newfile=$(basename $i .pe.qc.fq.gz.keep.abundfilt.pe)
+        echo newfile is $newfile
+        gzip -c $i > $newfile.pe.kak.qc.fq.gz
+    done
 
-    gzip -9c *.pe.qc.fq.gz.keep.abundfilt.pe.keep > *.pe.kak.qc.fq.gz
-
-and the single-ended files 
+and for the single-ended files 
 
 ::
 
-    gzip -9c *.pe.qc.fq.gz.keep.abundfilt.se.keep *.se.qc.fq.gz.keep.abundfilt.keep > *.se.kak.qc.fq.gz
+    for i in *.se.qc.fq.gz.keep.abundfilt
+    do
+        pe_orphans=$(basename $i .se.qc.fq.gz.keep.abundfilt).pe.qc.fq.gz.keep.abundfilt.se
+        newfile=$(basename $i .se.qc.fq.gz.keep.abundfilt).se.kak.qc.fq.gz
+       cat $i $pe_orphans | gzip -c > $newfile
+   done
+
 
 You can now remove all of these various files:: 
 
