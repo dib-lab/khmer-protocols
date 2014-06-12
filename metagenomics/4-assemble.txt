@@ -72,7 +72,7 @@ and convert them all into FASTA (for IDBA)
 
 ::
 
-   for i in *.pe.fq
+   for i in *kak*.pe.fq
    do
       name=$(basename $i .fq).fa
       python /usr/local/share/khmer/sandbox/fastq-to-fasta.py $i > $name
