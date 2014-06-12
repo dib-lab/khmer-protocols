@@ -2,14 +2,14 @@
 3. Partitioning
 ===============
 
-.. note
+.. note::
 
    Partitioning may not be needed or useful for data sets with low or
    medium richness.  You can proceed to :doc:`4-assemble` and use the
    pe.qc.fq.gz and se.fq.fq.gz files from :doc:`2-diginorm` in place of
    XXX. @@
 
-.. note
+.. note::
 
    Make sure you're running in screen!
 
@@ -110,18 +110,18 @@ abundances in there.
 So, can you recover the abundances?  Of course you can! 
 
 ::
- 
-   python /usr/local/share/khmer/scripts/sweep-files.py -x 3e8 --db kak.group*.fq --query *.?e.qc.fq.gz
+   
+    python /usr/local/share/khmer/scripts/sweep-files.py -x 3e8 --db kak.group*.fq --query *.?e.qc.fq.gz
 
 Finally, split the resulting ``.sweep`` files into PE/SE
 
 ::
 
-   for i in kak*.sweep
+   for i in *kak*.sweep
    do
        sweep=$(basename $i .fq)
        mv $i $sweep.fq 
-       /usr/local/share/khmer/scripts/extract-paired-reads.py kak*.sweep.fq 
+       /usr/local/share/khmer/scripts/extract-paired-reads.py *kak*.sweep.fq 
        mv $sweep.fq.pe ${sweep}.nodn.pe.fq
        mv $sweep.fq.se ${sweep}.nodn.se.fq
    done
@@ -142,7 +142,6 @@ which can be removed
 
    rm *.part
    rm kak.group*.fq
-   rm *.sweep.*
    rm *.kh
    rm *.below.fq
 

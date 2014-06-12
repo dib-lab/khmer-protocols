@@ -4,14 +4,18 @@
 Boot up an m1.xlarge machine from Amazon Web Services running Ubuntu 12.04 LTS (ami-59a4a230); this has about 15 GB of RAM, and 2 CPUs, and
 will be enough to complete the assembly of the example data set.
 
+.. shell start
+
 On the new machine, run the following commands to update the base
 software and reboot the machine::
-
-   apt-get update
-   apt-get -y install screen git curl gcc make g++ python-dev unzip default-jre \
+    
+    apt-get update
+    apt-get -y install screen git curl gcc make g++ python-dev unzip default-jre \
               pkg-config libncurses5-dev r-base-core r-cran-gplots python-matplotlib\
               sysstat && shutdown -r now
 
+
+.. @@ ping .
 
 .. note::
 
@@ -19,14 +23,22 @@ software and reboot the machine::
    :doc:`../amazon/using-screen`.
 
 
-.. shell start
-
 Install software
 ----------------
+.. clean up previous installs if we're re-running this...
 
-Install `khmer <http://khmer.readthedocs.org/>`__::
+.. ::
 
-    sudo -i
+   echo Removing previous installs, if any.
+   rm -fr /usr/local/share/khmer
+   rm -fr /root/Trimmomatic-*
+   rm -f /root/libgtextutils-*.bz2
+   rm -f /root/fastx_toolkit-*.bz2
+
+Install `khmer <http://khmer.readthedocs.org/>`__:
+
+::
+
     cd /usr/local/share
     git clone https://github.com/ged-lab/khmer.git
     cd khmer
@@ -34,7 +46,13 @@ Install `khmer <http://khmer.readthedocs.org/>`__::
     git merge origin/cs/sweepfix
     make install
 
-Install `Trimmomatic <http://www.usadellab.org/cms/?page=trimmomatic>`__::
+<<<<<<< HEAD
+
+Install `Trimmomatic <http://www.usadellab.org/cms/?page=trimmomatic>`__:
+=======
+Install `Trimmomatic <http://www.usadellab.org/cms/?page=trimmomatic>`__
+>>>>>>> ab9a8775649aba8583de7ccf2d68aa69b5ca57a5
+::
 
     cd /root
     curl -O http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.30.zip
@@ -44,13 +62,16 @@ Install `Trimmomatic <http://www.usadellab.org/cms/?page=trimmomatic>`__::
     cp -r adapters /usr/local/share/adapters
 
 
-Install `libgtextutils and fastx <http://hannonlab.cshl.edu/fastx_toolkit/>`__::
+Install `libgtextutils and fastx <http://hannonlab.cshl.edu/fastx_toolkit/>`__:
+::
 
     cd /root
     curl -O http://hannonlab.cshl.edu/fastx_toolkit/libgtextutils-0.6.1.tar.bz2
     tar xjf libgtextutils-0.6.1.tar.bz2
     cd libgtextutils-0.6.1/
     ./configure && make && make install
+
+::
 
     cd /root
     curl -O http://hannonlab.cshl.edu/fastx_toolkit/fastx_toolkit-0.0.13.2.tar.bz2
@@ -65,20 +86,9 @@ it below.  We're then unpacking it, sometimes compiling it (which we
 can discuss later), and then installing it for general use.
 
 
-Find Your Data
---------------
-
-::
-   
-    cd /mnt/ 
-    mkdir data
-    cd data
-    curl -O http://athyra.idyll.org/~mahmoud4/R1-extract.fastq.gz
-    curl -O http://athyra.idyll.org/~mahmoud4/R2-extract.fastq.gz
-
-
 Create Your Work Directory and Link Your Data 
 ---------------------------------------------
+Put your data in /mnt/data.
 
 ::
  
@@ -115,6 +125,7 @@ Automating Things abit
 OK, once you’ve done this once or twice, it gets kind of tedious, doesn’t it? I’ve written a script to write these commands out automatically. Run it and then look at ‘trim.sh’ using the ‘more’ command –
 
 ::
+ 
     cd /mnt/work
     python /usr/local/share/khmer/sandbox/write-trimmomatic.py > trim.sh 
     more trim.sh
@@ -125,7 +136,7 @@ If it looks like it contains the right commands, you can run it by doing
 
     bash trim.sh
 
-..:: Note This is a prime example of scripting to make your life much easier and less error prone. Take a look at this file sometime – ‘more /usr/local/share/khmer/sandbox/write-trimmomatic.py’ – to get some idea of how this works.
+.. note::  This is a prime example of scripting to make your life much easier and less error prone. Take a look at this file sometime – ‘more /usr/local/share/khmer/sandbox/write-trimmomatic.py’ – to get some idea of how this works.
 
 Quality Trim Each Pair of Files
 --------------------------------
@@ -143,8 +154,7 @@ If fastq_quality_filter complains about invalid quality scores, try removing the
 Automating This Step
 ---------------------
 
-
-This step can be automated with a ‘for’ loop at the shell prompt. Try :
+This step can be automated with a ‘for’ loop at the shell prompt. Try:
 
 ::
 

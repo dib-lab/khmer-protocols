@@ -3,16 +3,15 @@ Mapping and abundance quantitation
 
 .. shell start
 
-
-
-
 Let's do some simple mapping to do abundance estimation in final assembly.
 
 
 Bowtie Mapping
 ---------------
 
-Let's start by installing `bowtie <http://bowtie-bio.sourceforge.net/index.shtml>`__::
+Let's start by installing `bowtie <http://bowtie-bio.sourceforge.net/index.shtml>`
+
+::
 
    cd /root
    curl -O -L http://sourceforge.net/projects/bowtie-bio/files/bowtie/0.12.7/bowtie-0.12.7-linux-x86_64.zip

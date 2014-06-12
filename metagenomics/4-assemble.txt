@@ -15,7 +15,8 @@ Install Some Assemblers
 Let's try assembling the sequences with three different assemblers: Velvet,
 IDBA, and SPADes.
 
-First, let's install `Velvet <http://www.ebi.ac.uk/~zerbino/velvet/>`__::
+First, let's install `Velvet <http://www.ebi.ac.uk/~zerbino/velvet/>`__:
+::
 
    cd /root
    curl -O http://www.ebi.ac.uk/~zerbino/velvet/velvet_1.2.10.tgz
@@ -24,7 +25,8 @@ First, let's install `Velvet <http://www.ebi.ac.uk/~zerbino/velvet/>`__::
    make MAXKMERLENGTH=51
    cp velvet? /usr/local/bin
 
-And also `IDBA <https://code.google.com/p/hku-idba/>`__::
+And also `IDBA <https://code.google.com/p/hku-idba/>`__:
+::
 
    cd /root
    curl -O https://hku-idba.googlecode.com/files/idba-1.1.1.tar.gz
@@ -33,11 +35,14 @@ And also `IDBA <https://code.google.com/p/hku-idba/>`__::
    ./configure && make
    cp bin/idba_ud /usr/local/bin
 
-And also `SPADes <http://bioinf.spbau.ru/spades/>`__.  First::
+And also `SPADes <http://bioinf.spbau.ru/spades/>`__. First:
+::
 
    apt-get -y install cmake
 
-then::
+then:
+
+::
 
    wget http://spades.bioinf.spbau.ru/release2.5.1/SPAdes-2.5.1.tar.gz
    tar -xzf SPAdes-2.5.1.tar.gz
@@ -58,7 +63,7 @@ First, let's gunzip all of the pe.fq files (for SPADes)
 ::
 
    cd /mnt/work/
-   for i in *.pe.fq.gz
+   for i in *kak*.pe.fq.gz
    do
       gunzip -c $i > $(basename $i .gz)
    done
@@ -67,7 +72,7 @@ and convert them all into FASTA (for IDBA)
 
 ::
 
-   for i in *.pe.fq
+   for i in *kak*.pe.fq
    do
       name=$(basename $i .fq).fa
       python /usr/local/share/khmer/sandbox/fastq-to-fasta.py $i > $name
@@ -86,7 +91,8 @@ Let's make sure the file is empty first
 
    rm -f do-assembly.sh
 
-And install `GNU parallel <http://www.gnu.org/software/parallel/>`__::
+And install `GNU parallel <http://www.gnu.org/software/parallel/>`__.
+::
 
    cd /root
    curl -O http://ftp.gnu.org/gnu/parallel/parallel-latest.tar.bz2
