@@ -15,8 +15,7 @@ Install Some Assemblers
 Let's try assembling the sequences with three different assemblers: Velvet,
 IDBA, and SPADes.
 
-First, let's install `Velvet <http://www.ebi.ac.uk/~zerbino/velvet/>`
-
+First, let's install `Velvet <http://www.ebi.ac.uk/~zerbino/velvet/>`__:
 ::
 
    cd /root
@@ -26,8 +25,7 @@ First, let's install `Velvet <http://www.ebi.ac.uk/~zerbino/velvet/>`
    make MAXKMERLENGTH=51
    cp velvet? /usr/local/bin
 
-And also `IDBA <https://code.google.com/p/hku-idba/>`
-
+And also `IDBA <https://code.google.com/p/hku-idba/>`__:
 ::
 
    cd /root
@@ -37,8 +35,7 @@ And also `IDBA <https://code.google.com/p/hku-idba/>`
    ./configure && make
    cp bin/idba_ud /usr/local/bin
 
-And also `SPADes <http://bioinf.spbau.ru/spades/>`__.  First:
-
+And also `SPADes <http://bioinf.spbau.ru/spades/>`__. First:
 ::
 
    apt-get -y install cmake
@@ -94,8 +91,7 @@ Let's make sure the file is empty first
 
    rm -f do-assembly.sh
 
-And install `GNU parallel <http://www.gnu.org/software/parallel/>`
-
+And install `GNU parallel <http://www.gnu.org/software/parallel/>`__.
 ::
 
    cd /root

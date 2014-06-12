@@ -25,8 +25,17 @@ software and reboot the machine::
 
 Install software
 ----------------
+.. clean up previous installs if we're re-running this...
 
-Install `khmer <http://khmer.readthedocs.org/>`
+.. ::
+
+   echo Removing previous installs, if any.
+   rm -fr /usr/local/share/khmer
+   rm -fr /root/Trimmomatic-*
+   rm -f /root/libgtextutils-*.bz2
+   rm -f /root/fastx_toolkit-*.bz2
+
+Install `khmer <http://khmer.readthedocs.org/>`__:
 
 ::
 
@@ -37,8 +46,7 @@ Install `khmer <http://khmer.readthedocs.org/>`
     make install
 
 
-Install `Trimmomatic <http://www.usadellab.org/cms/?page=trimmomatic>`
-
+Install `Trimmomatic <http://www.usadellab.org/cms/?page=trimmomatic>`__:
 ::
 
     cd /root
@@ -49,8 +57,7 @@ Install `Trimmomatic <http://www.usadellab.org/cms/?page=trimmomatic>`
     cp -r adapters /usr/local/share/adapters
 
 
-Install `libgtextutils and fastx <http://hannonlab.cshl.edu/fastx_toolkit/>`
-
+Install `libgtextutils and fastx <http://hannonlab.cshl.edu/fastx_toolkit/>`__:
 ::
 
     cd /root
@@ -74,20 +81,9 @@ it below.  We're then unpacking it, sometimes compiling it (which we
 can discuss later), and then installing it for general use.
 
 
-Find Your Data
---------------
-
-::
-   
-    cd /mnt/ 
-    mkdir data
-    cd data
-    curl -O http://athyra.idyll.org/~mahmoud4/R1-extract.fastq.gz
-    curl -O http://athyra.idyll.org/~mahmoud4/R2-extract.fastq.gz
-
-
 Create Your Work Directory and Link Your Data 
 ---------------------------------------------
+Put your data in /mnt/data.
 
 ::
  
