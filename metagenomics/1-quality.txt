@@ -37,8 +37,7 @@ Install `khmer <http://khmer.readthedocs.org/>`
     git merge origin/cs/sweepfix
     make install
 
-Install `Trimmomatic <http://www.usadellab.org/cms/?page=trimmomatic>`
-
+Install `Trimmomatic <http://www.usadellab.org/cms/?page=trimmomatic>`__
 ::
 
     cd /root
