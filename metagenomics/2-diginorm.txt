@@ -2,14 +2,14 @@
 2. Running digital normalization
 ================================
 
+.. shell start
+
 .. note::
 
    Make sure you're running in screen!
 
 Start with the QC'ed files from :doc:`1-quality` or copy them into a
 working directory; 
-
-.. shell start
 
 Run a First Round of Digital Normalization
 ------------------------------------------
