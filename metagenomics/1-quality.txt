@@ -34,8 +34,8 @@ Install `khmer <http://khmer.readthedocs.org/>`
     git clone https://github.com/ged-lab/khmer.git
     cd khmer
     git checkout v1.0.1
+    git merge origin/cs/sweepfix
     make install
-
 
 Install `Trimmomatic <http://www.usadellab.org/cms/?page=trimmomatic>`
 

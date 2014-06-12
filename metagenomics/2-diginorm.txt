@@ -103,7 +103,6 @@ and for the single-ended files
        cat $i $pe_orphans | gzip -c > $newfile
    done
 
-
 You can now remove all of these various files:: 
 
    *.pe.qc.fq.gz.keep
