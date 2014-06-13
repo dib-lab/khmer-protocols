@@ -20,7 +20,7 @@ PE reads; keep pairs using '-p'
 ::
 
    cd /mnt/work
-   normalize-by-median.py -p -k 20 -C 20 -N 4 -x 3e8 --savetable normC20k20.kh  *.pe.qc.fq.gz
+   normalize-by-median.py -p -k 20 -C 20 -N 4 -x 1e9 --savetable normC20k20.kh  *.pe.qc.fq.gz
 
 and continuing into the (less valuable but maybe still useful) SE reads
 
@@ -68,7 +68,7 @@ high-coverage data.  First, normalize the paired-end reads
 
 ::
     
-   normalize-by-median.py -C 5 -k 20 -N 4 -x 5e8 --savetable normC5k20.kh -p *.pe.qc.fq.gz.keep.abundfilt.pe
+   normalize-by-median.py -C 5 -k 20 -N 4 -x 1e9 --savetable normC5k20.kh -p *.pe.qc.fq.gz.keep.abundfilt.pe
 
 and then do the remaining single-ended reads
 
