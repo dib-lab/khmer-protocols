@@ -209,6 +209,7 @@ and also some mass combining:
         otherfile="$(basename $i .pe.qc.fq.gz.se).se.qc.fq.gz"
         gunzip -c $otherfile > combine
         cat $i >> combine
+        rm -f $otherfile
         gzip -c combine > $otherfile
         rm $i combine
     done
