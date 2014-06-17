@@ -75,7 +75,7 @@ and convert them all into FASTA (for IDBA)
    for i in *kak*.pe.fq
    do
       name=$(basename $i .fq).fa
-      python /usr/local/share/khmer/sandbox/fastq-to-fasta.py $i > $name
+      python /usr/local/share/khmer/scripts/fastq-to-fasta.py $i > $name
    done
 
 Setting Up the Assemblies
