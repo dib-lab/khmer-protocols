@@ -42,7 +42,7 @@ Install `khmer <http://khmer.readthedocs.org/>`__:
     cd /usr/local/share
     git clone https://github.com/ged-lab/khmer.git
     cd khmer
-    git checkout v1.1-rc3
+    git checkout v1.1
     make install
 
 
