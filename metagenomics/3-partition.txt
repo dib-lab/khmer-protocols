@@ -111,7 +111,7 @@ So, can you recover the abundances?  Of course you can!
 
 ::
    
-    python /usr/local/share/khmer/scripts/sweep-files.py -x 3e8 --db kak.group*.fq --query *.?e.qc.fq.gz
+    python /usr/local/share/khmer/sandbox/sweep-files.py -x 3e8 --db kak.group*.fq --query *.?e.qc.fq.gz
 
 Finally, split the resulting ``.sweep`` files into PE/SE
 
