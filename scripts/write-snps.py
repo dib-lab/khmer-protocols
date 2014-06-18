@@ -27,6 +27,7 @@ def main(argv):
    index=1
    vcfs=list()
    filelist = glob.glob('*.vcf')
+   dic={}
    outfp=open("snps.txt",'w')
    j=0
    for every in filelist:
@@ -40,7 +41,6 @@ def main(argv):
       j=j+1 
       i=0
       lines = tuple(lines)
-      dic={}
       while i < len(lines):
           rec=lines[i].split('\t')
           if lines[i][0] in '#':
@@ -48,17 +48,15 @@ def main(argv):
                  pass
           else:
                i+=1
-               if str(rec[1]) in dic.keys():
+               if str(rec[1]) in dic:
                           oldindex=dic.get(rec[1])
                           mat[oldindex][j]=1
-               #           print 'rec and old index are:#', rec[1], '# in ',oldindex, 'and mat is ',mat[oldindex][j]
                else: 
                           mat[index][0]=str(rec[1])
                           mat[index][j]=1
                           dic[str(rec[1])]=index
                           index+=1
    snps=index
-#   print 'Number of ones is ', nones, index
    deli=" "
    zero="0"
    one="1"
