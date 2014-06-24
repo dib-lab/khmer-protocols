@@ -11,6 +11,7 @@ from collections import defaultdict
 import numpy
 
 def main(argv):
+   outfp='snp.txt'
    try:
       opts, args = getopt.getopt(argv,"hi:o:",["ofile="])
    except getopt.GetoptError:
@@ -21,14 +22,15 @@ def main(argv):
          print 'write-snps.py  -o <outputfile>'
          sys.exit()
       elif opt in ("-o", "--ofile"):
-         outfp = arg
+         outfp =arg
    nones=0
    snps=0
    index=1
    vcfs=list()
    filelist = glob.glob('*.vcf')
    dic={}
-   outfp=open("snps.txt",'w')
+   outfp=open(sys.argv[1], 'w') 
+  # outfp=open('snps.txt','w')
    j=0
    for every in filelist:
        name=every.split('.')
@@ -72,13 +74,7 @@ def main(argv):
           outfp.write(str(mat[itr1][0]).rstrip('\n')) 
           outfp.write(str(deli).rstrip('\n'))
           while itr2 <= 11: 
-           #   if(mat[itr1][itr2]==1):
-                     
                   outfp.write(str(mat[itr1][itr2]).rstrip('\n'))
-                 #  outfp.write(str(one).rstrip('\n'))
-                 #  outfp.write(str(deli).rstrip('\n'))
-              #else:
-               #    outfp.write(str(zero).rstrip('\n'))
                   outfp.write(str(deli).rstrip('\n'))
                   itr2+=1 
           print >> outfp ,'\n' 
