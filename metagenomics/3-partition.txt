@@ -121,7 +121,7 @@ Finally, split the resulting ``.sweep`` files into PE/SE
    do
        sweep=$(basename $i .fq)
        mv $i $sweep.fq 
-       /usr/local/share/khmer/scripts/extract-paired-reads.py *kak*.sweep.fq 
+       /usr/local/share/khmer/scripts/extract-paired-reads.py ${sweep}.fq 
        mv $sweep.fq.pe ${sweep}.nodn.pe.fq
        mv $sweep.fq.se ${sweep}.nodn.se.fq
    done
@@ -137,13 +137,9 @@ Cleaning Up
 
 At this point, you have quite a few intermediate files, all of
 which can be removed
-
 ::
 
-   rm *.part
-   rm kak.group*.fq
-   rm *.kh
-   rm *.below.fq
+   rm *.part kak.group*.fq *.kh *.below.fq *.sweep.fq
 
 You'll be left with 18 pairs of files named ``kak.group00XX.pe.fq.gz``
 and ``kak.group00xx.se.fq.gz``, and (if you reinflated the
