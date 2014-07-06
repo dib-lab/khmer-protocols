@@ -1,5 +1,6 @@
-Mapping and abundance quantitation
-=====================================
+======================================
+5. Mapping and abundance quantitation
+======================================
 
 .. shell start
 
