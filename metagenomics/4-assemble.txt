@@ -5,7 +5,6 @@
 At last!  All that filtering and diginorming is done, and we can get
 down to the serious business of assembling.  Huzzah!
 
-Let's start with some collection of group files in ``/mnt/assembly``.
 
 .. shell start
 
@@ -44,9 +43,9 @@ then:
 
 ::
 
-   wget http://spades.bioinf.spbau.ru/release2.5.1/SPAdes-2.5.1.tar.gz
-   tar -xzf SPAdes-2.5.1.tar.gz
-   cd SPAdes-2.5.1
+   wget http://spades.bioinf.spbau.ru/release3.0.0/SPAdes-3.0.0.tar.gz
+   tar -xzf SPAdes-3.0.0.tar.gz
+   cd SPAdes-3.0.0
    PREFIX=/usr/local ./spades_compile.sh
 
 Preparing the Data
