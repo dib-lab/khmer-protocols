@@ -1,14 +1,15 @@
-=============
+====================
 7. Quast Evaluation
-=============
+====================
 
 .. shell start
 
 Install Quast
-------------------
+-------------
 
 First, let's install `Quast <http://quast.bioinf.spbau.ru/manual.html>`__:
 ::
+
 
    cd /root
    wget https://downloads.sourceforge.net/project/quast/quast-2.3.tar.gz
@@ -20,6 +21,7 @@ First, let's install `Quast <http://quast.bioinf.spbau.ru/manual.html>`__:
 Now, evaluate our assembly: 
 
 ::
+
 
     python /root/quast-2.3/metaquast.py -R /mnt/data/reference.fa  -o /mnt/work/assembly-evaluation/  final-assembly.fa
     
