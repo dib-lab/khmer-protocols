@@ -86,8 +86,12 @@ BLAST in both directions.  Note, this may take ~24 hours or longer;
 you probably want to run it in screen:
 ::
 
-   blastall -i trinity-nematostella.renamed.fa -d mouse.protein.faa -e 1e-3 -p blastx -o nema.x.mouse -a 8 -v 4 -b 4
-   blastall -i mouse.protein.faa -d trinity-nematostella.renamed.fa -e 1e-3 -p tblastn -o mouse.x.nema -a 8 -v 4 -b 4
+    blastx -db mouse.protein.faa -query trinity-nematostella.renamed.fa \
+    -evalue 1e-3 -num_threads 8 -num_descriptions 4 -num_alignments 4 \
+    -out nema.x.mouse   
+    tblastn -db trinity-nematostella.renamed.fa -query mouse.protein.faa \
+    -evalue 1e-3 -num_threads 8 -num_descriptions 4 -num_alignments 4 \
+    -out mouse.x.nema
 
 Assigning names to sequences
 ============================
