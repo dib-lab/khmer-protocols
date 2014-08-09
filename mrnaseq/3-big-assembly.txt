@@ -52,24 +52,6 @@ Download and install bowtie:
    cd bowtie-0.12.7
    cp bowtie bowtie-build bowtie-inspect /usr/local/bin
 
-Install samtools
-----------------
-
-.. ::
-
-   echo 3-big-assembly installSamtools `date` >> /root/times.out
-
-Download and install samtools:
-::
-
-   cd /root
-   curl -L http://sourceforge.net/projects/samtools/files/latest/download?source=files >samtools.tar.bz2
-   tar xjf samtools.tar.bz2
-   mv samtools-* samtools-latest
-   cd samtools-latest/
-   make
-   cp samtools bcftools/bcftools misc/* /usr/local/bin
-
 Build the files to assemble
 ---------------------------
 
@@ -111,7 +93,7 @@ can increase (or decrease) it based on what machine you rented.  This size
 works for the m1.xlarge machines.
 
 Once this completes (on the Nematostella data it might take about 12 hours),
-you'll have an assembled transcriptome in trinity_out_dir/Trinity.fasta.
+you'll have an assembled transcriptome in ``trinity_out_dir/Trinity.fasta``.
 
 You can now copy it over via Dropbox, or set it up for BLAST (see
 :doc:`installing-blastkit`).
