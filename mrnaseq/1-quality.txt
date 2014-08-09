@@ -52,8 +52,8 @@ Install `khmer <http://khmer.readthedocs.org>`__ :
 Install `FastQC <http://www.bioinformatics.babraham.ac.uk/projects/fastqc/>`__::
 
    cd /usr/local/share
-   curl -O http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.10.1.zip
-   unzip fastqc_v0.10.1.zip
+   curl -O http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.2.zip
+   unzip fastqc_v0.11.2.zip
    chmod +x FastQC/fastqc
 
 Install `Trimmomatic <http://www.usadellab.org/cms/?page=trimmomatic>`__ :
