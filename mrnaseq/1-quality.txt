@@ -233,30 +233,25 @@ reads, respectively.
 Finishing up
 ------------
 
-You should now have a whole mess of files. For example, in the Nematostella
-data, for *each* of the original input files, you'll have::
+For the Nematostella data, for *each* of the original input files,
+you'll have::
 
    24HourB_GCCAAT_L002_R1_001.fastq.gz 	      	     - the original data
    24HourB_GCCAAT_L002_R2_001.fastq.gz
-   24HourB_GCCAAT_L002_R1_001.pe.fq.gz		     - adapter trimmed pe
-   24HourB_GCCAAT_L002_R1_001.pe.qc.fq.gz	     - FASTX filtered
-   24HourB_GCCAAT_L002_R1_001.pe.qc.fq.gz.pe	     - FASTX filtered PE
-   24HourB_GCCAAT_L002_R1_001.pe.qc.fq.gz.se	     - FASTX filtered SE
-   24HourB_GCCAAT_L002_R1_001.se.fq.gz		     - adapter trimmed orphans
-   24HourB_GCCAAT_L002_R1_001.se.qc.fq.gz	     - FASTX filtered orphans
+   24HourB_GCCAAT_L002_R1_001.pe.qc.fq.gz	     - trimmed data (paired)
+   24HourB_GCCAAT_L002_R1_001.se.qc.fq.gz	     - trimmed data (orphans)
 
-Yikes!  What to do?
-
-Well, first, you can get rid of the original data.  You already have it on a
-disk somewhere, right? :
+You no longer need the original data, so you can remove that::
 ::
 
    rm *.fastq.gz
 
-So now you should be left with only three files for each sample::
+and now you should be left with only two files for each sample::
 
-   24HourB_GCCAAT_L002_R1_001.pe.qc.fq.gz.pe   - trimmed PE
-   24HourB_GCCAAT_L002_R1_001.pe.qc.fq.gz.se   - trimmed SE
+   24HourB_GCCAAT_L002_R1_001.pe.qc.fq.gz   - trimmed PE
+   24HourB_GCCAAT_L002_R1_001.pe.qc.fq.gz   - trimmed SE
+
+These are the files you'll need going forward.
 
 Things to think about
 ~~~~~~~~~~~~~~~~~~~~~
@@ -290,6 +285,16 @@ Again, the output will be placed under the 'fastqc' directory in your
 Dropbox on your local computer; look for the fastqc_report.html files,
 and double click on them to load them into your browser.
 
+Workshop instructions
+---------------------
+
+If you are running with a data subset for a workshop, do
+::
+
+   cp /mnt/work/*.qc.fq.gz /data
+
+to save the QC files for later use.
+
 Saving the files
 ----------------
 
@@ -299,17 +304,8 @@ and ultimately comparative expression analysis.  You can save them by
 doing this::
 
    mkdir save
-   mv *.qc.fq.gz save
+   cp *.qc.fq.gz save
    du -sk save
-
-If you are running with a data subset for a workshop, do
-::
-
-   cp /mnt/work/*.qc.fq.gz /data
-
-to save the QC files for later use.
-
-.. @CTB fix ^^^
 
 .. shell stop
 
