@@ -46,7 +46,7 @@ Install `khmer <http://khmer.readthedocs.org>`__ :
    cd /usr/local/share
    git clone https://github.com/ged-lab/khmer.git
    cd khmer
-   git checkout v1.1
+   git checkout ngs2014
    make install
 
 Install `FastQC <http://www.bioinformatics.babraham.ac.uk/projects/fastqc/>`__::
@@ -60,34 +60,16 @@ Install `Trimmomatic <http://www.usadellab.org/cms/?page=trimmomatic>`__ :
 ::
 
    cd /root
-   curl -O http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.30.zip
-   unzip Trimmomatic-0.30.zip
-   cd Trimmomatic-0.30/
-   cp trimmomatic-0.30.jar /usr/local/bin
+   curl -O http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.32.zip
+   unzip Trimmomatic-0.32.zip
+   cd Trimmomatic-0.32/
+   cp trimmomatic-0.32.jar /usr/local/bin
    cp -r adapters /usr/local/share/adapters
-
-Install `libgtextutils and fastx <http://hannonlab.cshl.edu/fastx_toolkit/>`__ :
-::
-
-
-   cd /root
-   curl -O http://hannonlab.cshl.edu/fastx_toolkit/libgtextutils-0.6.1.tar.bz2
-   tar xjf libgtextutils-0.6.1.tar.bz2 
-   cd libgtextutils-0.6.1/
-   ./configure && make && make install
-   
-   cd /root
-   curl -O http://hannonlab.cshl.edu/fastx_toolkit/fastx_toolkit-0.0.13.2.tar.bz2
-   tar xjf fastx_toolkit-0.0.13.2.tar.bz2
-   cd fastx_toolkit-0.0.13.2/
-   ./configure && make && make install
 
 In each of these cases, we're downloading the software -- you can use
 google to figure out what each package is and does if we don't discuss
 it below.  We're then unpacking it, sometimes compiling it (which we
 can discuss later), and then installing it for general use.
-
-
 
 Find your data
 --------------
@@ -148,8 +130,8 @@ OPTIONAL: Evaluate the quality of your files with FastQC
 
 If you installed Dropbox, we can use FastQC to look at the quality of your sequences::
 
-   mkdir /home/ubuntu/Dropbox/fastqc
-   /usr/local/share/FastQC/fastqc *001.extract.fastq.gz --outdir=/home/ubuntu/Dropbox/fastqc
+   mkdir /mnt/Dropbox/fastqc
+   /usr/local/share/FastQC/fastqc *001.fastq.gz --outdir=/mnt/Dropbox/fastqc
 
 The output will be placed under the 'fastqc' directory in your Dropbox
 on your local computer; look for the fastqc_report.html files, and
@@ -181,10 +163,9 @@ screen, so that you detach and log out while it's running; see
 :doc:`../amazon/using-screen` for more information.)
 
 If you're following along using the Nematostella data, you should have a
-bunch of files that look like this (use 'ls' to show them)::
+bunch of files that look like this (use 'ls' to show them):
 
-   24HourB_GCCAAT_L002_R1_001.fastq.gz
-                       ^^
+   ``24HourB_GCCAAT_L002_R1_001.fastq.gz``
 
 Each file with an R1 in its name should have a matching file with an R2 --
 these are the paired ends.
@@ -197,52 +178,20 @@ these are the paired ends.
    It doesn't really matter what, but you need to make sure it's different
    for each pair of files.
 
-For *each* of these pairs, run the following::
+Adapter and quality trim your sequences
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-   # make a temp directory
-   mkdir trim
-   cd trim
+We'll now use Trimmomatic to both adapter-trim and quality-trim your
+sequences. We're going to use the following parameters:
 
-   # run trimmomatic
-   java -jar /usr/local/bin/trimmomatic-0.30.jar PE <R1 FILE> <R2 FILE> s1_pe s1_se s2_pe s2_se ILLUMINACLIP:/usr/local/share/adapters/TruSeq3-PE.fa:2:30:10
+* ILLUMINACLIP:barcodes.fa:2:40:15
+* LEADING:2 
+* TRAILING:2
+* SLIDINGWINDOW:4:2
+* MINLEN:25
 
-   # interleave the remaining paired-end files
-   interleave-reads.py s1_pe s2_pe | gzip -9c > ../<SAMPLE NAME>.pe.fq.gz
-
-   # combine the single-ended files
-   cat s1_se s2_se | gzip -9c > ../<SAMPLE NAME>.se.fq.gz
-
-   # go back up to the working directory and remove the temp directory
-   cd ..
-   rm -r trim
-
-   # make it hard to delete the files you just created
-   chmod u-w *.pe.fq.gz *.se.fq.gz
-
-To get a basic idea of what's going on, please read the '#' comments
-above, but, briefly, this set of commands:
-
-* creates a temporary directory, 'trim/'
-
-* runs 'Trimmomatic' in that directory to trim off the adapters, and then
-  puts remaining pairs (most of them!) in s1_pe and s2_pe, and any orphaned
-  singletons in s1_se and s2_se.
-
-* interleaves the paired ends and puts them back in the working directory
-
-* combines the orphaned reads and puts them back in the working directory
-
-At the end of this you will have new files ending in '.pe.fq.gz' and
-'.se.fq.gz', representing the paired and orphaned quality trimmed
-reads, respectively.
-
-Automating things a bit
-~~~~~~~~~~~~~~~~~~~~~~~
-
-OK, once you've done this once or twice, it gets kind of tedious, doesn't it?
-I've written a script to write these commands out automatically.  Run it
-like so :
-::
+We have a script to write these commands out automatically for each
+file.  Run it like so : ::
 
    cd /mnt/work
    python /usr/local/share/khmer/sandbox/write-trimmomatic.py > trim.sh
@@ -260,91 +209,22 @@ If it looks like it contains the right commands, you can run it by doing :
 
    bash trim.sh
 
-.. note::
 
-   This is a prime example of scripting to make your life much easier
-   and less error prone.  Take a look at this file sometime --
-   'more /usr/local/share/khmer/sandbox/write-trimmomatic.py' -- to get
-   some idea of how this works.
+Briefly, for each file, trim.sh:
 
+* creates a temporary directory, 'trim/'
 
+* runs 'Trimmomatic' in that directory to trim off the adapters, and then
+  puts remaining pairs (most of them!) in s1_pe and s2_pe, and any orphaned
+  singletons in s1_se and s2_se.
 
-Quality trim each pair of files
--------------------------------
+* interleaves the paired ends and puts them back in the working directory
 
-After you run this, you should have a bunch of '.pe.fq.gz' files and
-a bunch of '.se.fq.gz' files.  The former are files that contain paired,
-interleaved sequences; the latter contain single-ended, non-interleaved
-sequences.
+* combines the orphaned reads and puts them back in the working directory
 
-Next, for each of these files, run ::
-
-   gunzip -c <filename> | fastq_quality_filter -Q33 -q 30 -p 50 | gzip -9c > <filename>.qc.fq.gz
-
-This uncompresses each file, removes poor-quality sequences, and then
-recompresses it.  Note that (following `Short-read quality evaluation
-<http://ged.msu.edu/angus/tutorials-2013/short-read-quality-evaluation.html>`__)
-you can also trim to a specific length by putting in a 'fastx_trimmer
--Q33 -l 70 |' into the mix.
-
-If fastq_quality_filter complains about invalid quality scores, try
-removing the -Q33 in the command; Illumina has blessed us with multiple
-quality score encodings.
-
-Automating this step
-~~~~~~~~~~~~~~~~~~~~
-
-.. ::
-
-   echo 1-quality FILTER `date` >> /root/times.out
-
-This step can be automated with a 'for' loop at the shell prompt.  Try :
-::
-
-   for i in *.pe.fq.gz *.se.fq.gz
-   do
-      echo working with $i
-   newfile="$(basename $i .fq.gz)"
-   gunzip -c $i | fastq_quality_filter -Q33 -q 30 -p 50 | gzip -9c > "${newfile}.qc.fq.gz"
-   done
-
-What this loop does is:
-
-* for every file ending in pe.fq.gz and se.fq.gz,
-
-* print out a message with the filename,
-
-* construct a name 'newfile' that omits the trailing .fq.gz
-
-* uncompresses the original file, passes it through fastq, recompresses it,
-  and saves it as 'newfile'.qc.fq.gz
-
-Extracting paired ends from the interleaved files
--------------------------------------------------
-
-The fastx utilities that we're using to do quality trimming aren't
-paired-end aware; they're removing individual sequences.  Because the
-pe files are interleaved, this means that there may now be some orphaned
-sequences in there.  Downstream, we will want to pay special attention
-to the remaining paired sequences, so we want to separate out the pe
-and se files.  How do we go about that?  Another script, of course!
-
-The khmer script 'extract-paired-reads.py' does exactly that.
-You run it on an interleaved file that may have some orphans, and it
-produces .pe and .se files afterwards, containing pairs and orphans
-respectively.
-
-.. ::
-
-   echo 1-quality EXTRACT `date` >> /root/times.out
-
-To run it on all of the pe qc files, do :
-::
-
-   for i in *.pe.qc.fq.gz
-   do
-      extract-paired-reads.py $i
-   done
+At the end of this you will have new files ending in ``.pe.qc.fq.gz``
+and ``.se.qc.fq.gz``, representing the paired and orphaned trimmed
+reads, respectively.
 
 .. ::
 
@@ -373,23 +253,10 @@ disk somewhere, right? :
 
    rm *.fastq.gz
 
-Next, you can get rid of the 'pe.fq.gz' and 'se.fq.gz' files, since you
-only want the QC files.  So :
-::
-
-   rm *.pe.fq.gz *.se.fq.gz
-
-And, finally, you can toss the pe.qc.fq.gz files, because you've turned *those*
-into .pe and .se files. :
-::
-
-   rm *.pe.qc.fq.gz
-
 So now you should be left with only three files for each sample::
 
-   24HourB_GCCAAT_L002_R1_001.pe.qc.fq.gz.pe   - FASTX filtered PE
-   24HourB_GCCAAT_L002_R1_001.pe.qc.fq.gz.se   - FASTX filtered SE
-   24HourB_GCCAAT_L002_R1_001.se.qc.fq.gz      - FASTX filtered orphans
+   24HourB_GCCAAT_L002_R1_001.pe.qc.fq.gz.pe   - trimmed PE
+   24HourB_GCCAAT_L002_R1_001.pe.qc.fq.gz.se   - trimmed SE
 
 Things to think about
 ~~~~~~~~~~~~~~~~~~~~~
@@ -400,34 +267,10 @@ history of what you've done.  This is a good idea.
 Also note that we've conveniently named the files so that we can remove
 the unwanted ones en masse.  This is a good idea, too.
 
-Renaming files
---------------
+Protecting your files
+---------------------
 
-I'm a fan of keeping the files named somewhat sensibly, and keeping them
-compressed.  Let's do some mass renaming :
-::
-
-   for i in *.pe.qc.fq.gz.pe
-   do
-      newfile="$(basename $i .pe.qc.fq.gz.pe).pe.qc.fq"
-      mv $i $newfile
-      gzip $newfile
-   done
-
-and also some mass combining :
-::
-
-   for i in *.pe.qc.fq.gz.se
-   do
-     otherfile="$(basename $i .pe.qc.fq.gz.se).se.qc.fq.gz"
-     gunzip -c $otherfile > combine
-     cat $i >> combine
-     gzip -c combine > $otherfile
-     rm $i combine
-   done
-
-
-and finally, make the end product files read-only :
+You should make the end product files read-only :
 ::
 
    chmod u-w *.qc.fq.gz
@@ -440,8 +283,8 @@ OPTIONAL: Evaluate the quality of your files with FastQC again
 If you installed Dropbox, we can once again use FastQC to look at the
 quality of your newly-trimmed sequences::
 
-   mkdir /home/ubuntu/Dropbox/fastqc
-   /usr/local/share/FastQC/fastqc *001.extract.pe.qc.fq.gz --outdir=/home/ubuntu/Dropbox/fastqc
+   mkdir /mnt/Dropbox/fastqc
+   /usr/local/share/FastQC/fastqc *001.pe.qc.fq.gz --outdir=/mnt/Dropbox/fastqc
 
 Again, the output will be placed under the 'fastqc' directory in your
 Dropbox on your local computer; look for the fastqc_report.html files,
