@@ -110,28 +110,13 @@ Now, do an 'ls' to list the files.  If you see only one entry, ``*.fastq.gz``,
 then the ln command above didn't work properly.  One possibility is that
 your files aren't in /data; another is that they're not named *.fastq.gz.
 
-.. note::
-
-   This protocol takes many hours (days!) to run, so you might not want
-   to run it on all the data the first time.  If you're using the
-   example data, you can work with a subset of it by running this command
-   instead of the `ln -fs` command above::
-
-      for i in /data/*.fastq.gz
-      do
-          gunzip -c $i | head -400000 | gzip > $(basename $i)
-      done
-
-   This will pull out the first 100,000 reads of each file (4 lines per record)
-   and put them in the current directory, which should be /mnt/work.
-
 OPTIONAL: Evaluate the quality of your files with FastQC
 --------------------------------------------------------
 
 If you installed Dropbox, we can use FastQC to look at the quality of your sequences::
 
    mkdir /mnt/Dropbox/fastqc
-   /usr/local/share/FastQC/fastqc *001.fastq.gz --outdir=/mnt/Dropbox/fastqc
+   /usr/local/share/FastQC/fastqc *001.*.fastq.gz --outdir=/mnt/Dropbox/fastqc
 
 The output will be placed under the 'fastqc' directory in your Dropbox
 on your local computer; look for the fastqc_report.html files, and
@@ -279,7 +264,7 @@ If you installed Dropbox, we can once again use FastQC to look at the
 quality of your newly-trimmed sequences::
 
    mkdir /mnt/Dropbox/fastqc
-   /usr/local/share/FastQC/fastqc *001.pe.qc.fq.gz --outdir=/mnt/Dropbox/fastqc
+   /usr/local/share/FastQC/fastqc *001.*.pe.qc.fq.gz --outdir=/mnt/Dropbox/fastqc
 
 Again, the output will be placed under the 'fastqc' directory in your
 Dropbox on your local computer; look for the fastqc_report.html files,
