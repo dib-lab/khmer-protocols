@@ -67,7 +67,7 @@ If you've just finished a transcriptome assembly (:doc:`3-big-assembly`) then
 you can do this to copy your newly generated assembly into the right place:
 ::
 
-   cp trinity_out_dir/Trinity.fasta /root/blastkit/db/db.fa
+   cp /mnt/work/trinity_out_dir/Trinity.fasta /root/blastkit/db/db.fa
 
 Alternatively, you can grab my version of the assembly (from running this
 tutorial):
