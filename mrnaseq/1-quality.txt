@@ -264,7 +264,7 @@ If you installed Dropbox, we can once again use FastQC to look at the
 quality of your newly-trimmed sequences::
 
    mkdir /mnt/Dropbox/fastqc
-   /usr/local/share/FastQC/fastqc *001.*.pe.qc.fq.gz --outdir=/mnt/Dropbox/fastqc
+   /usr/local/share/FastQC/fastqc *001.*pe.qc.fq.gz --outdir=/mnt/Dropbox/fastqc
 
 Again, the output will be placed under the 'fastqc' directory in your
 Dropbox on your local computer; look for the fastqc_report.html files,

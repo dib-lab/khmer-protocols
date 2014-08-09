@@ -100,7 +100,8 @@ Running blastkit
 ----------------
 
 Figure out what your machine name is
-(ec2-???-???-???-???.compute-1.amazonaws.com) and go to::
+(ec2-???-???-???-???.compute-1.amazonaws.com) and go to this URL in
+your Web browser::
 
     http://machine-name/blastkit/
 
