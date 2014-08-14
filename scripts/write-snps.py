@@ -9,19 +9,14 @@ import sys, getopt
 import glob
 from collections import defaultdict
 import numpy
+import argparse
 
 def main(argv):
-   try:
-      opts, args = getopt.getopt(argv,"hi:o:",["ofile="])
-   except getopt.GetoptError:
-      print 'write-snps.py  -o <outputfile>'
-      sys.exit(2)
-   for opt, arg in opts:
-      if opt == '-h':
-         print 'write-snps.py  -o <outputfile>'
-         sys.exit()
-      elif opt in ("-o", "--ofile"):
-         outfp =arg
+    
+   parser=argparse.ArgumentParser()
+   parser.add_argument("outfile", help="Enter output file name") 
+   args=parser.parse_args()
+   outfp=args.outfile
    nones=0
    snps=0
    index=1
