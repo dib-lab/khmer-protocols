@@ -44,9 +44,9 @@ then:
 
 ::
 
-   wget http://spades.bioinf.spbau.ru/release2.5.1/SPAdes-2.5.1.tar.gz
-   tar -xzf SPAdes-2.5.1.tar.gz
-   cd SPAdes-2.5.1
+   wget http://spades.bioinf.spbau.ru/release3.1.0/SPAdes-3.1.0.tar.gz
+   tar -xzf SPAdes-3.1.0.tar.gz
+   cd SPAdes-3.1.0
    PREFIX=/usr/local ./spades_compile.sh
 
 Preparing the Data
