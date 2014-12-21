@@ -1,7 +1,6 @@
 ======================================
 5. Mapping and abundance quantitation
 ======================================
->>>>>>> a34a904a7a0173ddffd4e6aff6e57547749cbd31
 
 .. shell start
 
