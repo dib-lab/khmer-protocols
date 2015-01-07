@@ -21,8 +21,12 @@ Acceptance tests for khmer
    cd /mnt
    mkdir blast
    cd blast
-   curl -O ftp://ftp.ncbi.nih.gov/refseq/M_musculus/mRNA_Prot/mouse.protein.faa.gz
-   gunzip mouse.protein.faa.gz
+   for file in mouse.1.protein.faa.gz mouse.2.protein.faa.gz mouse.3.protein.faa.gz
+   do
+        curl -O ftp://ftp.ncbi.nih.gov/refseq/M_musculus/mRNA_Prot/${file}
+   done
+   gunzip mouse.[123].protein.faa.gz
+   cat mouse.[123].protein.faa > mouse.protein.faa
    formatdb -i mouse.protein.faa -o T -p T
    cp ../work/trinity_out_dir/Trinity.fasta .
    blastall -i Trinity.fasta -d mouse.protein.faa -p blastx -e 1e-6 -o trinity.x.mouse
