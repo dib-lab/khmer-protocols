@@ -6,7 +6,10 @@
 
 Boot up an m1.xlarge machine from Amazon Web Services running Ubuntu
 12.04 LTS (ami-59a4a230); this has about 15 GB of RAM, and 2 CPUs, and
-will be enough to complete the assembly of the Nematostella data set.
+will be enough to complete the assembly of the Nematostella data set. If you
+are using your own data, be aware of your space requirements and obtain an
+appropriately sized machine ("instance") and storage ("volume").
+
 
 On the new machine, run the following commands to update the base
 software and reboot the machine::
@@ -124,7 +127,7 @@ find them but doesn't need to actually move them around. :
    
    ln -fs /data/*.fastq.gz .
 
-(The 'ln' command is what does the linking.)
+(The 'ln' command does the linking.)
 
 Now, do an 'ls' to list the files.  If you see only one entry, ``*.fastq.gz``,
 then the ln command above didn't work properly.  One possibility is that
@@ -137,9 +140,9 @@ your files aren't in /data; another is that they're not named *.fastq.gz.
    example data, you can work with a subset of it by running this command
    instead of the `ln -fs` command above::
 
-      for i in /data/*.fastq.gz
+      for file in /data/*.fastq.gz
       do
-          gunzip -c $i | head -400000 | gzip > $(basename $i)
+          gunzip -c $file | head -400000 | gzip > $(basename $file)
       done
 
    This will pull out the first 100,000 reads of each file (4 lines per record)
@@ -303,11 +306,12 @@ Automating this step
 This step can be automated with a 'for' loop at the shell prompt.  Try :
 ::
 
-   for i in *.pe.fq.gz *.se.fq.gz
+   for file in *.pe.fq.gz *.se.fq.gz
    do
-      echo working with $i
-   newfile="$(basename $i .fq.gz)"
-   gunzip -c $i | fastq_quality_filter -Q33 -q 30 -p 50 | gzip -9c > "${newfile}.qc.fq.gz"
+        echo working with $file
+        newfile="$(basename $file .fq.gz)"
+        gunzip -c $file | fastq_quality_filter -Q33 -q 30 -p 50 | gzip -9c \
+            > "${newfile}.qc.fq.gz"
    done
 
 What this loop does is:
@@ -343,9 +347,9 @@ respectively.
 To run it on all of the pe qc files, do :
 ::
 
-   for i in *.pe.qc.fq.gz
+   for file in *.pe.qc.fq.gz
    do
-      extract-paired-reads.py $i
+      extract-paired-reads.py $file
    done
 
 .. ::
@@ -409,23 +413,23 @@ I'm a fan of keeping the files named somewhat sensibly, and keeping them
 compressed.  Let's do some mass renaming :
 ::
 
-   for i in *.pe.qc.fq.gz.pe
+   for file in *.pe.qc.fq.gz.pe
    do
-      newfile="$(basename $i .pe.qc.fq.gz.pe).pe.qc.fq"
-      mv $i $newfile
+      newfile="$(basename $file .pe.qc.fq.gz.pe).pe.qc.fq"
+      mv $file $newfile
       gzip $newfile
    done
 
 and also some mass combining :
 ::
 
-   for i in *.pe.qc.fq.gz.se
+   for $file in *.pe.qc.fq.gz.se
    do
-     otherfile="$(basename $i .pe.qc.fq.gz.se).se.qc.fq.gz"
+     otherfile="$(basename $file .pe.qc.fq.gz.se).se.qc.fq.gz"
      gunzip -c $otherfile > combine
-     cat $i >> combine
+     cat $file >> combine
      gzip -c combine > $otherfile
-     rm $i combine
+     rm $file combine
    done
 
 
