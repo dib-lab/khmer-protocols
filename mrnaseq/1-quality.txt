@@ -28,6 +28,8 @@ Install software
 
 .. ::
 
+   set -x
+   set -e
    echo Removing previous installs, if any.
    rm -fr /usr/local/share/khmer
    rm -fr /root/Trimmomatic-*
@@ -117,7 +119,7 @@ find them but doesn't need to actually move them around. :
 ::
 
    cd /mnt
-   mkdir work
+   mkdir -p work
    cd work
    
    ln -fs /data/*.fastq.gz .
