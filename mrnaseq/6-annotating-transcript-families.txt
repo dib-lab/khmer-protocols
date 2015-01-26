@@ -70,12 +70,15 @@ transcripts file:
 Now, grab the latest mouse RefSeq:
 ::
 
-   for file in mouse.1.protein.faa.gz mouse.2.protein.faa.gz mouse.3.protein.faa.gz
+   for file in mouse.1.protein.faa.gz mouse.2.protein.faa.gz
    do
         curl -O ftp://ftp.ncbi.nih.gov/refseq/M_musculus/mRNA_Prot/${file}
    done
    gunzip mouse.[123].protein.faa.gz
    cat mouse.[123].protein.faa > mouse.protein.faa
+
+.. ::
+
    echo 6-annotating-transcript-families blast `date` >> /root/times.out
 
 Format both as BLAST databases:

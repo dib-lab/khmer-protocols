@@ -47,7 +47,8 @@ Run digital normalization
 Apply digital normalization to the paired-end reads:
 ::
 
-   normalize-by-median.py -p -k 20 -C 20 -N 4 -x 3e8 --savetable normC20k20.kh *.pe.qc.fq.gz
+   normalize-by-median.py -p -k 20 -C 20 -N 4 -x 3e8 \
+     --savetable normC20k20.ct *.pe.qc.fq.gz
 
 .. ::
 
@@ -56,7 +57,8 @@ Apply digital normalization to the paired-end reads:
 and then to the single-end reads:
 ::
 
-   normalize-by-median.py -C 20 --loadtable normC20k20.kh --savetable normC20k20.kh *.se.qc.fq.gz
+   normalize-by-median.py -C 20 --loadtable normC20k20.ct \
+     --savetable normC20k20.ct *.se.qc.fq.gz
 
 Note the '-p' in the first normalize-by-median command -- when run on
 PE data, that ensures that no paired ends are orphaned.  However, it
@@ -73,7 +75,7 @@ only a few hundred million reads, 16 GB should be plenty.  (See
 for more information.)
 
 Trim off likely erroneous k-mers
--------------------------------
+--------------------------------
 
 .. ::
 
@@ -83,7 +85,7 @@ Now, run through all the reads and trim off low-abundance parts of
 high-coverage reads:
 ::
 
-   filter-abund.py -V normC20k20.kh *.keep
+   filter-abund.py -V normC20k20.ct *.keep
 
 This will turn some reads into orphans, but that's ok -- their partner
 read was bad.
@@ -100,29 +102,29 @@ You'll have a bunch of 'keep.abundfilt' files -- let's make things prettier.
 First, let's break out the orphaned and still-paired reads:
 ::
 
-   for i in *.pe.*.abundfilt;
+   for file in *.pe.*.abundfilt;
    do 
-      extract-paired-reads.py $i
+      extract-paired-reads.py ${file}
    done
 
 We can combine the orphaned reads into a single file:
 ::
 
-   for i in *.se.qc.fq.gz.keep.abundfilt
+   for file in *.se.qc.fq.gz.keep.abundfilt
    do
-      pe_orphans=$(basename $i .se.qc.fq.gz.keep.abundfilt).pe.qc.fq.gz.keep.abundfilt.se
-      newfile=$(basename $i .se.qc.fq.gz.keep.abundfilt).se.qc.keep.abundfilt.fq.gz
-      cat $i $pe_orphans | gzip -c > $newfile
+      pe_orphans=$(basename ${file} .se.qc.fq.gz.keep.abundfilt).pe.qc.fq.gz.keep.abundfilt.se
+      newfile=$(basename ${file} .se.qc.fq.gz.keep.abundfilt).se.qc.keep.abundfilt.fq.gz
+      cat ${file} ${pe_orphans} | gzip -c > ${newfile}
    done
 
 We can also rename the remaining PE reads & compress those files:
 ::
 
-   for i in *.abundfilt.pe
+   for file in *.abundfilt.pe
    do
-      newfile=$(basename $i .fq.gz.keep.abundfilt.pe).keep.abundfilt.fq
-      mv $i $newfile
-      gzip $newfile
+      newfile=$(basename ${file} .fq.gz.keep.abundfilt.pe).keep.abundfilt.fq
+      mv ${file} ${newfile}
+      gzip ${newfile}
    done
 
 This leaves you with a whole passel o' files, most of which you want to go
@@ -147,7 +149,7 @@ So, finally, let's get rid of a lot of the old files :
    rm *.pe.qc.fq.gz.keep.abundfilt.se
    rm *.keep
    rm *.abundfilt
-   rm *.kh
+   rm *.ct
 
 ..   rm *.qc.fq.gz @CTB should we do?
 

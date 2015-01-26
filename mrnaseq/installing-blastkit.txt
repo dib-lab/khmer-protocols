@@ -12,13 +12,10 @@ Installing blastkit
 Installing some prerequisites:
 ::
 
-   pip install pygr
-   pip install whoosh
-   pip install Pillow
-   pip install Jinja2
-   pip install git+https://github.com/ctb/pygr-draw.git
-   pip install git+https://github.com/ged-lab/screed.git
-   apt-get -y install lighttpd
+   pip install pygr whoosh Pillow Jinja2 \
+       git+https://github.com/ctb/pygr-draw.git screed
+   apt-get -y install lighttpd blast2
+   ln -s /usr/bin/blastall /usr/local/bin/
 
 and configure them:
 ::
@@ -30,17 +27,7 @@ and configure them:
 
    /etc/init.d/lighttpd restart
 
-Next, install BLAST:
-::
-
-   cd /root
-
-   curl -O ftp://ftp.ncbi.nih.gov/blast/executables/release/2.2.24/blast-2.2.24-x64-linux.tar.gz
-   tar xzf blast-2.2.24-x64-linux.tar.gz
-   cp blast-2.2.24/bin/* /usr/local/bin
-   cp -r blast-2.2.24/data /usr/local/blast-data
-
-And put in blastkit:
+Next install blastkit:
 ::
 
    cd /root
@@ -67,6 +54,7 @@ If you've just finished a transcriptome assembly (:doc:`3-big-assembly`) then
 you can do this to copy your newly generated assembly into the right place:
 ::
 
+   cd /mnt/work
    cp trinity_out_dir/Trinity.fasta /root/blastkit/db/db.fa
 
 Alternatively, you can grab my version of the assembly (from running this

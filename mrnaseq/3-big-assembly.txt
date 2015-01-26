@@ -32,11 +32,11 @@ To install Trinity:
 
    cd /root
    
-   curl -L http://sourceforge.net/projects/trinityrnaseq/files/latest/download?source=files > trinity.tar.gz
+   wget https://github.com/trinityrnaseq/trinityrnaseq/archive/v2.0.2.tar.gz \
+     -O trinity.tar.gz
    tar xzf trinity.tar.gz
    cd trinityrnaseq*/
-   export FORCE_UNSAFE_CONFIGURE=1
-   make 2>1& > trinity-build.log
+   make 2>1& | tee trinity-build.log
 
 Install bowtie
 --------------
@@ -86,9 +86,9 @@ seqs to one of 'em. :
 ::
 
    cd /mnt/work
-   for i in *.pe.qc.keep.abundfilt.fq.gz
+   for file in *.pe.qc.keep.abundfilt.fq.gz
    do
-      split-paired-reads.py $i
+      split-paired-reads.py ${file}
    done
    
    cat *.1 > left.fq
@@ -106,11 +106,12 @@ Assembling with Trinity
 Run the assembler! :
 ::
 
-   /root/trinityrnaseq*/Trinity --left left.fq --right right.fq --seqType fq -JM 10G
+   /root/trinityrnaseq*/Trinity --left left.fq --right right.fq --seqType fq \
+      --max_memory 14G --CPU 4
 
-Note that this last bit (10G) is the maximum amount of memory to use.  You
-can increase (or decrease) it based on what machine you rented.  This size
-works for the m1.xlarge machines.
+Note that this last two parts (--max_memory 14G --CPU 4) is the maximum amount
+of memory and CPUs to use.  You can increase (or decrease) them based on what
+machine you rented. This size works for the m1.xlarge machines.
 
 Once this completes (on the Nematostella data it might take about 12 hours),
 you'll have an assembled transcriptome in trinity_out_dir/Trinity.fasta.
