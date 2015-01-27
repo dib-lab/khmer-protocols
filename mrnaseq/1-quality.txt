@@ -377,7 +377,7 @@ So ::
    rmdir trimmed
 
 And, finally, you can toss the filtered files, because you've turned *those*
-into *.pe and *.se files ::
+into ``*.pe`` and ``*.se`` files::
    
    rm filtered/*
    rmdir filtered
