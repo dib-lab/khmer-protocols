@@ -44,9 +44,9 @@ then:
 
 ::
 
-   wget http://spades.bioinf.spbau.ru/release2.5.1/SPAdes-2.5.1.tar.gz
-   tar -xzf SPAdes-2.5.1.tar.gz
-   cd SPAdes-2.5.1
+   wget http://spades.bioinf.spbau.ru/release3.1.0/SPAdes-3.1.0.tar.gz
+   tar -xzf SPAdes-3.1.0.tar.gz
+   cd SPAdes-3.1.0
    PREFIX=/usr/local ./spades_compile.sh
 
 Preparing the Data
@@ -72,9 +72,11 @@ and convert them all into FASTA (for IDBA)
 
 ::
 
-   for i in *kak*.pe.fq
+   for i in kak*.pe.fq.gz
    do
       name=$(basename $i .fq).fa
+      python /usr/local/share/khmer/scripts/fastq-to-fasta.py $i > $name
+      name=$(basename $i .fq.gz).fa
       python /usr/local/share/khmer/sandbox/fastq-to-fasta.py $i > $name
    done
 
@@ -170,10 +172,10 @@ Getting Stats For the Assemblies
 --------------------------------
 
 To get some basic stats for the assemblies, run
-
 ::
 
-    python /usr/local/share/khmer/sandbox/calc-best-assembly.py -q  *velvet.*.d/contigs.fa  *.spades.d/contigs.fasta *.idba.d/scaffold.fa  -o best.fa
+    python /usr/local/share/khmer/sandbox/assemstats3.py 1000 *velvet.*.d/contigs.fa  *.spades.d/contigs.fasta *.idba.d/scaffold.fa
+
 
 This will yield something like:
 
@@ -212,24 +214,26 @@ represent the partition.  (An alternative would be to use something like
 minimus2 to merge assemblies, but we think assembling assemblies is a
 bad idea.)  To pick the best assembly, we're going to choose the one
 that is best 
+::
 
+    GROUPLIST=$(ls -1 kak.group*.pe.fq.gz | cut -c 5-13)
+    for g in $GROUPLIST
+    do
+       python /usr/local/share/khmer/sandbox/calc-best-assembly.py -q *.${g}.*velvet.*.d/contigs.fa  *.${g}.*spades.d/contigs.fasta *.${g}.*.idba.d/scaffold.fa -o best.$g.fa
+    done
+
+Now, rename the sequences:
 ::
  
-    python /usr/local/share/khmer/sandbox/multi-rename.py testasm  best.fa > assembly.fa
-
-::
-
+    python /usr/local/share/khmer/sandbox/multi-rename.py assembly  best.group*.fa > assembly.fa
     fold assembly.fa > final-assembly.fa
    
 After this, 'final-assembly.fa' will contain the final set of contigs,
-with each contig renamed to 'testasm.N'.  To get stats
+with each contig renamed to 'assembly.N'.  To get stats
 
 ::
 
-    python /usr/local/share/khmer/sandbox/assemstats3.py 500 *velvet.*.d/contigs.fa  *.spades.d/contigs.fasta *.idba.d/scaffold.fa
-
-Note, 'best-assemblies.txt' contains the list of "best" assembly file names,
-if you want to know which ones were picked.
+    python /usr/local/share/khmer/sandbox/assemstats3.py 500 final-assembly.fa
 
 ----
 
