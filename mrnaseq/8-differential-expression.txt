@@ -29,7 +29,7 @@
 .. note::
 
    If all you have is a genes.results file, you can recover the
-   *.fq.genes.results files by doing the following::
+   \*.fq.genes.results files by doing the following::
  
          python /usr/local/share/eel-pond/unpack-genes-matrix.py genes.results
 
