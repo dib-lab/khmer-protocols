@@ -73,7 +73,7 @@ only a few hundred million reads, 16 GB should be plenty.  (See
 for more information.)
 
 Trim off likely erroneous k-mers
--------------------------------
+--------------------------------
 
 .. ::
 
