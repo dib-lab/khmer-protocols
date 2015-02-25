@@ -6,27 +6,19 @@
 
 .. ::
 
-   echo 6-annotating-transcript-families START `date` >> /root/times.out
+   echo 6-annotating-transcript-families START `date` >> ${HOME}/times.out
 
 .. ::
 
    set -x
    set -e
-   rm -fr /root/blast-2.2.*
-   rm -f /mnt/mouse.protein.faa
-   rm -f /mnt/trinity-nematostella.renamed.fa
-   rm -f /mnt/nema.x.mouse
-   rm -f /mnt/mouse.x.nema
-   rm -f /mnt/nema.x.mouse.homol
-   rm -f /mnt/nema.x.mouse.ortho
-   rm -f /mnt/mouse.protein.faa_screed
-   echo 6-annotating-transcript-families start `date` >> /root/times.out
+   echo 6-annotating-transcript-families start `date` >> ${HOME}/times.out
 
 You can start with the 'trinity-nematostella.renamed.fa.gz' file from the
 previous page (:doc:`5-building-transcript-families`) _or_ download
 a precomputed one::
 
-      cd /mnt
+      cd ${HOME}/projects/eelpond/partitions
       curl -O http://public.ged.msu.edu.s3.amazonaws.com/trinity-nematostella.renamed.fa.gz
 
 .. note::
@@ -34,7 +26,7 @@ a precomputed one::
    The BLASTs below will take a *long* time, like 24-36 hours.  If you
    want to work with canned BLASTs, do::
 
-      cd /mnt
+      cd ${HOME}/projects/eelpond/annotation
       curl -O http://public.ged.msu.edu.s3.amazonaws.com/nema.x.mouse.gz
       curl -O http://public.ged.msu.edu.s3.amazonaws.com/mouse.x.nema.gz
       gunzip nema.x.mouse.gz
@@ -43,33 +35,22 @@ a precomputed one::
    However, if you built your own transcript families, you'll need to
    rerun these BLASTs.
 
-Install BLAST
-=============
-
-Make sure you've updated BLAST, as in :doc:`installing-blastkit`:
-::
-   
-   cd /root
-   
-   curl -O ftp://ftp.ncbi.nih.gov/blast/executables/release/2.2.24/blast-2.2.24-x64-linux.tar.gz
-   tar xzf blast-2.2.24-x64-linux.tar.gz
-   cp blast-2.2.24/bin/* /usr/local/bin
-   cp -r blast-2.2.24/data /usr/local/blast-data
-
 Doing a preliminary annotation against mouse
 ============================================
 
 Now let's assign putative homology & orthology to these transcripts, by
 doing BLASTs & reciprocal best hit analysis.  First, uncompress your
-transcripts file:
-::
+transcripts file::
 
-   cd /mnt
-   gunzip trinity-nematostella.renamed.fa.gz 
+   cd ${HOME}/projects/eelpond/
+   mkdir annotation
+   cd annotation
+   gunzip -c ../partitions/trinity-nematostella.renamed.fa.gz \
+     trinity-nematostella.renamed.fa
 
-Now, grab the latest mouse RefSeq:
-::
+Now, grab the latest mouse RefSeq::
 
+   cd ${HOME}/projects/eelpond/annotation
    for file in mouse.1.protein.faa.gz mouse.2.protein.faa.gz
    do
         curl -O ftp://ftp.ncbi.nih.gov/refseq/M_musculus/mRNA_Prot/${file}
@@ -79,46 +60,53 @@ Now, grab the latest mouse RefSeq:
 
 .. ::
 
-   echo 6-annotating-transcript-families blast `date` >> /root/times.out
+   echo 6-annotating-transcript-families blast `date` >> ${HOME}/times.out
 
-Format both as BLAST databases:
-::
+Format both as BLAST databases::
 
    formatdb -i mouse.protein.faa -o T -p T
    formatdb -i trinity-nematostella.renamed.fa -o T -p F
 
 And, now, if you haven't downloaded the canned BLAST data above, run
 BLAST in both directions.  Note, this may take ~24 hours or longer;
-you probably want to run it in screen:
-::
+you probably want to run it in screen::
 
-   blastall -i trinity-nematostella.renamed.fa -d mouse.protein.faa -e 1e-3 -p blastx -o nema.x.mouse -a 8 -v 4 -b 4
-   blastall -i mouse.protein.faa -d trinity-nematostella.renamed.fa -e 1e-3 -p tblastn -o mouse.x.nema -a 8 -v 4 -b 4
+   blastall -i trinity-nematostella.renamed.fa -d mouse.protein.faa -e 1e-3 \
+     -p blastx -o nema.x.mouse -a ${THREADS:-1} -v 4 -b 4
+   blastall -i mouse.protein.faa -d trinity-nematostella.renamed.fa -e 1e-3 \
+     -p tblastn -o mouse.x.nema -a ${THREADS:-1} -v 4 -b 4
+
+..
+  #blast+ versions
+  blastx -db mouse.protein.faa -query trinity-nematostella.renamed.fa \
+    -evalue 1e-3 -num_threads ${THREADS:-1} -num_descriptions 4 \
+    -num_alignments 4 -out nema.x.mouse
+  tblastn -db trinity-nematostella.renamed.fa -query mouse.protein.faa \
+    -evalue 1e-3 -num_threads ${THREADS:-1} -num_descriptions 4 \
+    -num_alignments 4 -out mouse.x.nema 
 
 Assigning names to sequences
 ============================
 
 .. ::
 
-   echo 6-annotating-transcript-families homolortho `date` >> /root/times.out
+   echo 6-annotating-transcript-families homolortho `date` >> ${HOME}/times.out
 
 Now, calculate putative homology (best BLAST hit) and orthology
-(reciprocal best hits):
-::
+(reciprocal best hits)::
 
-   python /usr/local/share/eel-pond/make-uni-best-hits.py nema.x.mouse nema.x.mouse.homol
-   python /usr/local/share/eel-pond/make-reciprocal-best-hits.py nema.x.mouse mouse.x.nema nema.x.mouse.ortho
+   make-uni-best-hits.py nema.x.mouse nema.x.mouse.homol
+   make-reciprocal-best-hits.py nema.x.mouse mouse.x.nema nema.x.mouse.ortho
 
-Prepare some of the mouse info:
-::
+Prepare some of the mouse info::
 
-   python /usr/local/share/eel-pond/make-namedb.py mouse.protein.faa mouse.namedb
+   make-namedb.py mouse.protein.faa mouse.namedb
    python -m screed.fadbm mouse.protein.faa
 
-And, finally, annotate the sequences:
-::
+And, finally, annotate the sequences::
 
-   python /usr/local/share/eel-pond/annotate-seqs.py trinity-nematostella.renamed.fa nema.x.mouse.ortho nema.x.mouse.homol
+   annotate-seqs.py trinity-nematostella.renamed.fa nema.x.mouse.ortho \
+     nema.x.mouse.homol
 
 After this last, you should see::
 
@@ -137,8 +125,7 @@ will have sequences that look like this::
    >nematostella.id1.tr115222 h=43% => suppressor of tumorigenicity 7 protein isoform 2 [Mus musculus] 1_of_7_in_tr115222 len=1635 id=1 tr=115222 1_of_7_in_tr115222 len=1635 id=1 tr=115222
 
 I suggest renaming this file to 'nematostella.fa' and using it for
-BLASTs (see :doc:`installing-blastkit`). :
-::
+BLASTs (see :doc:`installing-blastkit`). ::
 
    cp trinity-nematostella.renamed.fa.annot nematostella.fa
 
@@ -150,14 +137,14 @@ contains all of the same information as in the first but *also* contains
 all of the actual DNA sequence in the last column.  (Some spreadsheet
 programs may not be able to open it.)  You can do::
 
-   cp *.csv /root/Dropbox
+   cp *.csv ${HOME}/Dropbox
 
 to copy them locally, if you have set up Dropbox (see:
 :doc:`../amazon/installing-dropbox`).
 
 .. ::
 
-   echo 6-annotating-transcript-families DONE `date` >> /root/times.out
+   echo 6-annotating-transcript-families DONE `date` >> ${HOME}/times.out
 
 .. shell stop
 

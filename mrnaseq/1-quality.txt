@@ -10,6 +10,14 @@ will be enough to complete the assembly of the Nematostella data set. If you
 are using your own data, be aware of your space requirements and obtain an
 appropriately sized machine ("instance") and storage ("volume").
 
+.. note::
+
+   The raw data for this tutorial is available as public snapshot
+   snap-f5a9dea7.
+
+Install software
+----------------
+
 .. Rackspace instructions
    15 GB I/O v1
    
@@ -17,6 +25,9 @@ appropriately sized machine ("instance") and storage ("volume").
    mkdir /data
    mount /dev/xvde /data
    cd /data
+   chmod -R a+rw /data
+   mkdir nemo
+   cd nemo
    curl -O http://athyra.idyll.org/~t/mrnaseq-subset.tar
    tar xvf mrnaseq-subset.tar
 
@@ -27,16 +38,7 @@ software and reboot the machine::
    apt-get -y install screen git curl gcc make g++ python-dev unzip default-jre \
               pkg-config libncurses5-dev r-base-core r-cran-gplots \
               python-matplotlib python-pip python-virtualenv sysstat fastqc \
-              trimmomatic fastx_toolkit && shutdown -r now
-
-.. note::
-
-   The raw data for this tutorial is available as public snapshot
-   snap-f5a9dea7.
-
-Install software
-----------------
-
+              trimmomatic fastx-toolkit bowtie samtools blast2
 .. ::
 
    set -x
@@ -45,6 +47,8 @@ Install software
    echo Clearing times.out
    mv -f ${HOME}/times.out ${HOME}/times.out.bak
    echo 1-quality INSTALL `date` >> ${HOME}/times.out
+
+Now switch to the non-root user.
 
 Since we have four CPUs on this machine we'll set a variable that we will use
 elsewhere so that our programs make use of all the CPUs ::
@@ -67,7 +71,8 @@ Python's pip command ::
 
 The use of ``virtualenv`` allows us to install Python software without having
 root access. If you come back to this protocol in a different terminal session
-you will need to rerun ``source ${HOME}/eelpond/env/bin/activate`` again.
+you will need to rerun ``source ${HOME}/projects/eelpond/env/bin/activate``
+again.
 
 Find your data
 --------------
@@ -132,7 +137,7 @@ OPTIONAL: Evaluate the quality of your files with FastQC
 
 If you installed Dropbox, we can use FastQC to look at the quality of your sequences::
 
-   mkdir ${HOME}/Dropbox/fastqc
+   mkdir -p ${HOME}/Dropbox/fastqc
    cd ${HOME}/projects/eelpond/extract/
    fastqc --threads ${THREADS:-1} *.fastq.gz --outdir=${HOME}/Dropbox/fastqc
 
@@ -185,7 +190,7 @@ these are the paired ends.
     
     # make a directory for this step
     mkdir ${HOME}/projects/eelpond/trimming_temp
-    mkdir ${HOME}/projecte/eelpond/trimmed
+    mkdir ${HOME}/projects/eelpond/trimmed
 
 For *each* of these pairs, run the following ::
    
@@ -230,10 +235,9 @@ Automating things a bit
 
 OK, once you've done this once or twice, it gets kind of tedious, doesn't it?
 I've written a script to write these commands out automatically.  Run it
-like so :
-::
+like so ::
 
-   cd ${HOME}/projects/eelpond
+   cd ${HOME}/projects/eelpond/raw
    python ${HOME}/src/khmer/sandbox/write-trimmomatic.py > trim.sh
 
 Run this, and then look at 'trim.sh' using the 'more' command --::
@@ -253,7 +257,7 @@ If it looks like it contains the right commands, you can run it by doing :
 
    This is a prime example of scripting to make your life much easier
    and less error prone.  Take a look at this file sometime --
-   'more ${HOME}/src/khmer/sandbox/write-trimmomatic.py' -- to get
+   ``more ${HOME}/src/khmer/sandbox/write-trimmomatic.py`` -- to get
    some idea of how this works.
 
 
@@ -293,12 +297,13 @@ This step can be automated with a 'for' loop at the shell prompt.  Try :
 
    cd ${HOME}/projects/eelpond/
    mkdir filtered
-   for file in trimmed/*
+   cd trimmed
+   for file in *
    do
         echo working with ${file}
         newfile=${file%%.fq.gz}.qc.fq.gz
         gunzip -c ${file} | fastq_quality_filter -Q33 -q 30 -p 50 | gzip -9c \
-            > filtered/${newfile}
+            > ../filtered/${newfile}
    done
 
 What this loop does is:
@@ -312,6 +317,14 @@ What this loop does is:
 
 * uncompresses the original file, passes it through fastq, recompresses it,
   and saves it to the ``filtered`` directory with the new filename.
+
+.. parallel-version::
+
+   ls * | parallel 'export file={}; \
+   echo working with ${file};
+   newfile=${file%%.fq.gz}.qc.fq.gz;
+   gunzip -c ${file} | fastq_quality_filter -Q33 -q 30 -p 50 | gzip -9c \
+   > ../filtered/${newfile}'
 
 Extracting paired ends from the interleaved files
 -------------------------------------------------
@@ -343,6 +356,14 @@ To run it on all of the pe qc files, do :
       extract-paired-reads.py ${file}
    done
 
+.. gnu-parallel-version:
+
+   cd ${HOME}/projects/eelpond/
+   mkdir filtered-pairs
+   cd filtered-pairs
+   ls ../filtered/*.pe.qc.fq.gz | parallel extract-paired-reads.py
+
+
 .. ::
 
    echo 1-quality DONE `date` >> ${HOME}/times.out
@@ -373,7 +394,7 @@ disk somewhere, right? ::
 Next, you can get rid of the trimmed files, since you only want the QC files.
 So ::
 
-   rm trimmed/*
+   rm -f trimmed/*
    rmdir trimmed
 
 And, finally, you can toss the filtered files, because you've turned *those*
@@ -435,7 +456,7 @@ If you installed Dropbox, we can once again use FastQC to look at the
 quality of your newly-trimmed sequences::
 
    mkdir -p ${HOME}/Dropbox/fastqc
-   cd ${HOME}/projects/eelpond/filtered-reads/
+   cd ${HOME}/projects/eelpond/filtered-pairs/
    fastqc --threads ${THREADS:-1} *.pe.qc.fq.gz \
        --outdir=${HOME}/Dropbox/fastqc
 

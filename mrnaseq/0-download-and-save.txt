@@ -44,8 +44,8 @@ Downloading and saving your data to a volume
 --------------------------------------------
 
 There are *many* different ways of getting big sequence files to and
-from Amazon.  The two that I mostly use are 'curl', which downloads
-files from a Web site URL; and 'ncftp', which is a robust FTP client
+from Amazon.  The two that I mostly use are ``curl``, which downloads
+files from a Web site URL; and ``ncftp``, which is a robust FTP client
 that let's you get files from an FTP site.  Sequencing centers almost
 always make their data available in one of these two ways.
 
@@ -61,20 +61,20 @@ like::
    cd /mnt
    ncftp -u <username> ftp://path/to/FTP/site
 
-use 'cd' to find the right directory, and then::
+use ``cd`` to find the right directory, and then::
 
    >> mget *
 
 to download the files.  Then type 'quit'.  
 
-You can also use 'curl' to download files one at a time from Web or FTP sites.
+You can also use ``curl`` to download files one at a time from Web or FTP sites.
 For example, to save a file from a website, you could use::
 
    cd /mnt
    curl -O http://path/to/file/on/website
 
-Once you have the files, figure out their size using 'du -sk' (e.g. after the
-above, 'du -sk /mnt' will tell you how much data you have saved under /mnt),
+Once you have the files, figure out their size using ``du -sh`` (e.g. after the
+above, ``du -sh /mnt`` will tell you how much data you have saved under /mnt),
 and go create and attach a volume (see :doc:`../amazon/index`).
 
 Any files in the '/mnt' directory will be lost when the instance is stopped or
