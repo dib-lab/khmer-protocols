@@ -5,6 +5,8 @@
 
 .. ::
 
+   set -x
+   set -e
    export PATH=$PATH:/root/rsem-1.2.8
    echo 8-differential-expression START `date` >> /root/times.out
 
