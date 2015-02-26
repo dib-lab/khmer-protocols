@@ -5,7 +5,6 @@
 At last!  All that filtering and diginorming is done, and we can get
 down to the serious business of assembling.  Huzzah!
 
-Let's start with some collection of group files in ``/mnt/assembly``.
 
 .. shell start
 

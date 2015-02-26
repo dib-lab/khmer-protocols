@@ -60,10 +60,6 @@ two sets of SE files (.se.qc.fq.gz.keep.abundfilt and
 .pe.qc.fq.gz.keep.abundfilt.se).  (Yes, the naming scheme does make
 sense.  Trust me.)
 
-You can now remove the ``normC20k20.kh`` file, too
-::
-
-    rm normC20k20.kh
 
 Normalize Down to C=5
 ---------------------
