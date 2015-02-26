@@ -1,6 +1,5 @@
 Variant calling
-###############
- 
+================ 
 
 We are using Podar dataset from ... 
 
@@ -21,7 +20,7 @@ First, we need to install the `BWA aligner
 
    cp bwa /usr/local/bin
 
-.. We also need a new version of `samtools <http://samtools.sourceforge.net/>`__::
+We also need a new version of `samtools <http://samtools.sourceforge.net/>`__::
 
    cd /root
    curl -O -L http://sourceforge.net/projects/samtools/files/samtools/0.1.19/samtools-0.1.19.tar.bz2
@@ -34,7 +33,7 @@ First, we need to install the `BWA aligner
    cp *.pl maq2sam-long maq2sam-short md5fa md5sum-lite wgsim /usr/local/bin/
 
 Download data
-~~~~~~~~~~~~~
+=============
 
 Download the reference genome and the resequencing reads::
 
