@@ -5,7 +5,6 @@
 At last!  All that filtering and diginorming is done, and we can get
 down to the serious business of assembling.  Huzzah!
 
-Let's start with some collection of group files in ``/mnt/assembly``.
 
 .. shell start
 
@@ -72,7 +71,7 @@ and convert them all into FASTA (for IDBA)
 
 ::
 
-   for i in *kak*.pe.fq
+   for i in kak*.pe.fq.gz
    do
       name=$(basename $i .fq).fa
       python /usr/local/share/khmer/scripts/fastq-to-fasta.py $i > $name

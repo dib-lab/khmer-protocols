@@ -50,7 +50,7 @@ PE file into still-interleaved and non-interleaved reads
 
 ::
 
-    for i in *.pe.qc.fq.gz.keep.abundfilt
+    for i in *.pe.*.keep*
     do
        extract-paired-reads.py $i
     done
@@ -60,10 +60,6 @@ two sets of SE files (.se.qc.fq.gz.keep.abundfilt and
 .pe.qc.fq.gz.keep.abundfilt.se).  (Yes, the naming scheme does make
 sense.  Trust me.)
 
-You can now remove the ``normC20k20.kh`` file, too
-::
-
-    rm normC20k20.kh
 
 Normalize Down to C=5
 ---------------------
@@ -90,23 +86,22 @@ keep/abundfilt/keep)
 
 ::
    
-    for i in *.abundfilt.pe
-    do
-        newfile=$(basename $i .pe.qc.fq.gz.keep.abundfilt.pe)
-        echo newfile is $newfile
-        gzip -c $i > $newfile.pe.kak.qc.fq.gz
+    for pe in *.pe.qc.fq.gz.keep.abundfilt.pe.keep
+    do 
+    	se=${pe/pe.keep/se.keep}
+	newfile=${pe/.pe.qc.fq.gz.keep.abundfilt.pe.keep/.pe.kak.qc.fq.gz}
+	cat $pe $se |gzip -c > $newfile
     done
 
 and for the single-ended files 
 
 ::
 
-    for i in *.se.qc.fq.gz.keep.abundfilt
-    do
-        pe_orphans=$(basename $i .se.qc.fq.gz.keep.abundfilt).pe.qc.fq.gz.keep.abundfilt.se
-        newfile=$(basename $i .se.qc.fq.gz.keep.abundfilt).se.kak.qc.fq.gz
-       cat $i $pe_orphans | gzip -c > $newfile
-   done
+    for se in *.se.qc.fq.gz.keep.abundfilt.keep 
+    do 
+        newfile=${se/.se.qc.fq.gz.keep.abundfilt.keep/.se.kak.qc.fq.gz}
+        gzip -c  $se >$newfile
+    done
 
 You can now remove all of these various files:: 
 
