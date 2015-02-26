@@ -20,6 +20,8 @@ Installing Trinity
 
 .. ::
 
+   set -x
+   set -e
    rm -fr /root/trinity* /root/bowtie* /root/samtools*
    rm -fr /mnt/work/trinity_out_dir
    rm -f /mnt/work/*.1 /mnt/work/*.2
@@ -34,7 +36,7 @@ To install Trinity:
    tar xzf trinity.tar.gz
    cd trinityrnaseq*/
    export FORCE_UNSAFE_CONFIGURE=1
-   make
+   make 2>1& > trinity-build.log
 
 Install bowtie
 --------------
@@ -67,8 +69,8 @@ Download and install samtools:
    tar xjf samtools.tar.bz2
    mv samtools-* samtools-latest
    cd samtools-latest/
-   make
-   cp samtools bcftools/bcftools misc/* /usr/local/bin
+   make 2>&1 > samtools-build.log
+   cp samtools misc/* /usr/local/bin
 
 Build the files to assemble
 ---------------------------

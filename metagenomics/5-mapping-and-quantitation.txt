@@ -1,4 +1,4 @@
-======================================
+=====================================
 5. Mapping and abundance quantitation
 ======================================
 
@@ -31,7 +31,8 @@ and then do the mapping
 
 ::
 
-   gunzip -c *.pe.qc.fq.gz | bowtie -p 4 -q metagenome - > metagenome.map
+    gunzip -c *.pe.qc.fq.gz | bowtie -p 4 -q metagenome - > metagenome.map
+
 
 At the moment, there seems to be no good way to do automated differential
 analysis of two samples, so we'll just show you how to annotate the
