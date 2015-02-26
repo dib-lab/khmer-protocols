@@ -31,4 +31,4 @@ Acceptance tests for khmer
    cat mouse.[123].protein.faa > mouse.protein.faa
    formatdb -i mouse.protein.faa -o T -p T
    cp ../work/trinity_out_dir/Trinity.fasta .
-   blastall -i Trinity.fasta -d mouse.protein.faa -p blastx -e 1e-6 -o trinity.x.mouse
+   blastx -db mouse.protein.faa -query Trinity.fasta -evalue 1e-6 -out trinity.x.mouse 
