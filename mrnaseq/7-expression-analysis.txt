@@ -9,6 +9,8 @@
 
 .. ::
 
+   set -x
+   set -e
    rm -fr /root/rsem*
    rm -fr /root/bowtie*
    rm -fr /mnt/rsem

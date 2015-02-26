@@ -4,6 +4,11 @@
 
 .. shell start
 
+.. ::
+
+   set -x
+   set -e
+
 .. note::
 
    You can start this tutorial with the contents of EC2/EBS snapshot
@@ -20,7 +25,7 @@ Make sure your data is in /mnt/work/.  If you've loaded it onto /data,
 you can do::
 
    cd /mnt
-   mkdir work
+   mkdir -p work
    cd /mnt/work
    ln -fs /data/*.qc.fq.gz .
 

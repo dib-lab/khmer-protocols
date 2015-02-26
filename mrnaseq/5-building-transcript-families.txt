@@ -10,6 +10,8 @@ m1.xlarge machine.
 
 .. ::
 
+   set -x
+   set -e
    rm -fr /usr/local/share/eel-pond
    rm -f /mnt/trinity-nematostella-raw.fa.gz
    echo 5-building-transcript-families install `date` >> /root/times.out

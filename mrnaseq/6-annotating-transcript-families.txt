@@ -10,6 +10,8 @@
 
 .. ::
 
+   set -x
+   set -e
    rm -fr /root/blast-2.2.*
    rm -f /mnt/mouse.protein.faa
    rm -f /mnt/trinity-nematostella.renamed.fa
@@ -68,11 +70,12 @@ transcripts file:
 Now, grab the latest mouse RefSeq:
 ::
 
-   curl -O ftp://ftp.ncbi.nih.gov/refseq/M_musculus/mRNA_Prot/mouse.protein.faa.gz
-   gunzip mouse.protein.faa.gz
-
-.. ::
-
+   for file in mouse.1.protein.faa.gz mouse.2.protein.faa.gz mouse.3.protein.faa.gz
+   do
+        curl -O ftp://ftp.ncbi.nih.gov/refseq/M_musculus/mRNA_Prot/${file}
+   done
+   gunzip mouse.[123].protein.faa.gz
+   cat mouse.[123].protein.faa > mouse.protein.faa
    echo 6-annotating-transcript-families blast `date` >> /root/times.out
 
 Format both as BLAST databases:

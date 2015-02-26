@@ -9,54 +9,49 @@ import sys, getopt
 import glob
 from collections import defaultdict
 import numpy
+import argparse
 
 def main(argv):
-   try:
-      opts, args = getopt.getopt(argv,"hi:o:",["ofile="])
-   except getopt.GetoptError:
-      print 'write-snps.py  -o <outputfile>'
-      sys.exit(2)
-   for opt, arg in opts:
-      if opt == '-h':
-         print 'write-snps.py  -o <outputfile>'
-         sys.exit()
-      elif opt in ("-o", "--ofile"):
-         outfp = arg
+    
+   parser=argparse.ArgumentParser()
+   parser.add_argument("outfile", help="Enter output file name") 
+   args=parser.parse_args()
+   outfp=args.outfile
    nones=0
    snps=0
    index=1
    vcfs=list()
    filelist = glob.glob('*.vcf')
    dic={}
-   outfp=open("snps.txt",'w')
+   outfp=open(sys.argv[1], 'w') 
    j=0
    for every in filelist:
        name=every.split('.')
        vcf=name[0]
        vcfs.append(vcf)
    mat=numpy.zeros((2000000,len(vcfs)+2),int)
+   indeces= []
+   indeces.append('zero')
    for r1 in filelist:
       print 'processing', r1, index
-      lines = open(r1, "r" ).readlines()
-      j=j+1 
       i=0
-      lines = tuple(lines)
-      while i < len(lines):
-          rec=lines[i].split('\t')
-          if lines[i][0] in '#':
-                 i+=1
-                 pass
-          else:
-               i+=1
-               if str(rec[1]) in dic:
-                          oldindex=dic.get(rec[1])
+      j=j+1
+      for line in open(r1):
+        i=i+1 
+        rec=line.split('\t')
+        if line.startswith('#'):  
+            continue 
+                 
+        else:
+               ivalue=str(rec[0])+'-'+str(rec[1])
+               if(ivalue in indeces):
+                          oldindex=indeces.index(ivalue)
                           mat[oldindex][j]=1
                else: 
-                          mat[index][0]=str(rec[1])
                           mat[index][j]=1
-                          dic[str(rec[1])]=index
+                          indeces.append(ivalue)
                           index+=1
-   snps=index
+   print len(indeces)
    deli=" "
    zero="0"
    one="1"
@@ -67,18 +62,12 @@ def main(argv):
              outfp.write(str(deli).rstrip('\n'))
    print >> outfp ,'\n'
    itr1=1
-   while itr1 <= snps:
+   while itr1 < len(indeces) :
           itr2=1 
-          outfp.write(str(mat[itr1][0]).rstrip('\n')) 
+          outfp.write(str(indeces[itr1]).rstrip('\n')) 
           outfp.write(str(deli).rstrip('\n'))
-          while itr2 <= 11: 
-           #   if(mat[itr1][itr2]==1):
-                     
+          while itr2 <= j: 
                   outfp.write(str(mat[itr1][itr2]).rstrip('\n'))
-                 #  outfp.write(str(one).rstrip('\n'))
-                 #  outfp.write(str(deli).rstrip('\n'))
-              #else:
-               #    outfp.write(str(zero).rstrip('\n'))
                   outfp.write(str(deli).rstrip('\n'))
                   itr2+=1 
           print >> outfp ,'\n' 
