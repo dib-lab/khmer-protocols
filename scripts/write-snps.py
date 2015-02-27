@@ -28,7 +28,7 @@ def main(argv):
    vcfs=list()
    filelist = glob.glob('*.vcf')
    dic={}
-   outfp=open("snps.txt",'w')
+   outfp=open(sys.argv[1], 'w')  
    j=0
    for every in filelist:
        name=every.split('.')
