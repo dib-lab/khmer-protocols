@@ -106,15 +106,17 @@ Assembling with Trinity
 Run the assembler! :
 ::
 
-   /root/trinityrnaseq*/Trinity --left left.fq --right right.fq --seqType fq --max_memory 10G
+   /root/trinityrnaseq*/Trinity --left digiresult/left.fq \
+     --right digiresult/right.fq --seqType fq --max_memory 14G \
+     --CPU ${THREADS:-2}
 
-
-Note that this last bit (10G) is the maximum amount of memory to use.  You
-can increase (or decrease) it based on what machine you rented.  This size
-works for the m1.xlarge machines.
+Note that this last two parts (``--max_memory 14G --CPU ${THREADS:-2}``) is the
+maximum amount of memory and CPUs to use.  You can increase (or decrease) them
+based on what machine you rented. This size works for the m1.xlarge machines.
 
 Once this completes (on the Nematostella data it might take about 12 hours),
-you'll have an assembled transcriptome in trinity_out_dir/Trinity.fasta.
+you'll have an assembled transcriptome in
+``${HOME}/projects/eelpond/trinity_out_dir/Trinity.fasta``.
 
 You can now copy it over via Dropbox, or set it up for BLAST (see
 :doc:`installing-blastkit`).
