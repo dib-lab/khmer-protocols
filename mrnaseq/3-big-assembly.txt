@@ -31,13 +31,13 @@ To install Trinity:
 ::
 
    cd /root
-   
-   curl -L http://sourceforge.net/projects/trinityrnaseq/files/latest/download?source=files > trinity.tar.gz
+
+   wget https://github.com/trinityrnaseq/trinityrnaseq/archive/v2.0.4.tar.gz \
+   -O trinity.tar.gz
    tar xzf trinity.tar.gz
    cd trinityrnaseq*/
-   export FORCE_UNSAFE_CONFIGURE=1
-   make 2>1& > trinity-build.log
-
+   make |& tee trinity-build.log
+   
 Install bowtie
 --------------
 
