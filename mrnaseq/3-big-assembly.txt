@@ -31,7 +31,6 @@ To install Trinity:
 ::
 
    cd /root
-
    wget https://github.com/trinityrnaseq/trinityrnaseq/archive/v2.0.4.tar.gz \
    -O trinity.tar.gz
    tar xzf trinity.tar.gz
