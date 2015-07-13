@@ -12,6 +12,10 @@ information, and `the khmer-protocols site
 <http://khmer-protocols.readthedocs.org/>`__ for the latest released
 version.
 
+This protocol assumes that you have short-insert paired-end Illumina reads.
+
+.. @CTB TODO: list software we are using, and publications.
+
 Special thanks to Dr. Joshua Rosenthal for his help in developing this,
 and to Dr. Leslie Babonis for her feedback on various problems!
 
@@ -20,7 +24,6 @@ The tutorial:
 .. toctree::
    :maxdepth: 1
 
-   0-download-and-save
    1-quality
    2-diginorm
    3-big-assembly
