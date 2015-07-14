@@ -27,8 +27,7 @@ Installing Trinity
 To install Trinity:
 ::
 
-   mkdir -p ${HOME}/src
-   cd ${HOME}/src
+   cd ${HOME}
    
    wget https://github.com/trinityrnaseq/trinityrnaseq/archive/v2.0.4.tar.gz \
      -O trinity.tar.gz
@@ -49,7 +48,7 @@ all of our interleaved pair files in two, and then add the single-ended
 seqs to one of 'em. :
 ::
 
-   cd ${HOME}/projects/eelpond/digiresult
+   cd /mnt/work
    for file in *.pe.qc.keep.abundfilt.fq.gz
    do
       split-paired-reads.py ${file}
@@ -58,14 +57,7 @@ seqs to one of 'em. :
    cat *.1 > left.fq
    cat *.2 > right.fq
    
-   gunzip -c *.se.qc.keep.abundfilt.fq.gz >> left.fq
-
-..
-   # parallel version
-   cd ${HOME}/projects/eelpond/digiresult
-   ls *.pe.qc.keep.abundfilt.fq.gz | parallel split-paired-reads.py
-   cat *.1 > left.fq & cat *.2 > right.fq
-   gunzip -c *.se.qc.keep.abundfilt.fq.gz >> left.fq
+   gunzip -c orphans.keep.abundfilt.fq.gz >> left.fq
 
 Assembling with Trinity
 -----------------------
@@ -76,9 +68,8 @@ Assembling with Trinity
 
 Run the assembler! ::
 
-   cd ${HOME}/projects/eelpond
-   ${HOME}/src/trinity*/Trinity --left digiresult/left.fq \
-     --right digiresult/right.fq --seqType fq --max_memory 14G \
+   ${HOME}/trinity*/Trinity --left left.fq \
+     --right right.fq --seqType fq --max_memory 14G \
      --CPU ${THREADS:-2}
 
 Note that this last two parts (``--max_memory 14G --CPU ${THREADS:-2}``) is the
