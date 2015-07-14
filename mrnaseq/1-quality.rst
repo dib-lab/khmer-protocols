@@ -161,13 +161,13 @@ Adapter trim each pair of files
    echo 1-quality TRIM `date` >> ${HOME}/times.out
 
 (From this point on, you may want to be running things inside of
-screen, so that you detach and log out while it's running; see
-:doc:`../amazon/using-screen` for more information.)
+screen, so that you can leave it running while you go do something
+else; see :doc:`../amazon/using-screen` for more information.)
 
 Run
 ::
 
-  rm -f orphans.fq
+  rm -f orphans.fq.gz
 
   for filename in *_R1_*.fastq.gz
   do
@@ -189,13 +189,17 @@ Run
            MINLEN:25
 
         # save the orphans
-        cat s1_se s2_se >> orphans.fq
+        gzip -9c s1_se s2_se >> orphans.fq.gz
+        rm -f s1_se s2_se
   done
+
 
 Each file with an R1 in its name should have a matching file with an R2 --
 these are the paired ends.
 
-.. ::
+The paired sequences output by this set of commands will be in the
+files ending in ``qc.fq.gz``, with any orphaned sequences all together
+in ``orphans.fq.gz``.
 
 Interleave the sequences
 ------------------------
@@ -221,26 +225,34 @@ modification of the previous for loop... ::
         # construct the output filename
         output=${base/_R1_/}.pe.qc.fq.gz
 
-        interleave-reads.py ${base}.qc.fq.gz ${baseR2}.qc.fq.gz | \
-            gzip > $output
+        (interleave-reads.py ${base}.qc.fq.gz ${baseR2}.qc.fq.gz | \
+            gzip > $output) && rm ${base}.qc.fq.gz ${baseR2}.qc.fq.gz
    done
-
-   gzip orphans.fq
 
 .. ::
 
    echo 1-quality DONE `date` >> ${HOME}/times.out
 
+The final product of this is now a set of files named
+``*.pe.qc.fq.gz`` that are paired-end / interleaved and quality
+filtered sequences, together with the file ``orphans.fq.gz`` that
+contains orphaned sequences.
+
 Finishing up
 ------------
 
-.. @CTB cleanup
-
 Make the end product files read-only::
 
-   chmod u-w *.qc.fq.gz orphans.fq.gz
+   chmod u-w *.pe.qc.fq.gz orphans.fq.gz
 
-to make sure you don't accidentally delete something.
+to make sure you don't accidentally delete them.
+
+If you linked your original data files into /mnt/work, you can now do
+::
+
+   rm *.fastq.gz
+
+to remove them from this location; you don't need them any more.
 
 Things to think about
 ~~~~~~~~~~~~~~~~~~~~~
@@ -265,4 +277,3 @@ quality of your newly-trimmed sequences::
 .. @@CTB
 
 Next stop: :doc:`2-diginorm`.
-
