@@ -22,6 +22,7 @@ Installing Trinity
 
    set -x
    set -e
+   source /home/ubuntu/work/bin/activate
    echo 3-big-assembly compileTrinity `date` >> ${HOME}/times.out
 
 To install Trinity:

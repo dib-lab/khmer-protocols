@@ -15,6 +15,7 @@ assembly <https://peerj.com/preprints/505/>`__.
 
    set -x
    set -e
+   source /home/ubuntu/work/bin/activate
 
 .. note::
 
