@@ -20,7 +20,8 @@ Install software
 ----------------
 
 On the new machine, run the following commands to update the base
-software and reboot the machine::
+software and reboot the machine
+::
 
    sudo apt-get update && \
    sudo apt-get -y install screen git curl gcc make g++ python-dev unzip \
@@ -36,7 +37,8 @@ software and reboot the machine::
    mv -f ${HOME}/times.out ${HOME}/times.out.bak
    echo 1-quality INSTALL `date` >> ${HOME}/times.out
 
-Install `khmer <http://khmer.readthedocs.org>`__ from its source code. ::
+Install `khmer <http://khmer.readthedocs.org>`__ from its source code.
+::
 
    cd ~/
    python2.7 -m virtualenv work
@@ -48,8 +50,7 @@ Install `khmer <http://khmer.readthedocs.org>`__ from its source code. ::
 
 The use of ``virtualenv`` allows us to install Python software without having
 root access. If you come back to this protocol in a different terminal session
-you will need to run
-::
+you will need to run::
         source ~/work/bin/activate
 
 Find your data
@@ -106,8 +107,7 @@ their names don't end with ``.fastq.gz``.
    This protocol takes many hours (days!) to run, so you might not want
    to run it on all the data the first time.  If you're using the
    example data, you can work with a subset of it by running this command
-   instead of the `ln -fs` command above
-   ::
+   instead of the `ln -fs` command above::
 
       cd /mnt/data
       mkdir -p extract
@@ -118,8 +118,7 @@ their names don't end with ``.fastq.gz``.
       done
 
    This will pull out the first 100,000 reads of each file (4 lines per record)
-   and put them in the new ``/mnt/data/extract`` directory.  Then, do
-   ::
+   and put them in the new ``/mnt/data/extract`` directory.  Then, do::
 
       rm -fr /mnt/work
       mkdir /mnt/work
@@ -141,7 +140,8 @@ Find the right Illumina adapters
 
 You'll need to know which Illumina sequencing adapters were used for
 your library in order to trim them off. Below, we will use the TruSeq3-PE.fa
-adapters::
+adapters
+::
 
    cd /mnt/work
    wget https://sources.debian.net/data/main/t/trimmomatic/0.33+dfsg-1/adapters/TruSeq3-PE.fa
@@ -210,7 +210,8 @@ from the `khmer package <http://khmer.readthedocs.org>`__, which we
 installed above.
 
 Now let's use a for loop again - you might notice this is only a minor
-modification of the previous for loop... ::
+modification of the previous for loop...
+::
 
    for filename in *_R1_*.qc.fq.gz
    do
