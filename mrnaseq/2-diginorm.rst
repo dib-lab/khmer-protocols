@@ -34,7 +34,8 @@ Run digital normalization
 
    echo 2-diginorm normalize1-pe `date` >> ${HOME}/times.out
 
-Apply digital normalization to the paired-end reads ::
+Apply digital normalization to the paired-end reads
+::
 
    cd /mnt/work
    normalize-by-median.py -p -k 20 -C 20 -N 4 \
@@ -60,7 +61,8 @@ Trim off likely erroneous k-mers
    echo 2-diginorm filter-abund `date` >> ${HOME}/times.out
 
 Now, run through all the reads and trim off low-abundance parts of
-high-coverage reads::
+high-coverage reads
+::
 
    filter-abund.py -V -Z 18 normC20k20.ct *.keep && \
       rm *.keep normC20k20.ct
@@ -77,7 +79,8 @@ You'll have a bunch of ``keep.abundfilt`` files -- let's make things prettier.
    
    echo 2-diginorm extract `date` >> ${HOME}/times.out
 
-First, let's break out the orphaned and still-paired reads::
+First, let's break out the orphaned and still-paired reads
+::
 
    for file in *.pe.*.abundfilt
    do 
@@ -85,7 +88,8 @@ First, let's break out the orphaned and still-paired reads::
             rm ${file}
    done
 
-We can combine all of the orphaned reads into a single file::
+We can combine all of the orphaned reads into a single file
+::
 
    gzip -9c orphans.fq.gz.keep.abundfilt > orphans.keep.abundfilt.fq.gz && \
        rm orphans.fq.gz.keep.abundfilt
@@ -95,7 +99,8 @@ We can combine all of the orphaned reads into a single file::
            rm ${file}
    done
 
-We can also rename the remaining PE reads & compress those files::
+We can also rename the remaining PE reads & compress those files
+::
 
    for file in *.abundfilt.pe
    do

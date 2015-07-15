@@ -66,7 +66,8 @@ Assembling with Trinity
 
    echo 3-big-assembly assemble `date` >> ${HOME}/times.out
 
-Run the assembler! ::
+Run the assembler!
+::
 
    ${HOME}/trinity*/Trinity --left left.fq \
      --right right.fq --seqType fq --max_memory 14G \

@@ -34,6 +34,7 @@ software and reboot the machine
    set -e
 
    echo Clearing times.out
+   touch ${HOME}/times.out
    mv -f ${HOME}/times.out ${HOME}/times.out.bak
    echo 1-quality INSTALL `date` >> ${HOME}/times.out
 
@@ -64,7 +65,7 @@ from `Tulin et al., 2013 <http://www.evodevojournal.com/content/4/1/16>`__.
    cd /mnt
    sudo chmod a+rwxt /mnt
    curl -O http://athyra.idyll.org/~t/mrnaseq-subset.tar
-   mkdir data
+   mkdir -p data
    cd data
    tar xvf ../mrnaseq-subset.tar
 
@@ -90,7 +91,7 @@ find them but doesn't need to actually move them around. :
 ::
 
    cd /mnt
-   mkdir work
+   mkdir -p work
    cd work
    
    ln -fs /mnt/data/*.fastq.gz .
@@ -167,31 +168,31 @@ else; see :doc:`../amazon/using-screen` for more information.)
 Run
 ::
 
-  rm -f orphans.fq.gz
+   rm -f orphans.fq.gz
 
-  for filename in *_R1_*.fastq.gz
-  do
+   for filename in *_R1_*.fastq.gz
+   do
         # first, make the base by removing fastq.gz
         base=$(basename $filename .fastq.gz)
         echo $base
-
+        
         # now, construct the R2 filename by replacing R1 with R2
         baseR2=${base/_R1_/_R2_}
         echo $baseR2
-
+        
         # finally, run Trimmomatic
         TrimmomaticPE ${base}.fastq.gz ${baseR2}.fastq.gz \
            ${base}.qc.fq.gz s1_se \
            ${baseR2}.qc.fq.gz s2_se \
            ILLUMINACLIP:TruSeq3-PE.fa:2:40:15 \
-           LEADING:2 TRAILING:2 \                            
+           LEADING:2 TRAILING:2 \
            SLIDINGWINDOW:4:2 \
            MINLEN:25
-
+        
         # save the orphans
         gzip -9c s1_se s2_se >> orphans.fq.gz
         rm -f s1_se s2_se
-  done
+   done
 
 
 Each file with an R1 in its name should have a matching file with an R2 --
