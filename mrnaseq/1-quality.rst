@@ -27,7 +27,7 @@ software and reboot the machine
    sudo apt-get -y install screen git curl gcc make g++ python-dev unzip \
             default-jre pkg-config libncurses5-dev r-base-core r-cran-gplots \
             python-matplotlib python-pip python-virtualenv sysstat fastqc \
-            trimmomatic fastx-toolkit bowtie samtools blast2
+            trimmomatic bowtie samtools blast2
 .. ::
 
    set -x
@@ -45,13 +45,14 @@ Install `khmer <http://khmer.readthedocs.org>`__ from its source code.
    python2.7 -m virtualenv work
    source work/bin/activate
    pip install -U setuptools
-   git clone --branch v1.4 https://github.com/dib-lab/khmer.git
+   git clone --branch v1.4.1 https://github.com/dib-lab/khmer.git
    cd khmer
    make install
 
 The use of ``virtualenv`` allows us to install Python software without having
 root access. If you come back to this protocol in a different terminal session
 you will need to run::
+
         source ~/work/bin/activate
 
 Find your data

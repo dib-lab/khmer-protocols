@@ -2,7 +2,15 @@
 2. Running digital normalization
 ================================
 
+.. |memuse| replace:: 4e9
+
 .. shell start
+
+.. ::
+
+   set -x
+   set -e
+   source /home/ubuntu/work/bin/activate
 
 .. note::
 
@@ -15,33 +23,34 @@ Run a First Round of Digital Normalization
 ------------------------------------------
 
 Normalize everything to a coverage of 20, starting with the (more valuable)
-PE reads; keep pairs using '-p'
+PE reads; keep pairs using ``-p``, and include orphans with ``-u``.
 
-::
+.. parsed-literal::
 
    cd /mnt/work
-   normalize-by-median.py -p -k 20 -C 20 -N 4 -x 1e9 --savetable normC20k20.kh  *.pe.qc.fq.gz
+   normalize-by-median.py -p -k 20 -C 20 -M |memuse| \\
+      --savetable normC20k20.ct -u orphans.fq.gz *.pe.qc.fq.gz
 
-and continuing into the (less valuable but maybe still useful) SE reads
+This produces a set of '.keep' files, as well as a normC20k20.ct
+file containing k-mer counts that we will use in the next step.
 
-::
-
-   normalize-by-median.py -C 20 --loadtable normC20k20.kh --savetable normC20k20.kh *.se.qc.fq.gz
-
-This produces a set of '.keep' files, as well as a normC20k20.kh
-database file.
+Note the ``-x`` and ``-N`` parameters.  These specify how much
+memory diginorm should use.  The product of these should be less than
+the memory size of the machine you selected.  (See `choosing hash
+sizes for khmer
+<http://khmer.readthedocs.org/en/latest/choosing-hash-sizes.html>`__
+for more information.)
 
 Error-trim Our Data
 --------------------
 
 Use 'filter-abund' to trim off any k-mers that are abundance-1 in
-high-coverage reads.  The -V option is used to make this work better
-for variable coverage data sets:
-
+high-coverage reads.  The -V option is used to ignore low coverage
+reads that are prevalent in variable abundance data sets:
 ::
 
-   filter-abund.py -V normC20k20.kh *.keep
-
+   filter-abund.py -V -Z 18 normC20k20.ct *.keep && \
+      rm *.keep normC20k20.ct
 
 This produces .abundfilt files containing the trimmed sequences.
 
@@ -50,16 +59,18 @@ PE file into still-interleaved and non-interleaved reads
 
 ::
 
-    for i in *.pe.*.keep*
-    do
-       extract-paired-reads.py $i
-    done
+   for file in *.pe.*.abundfilt
+   do
+      extract-paired-reads.py ${file} && \
+           rm ${file}
+   done
 
-This leaves you with PE files (.pe.qc.fq.gz.keep.abundfilt.pe) and
-two sets of SE files (.se.qc.fq.gz.keep.abundfilt and
-.pe.qc.fq.gz.keep.abundfilt.se).  (Yes, the naming scheme does make
-sense.  Trust me.)
+This leaves you with PE files (*.pe) and SE files (*.se).  Next, concatenate
+all of the *.se files into orphan files
+::
 
+   gzip -9c orphans.fq.gz.keep.abundfilt *.se > orphans.keep.abundfilt.fq.gz && \
+      rm orphans.fq.gz.keep.abundfilt *.se
 
 Normalize Down to C=5
 ---------------------
@@ -67,68 +78,39 @@ Normalize Down to C=5
 Now that we've eliminated many more erroneous k-mers, let's ditch some more
 high-coverage data.  First, normalize the paired-end reads 
 
-::
+.. parsed-literal::
     
-   normalize-by-median.py -C 5 -k 20 -N 4 -x 1e9 --savetable normC5k20.kh -p *.pe.qc.fq.gz.keep.abundfilt.pe
-
-and then do the remaining single-ended reads
-
-::
-    
-   normalize-by-median.py -C 5 --savetable normC5k20.kh --loadtable normC5k20.kh *.pe.qc.fq.gz.keep.abundfilt.se *.se.qc.fq.gz.keep.abundfilt
-
+   normalize-by-median.py -C 5 -k 20 -M |memuse| \\
+      --savetable normC5k20.ct -p *.abundfilt.pe \\
+      -u orphans.keep.abundfilt.fq.gz && \\
+      rm *.abundfilt.pe orphans.keep.abundfilt.fq.gz
 
 Compress and Combine the Files
 ------------------------------
 
 Now let's tidy things up.  Here are the paired files (kak =
 keep/abundfilt/keep) 
-
 ::
    
-    for pe in *.pe.qc.fq.gz.keep.abundfilt.pe.keep
-    do 
-    	se=${pe/pe.keep/se.keep}
-	newfile=${pe/.pe.qc.fq.gz.keep.abundfilt.pe.keep/.pe.kak.qc.fq.gz}
-	cat $pe $se |gzip -c > $newfile
-    done
+   for file in *.keep.abundfilt.pe.keep
+   do 
+      newfile=${file/fq.gz.keep.abundfilt.pe.keep/kak.fq}
+      mv ${file} ${newfile}
+      gzip -9 ${newfile}
+   done
 
-and for the single-ended files 
-
+and here are the orphaned reads
 ::
 
-    for se in *.se.qc.fq.gz.keep.abundfilt.keep 
-    do 
-        newfile=${se/.se.qc.fq.gz.keep.abundfilt.keep/.se.kak.qc.fq.gz}
-        gzip -c  $se >$newfile
-    done
+   mv orphans.keep.abundfilt.fq.gz.keep orphans.kak.fq && \
+      gzip orphans.kak.fq
 
-You can now remove all of these various files:: 
-
-   *.pe.qc.fq.gz.keep
-   *.pe.qc.fq.gz.keep.abundfilt
-   *.pe.qc.fq.gz.keep.abundfilt.pe
-   *.pe.qc.fq.gz.keep.abundfilt.pe.keep
-   *.pe.qc.fq.gz.keep.abundfilt.se
-   *.pe.qc.fq.gz.keep.abundfilt.se.keep
-
-by typing
- 
-::
-
-    rm *.keep *.abundfilt *.pe *.se
-
+-----
 
 If you are *not* doing partitioning (see :doc:`3-partition`), you may
-also want to remove the k-mer hash tables::
+want to remove the k-mer hash tables::
 
-   rm *.kh
-
-If you *are* running partitioning, you can remove the ``normC20k20.kh`` file::
-
-   rm normC20k20.kh
-
-but you will need the ``normC5k20.kh`` file.
+   rm *.ct
 
 Read Stats
 ----------
@@ -137,7 +119,7 @@ Try running
 
 ::
 
-   /usr/local/share/khmer/sandbox/readstats.py *.kak.qc.fq.gz *.?e.qc.fq.gz
+   readstats.py *.kak.fq.gz orphans.kak.fq.gz
 
 after a long wait, you'll see::
 

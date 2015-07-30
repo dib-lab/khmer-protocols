@@ -40,7 +40,7 @@ Apply digital normalization to the paired-end reads
 
    cd /mnt/work
    normalize-by-median.py -p -k 20 -C 20 -N 4 \
-     -x 3e9 --savetable normC20k20.ct -u orphans.fq.gz \
+     -x 1e9 --savetable normC20k20.ct -u orphans.fq.gz \
      *.pe.qc.fq.gz
 
 Note the ``-p`` in the normalize-by-median command -- when run on
