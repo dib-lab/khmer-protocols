@@ -27,8 +27,6 @@ on Amazon is writeable::
 Install software
 ----------------
 
-.. @CTB update to 2.0 when it hits! @@templating
-
 Install `khmer <http://khmer.readthedocs.org/>`__:
 
 ::
@@ -37,7 +35,7 @@ Install `khmer <http://khmer.readthedocs.org/>`__:
    python2.7 -m virtualenv work
    source work/bin/activate
    pip install -U setuptools
-   git clone --branch master https://github.com/dib-lab/khmer.git
+   git clone --branch v2.0-rc4 https://github.com/dib-lab/khmer.git
    cd khmer
    make install
 

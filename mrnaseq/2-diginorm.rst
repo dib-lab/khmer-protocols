@@ -39,17 +39,17 @@ Apply digital normalization to the paired-end reads
 ::
 
    cd /mnt/work
-   normalize-by-median.py -p -k 20 -C 20 -N 4 \
-     -x 1e9 --savetable normC20k20.ct -u orphans.fq.gz \
+   normalize-by-median.py -p -k 20 -C 20 -M 4e9 \
+     --savegraph normC20k20.ct -u orphans.fq.gz \
      *.pe.qc.fq.gz
 
 Note the ``-p`` in the normalize-by-median command -- when run on
 PE data, that ensures that no paired ends are orphaned.  The ``-u`` tells
 it that the following filename is unpaired.
 
-Also note the ``-x`` and ``-N`` parameters.  These specify how much
-memory diginorm should use.  The product of these should be less than
-the memory size of the machine you selected.  (See `choosing hash
+Also note the ``-M`` parameter.  This specifies how much memory diginorm
+should use, and should be less than the total memory on the computer
+you're using. (See `choosing hash
 sizes for khmer
 <http://khmer.readthedocs.org/en/latest/choosing-hash-sizes.html>`__
 for more information.)
