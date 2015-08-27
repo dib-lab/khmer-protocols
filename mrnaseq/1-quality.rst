@@ -45,7 +45,7 @@ Install `khmer <http://khmer.readthedocs.org>`__ from its source code.
    python2.7 -m virtualenv work
    source work/bin/activate
    pip install -U setuptools
-   git clone --branch v1.4.1 https://github.com/dib-lab/khmer.git
+   git clone --branch v2.0-rc4 https://github.com/dib-lab/khmer.git
    cd khmer
    make install
 
