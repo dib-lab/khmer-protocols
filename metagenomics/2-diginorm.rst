@@ -100,8 +100,8 @@ keep/abundfilt/keep)
 and here are the orphaned reads
 ::
 
-   mv orphans.keep.abundfilt.fq.gz.keep orphans.kak.fq && \
-      gzip orphans.kak.fq
+   mv orphans.keep.abundfilt.fq.gz.keep orphans.qc.kak.fq && \
+      gzip orphans.qc.kak.fq
 
 -----
 
@@ -117,7 +117,7 @@ Try running
 
 ::
 
-   readstats.py *.kak.fq.gz orphans.kak.fq.gz
+   readstats.py *.kak.fq.gz orphans.qc.kak.fq.gz
 
 after a long wait, you'll see::
 
