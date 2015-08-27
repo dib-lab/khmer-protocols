@@ -117,7 +117,7 @@ Try running
 
 ::
 
-   readstats.py *.kak.fq.gz orphans.qc.kak.fq.gz
+   readstats.py *.kak.fq.gz
 
 after a long wait, you'll see::
 
