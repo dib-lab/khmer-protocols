@@ -7,7 +7,8 @@ will be enough to complete the assembly of the example data set.
 .. shell start
 
 On the new machine, run the following commands to update the base
-software and install new necessary software::
+software and install new necessary software
+::
     
    sudo apt-get update && sudo apt-get -y install screen git curl gcc make \
            g++ python-dev unzip default-jre pkg-config libncurses5-dev \
