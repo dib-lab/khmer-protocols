@@ -24,12 +24,11 @@ Run a First Round of Digital Normalization
 
 Normalize everything to a coverage of 20, starting with the (more valuable)
 PE reads; keep pairs using ``-p``, and include orphans with ``-u``.
-
-.. parsed-literal::
+::
 
    cd /mnt/work
-   normalize-by-median.py -p -k 20 -C 20 -M |memuse| \\
-      --savetable normC20k20.ct -u orphans.fq.gz *.pe.qc.fq.gz
+   normalize-by-median.py -p -k 20 -C 20 -M 4e9 \
+      --savegraph normC20k20.ct -u orphans.fq.gz *.pe.qc.fq.gz
 
 This produces a set of '.keep' files, as well as a normC20k20.ct
 file containing k-mer counts that we will use in the next step.
@@ -77,12 +76,11 @@ Normalize Down to C=5
 
 Now that we've eliminated many more erroneous k-mers, let's ditch some more
 high-coverage data.  First, normalize the paired-end reads 
+::
 
-.. parsed-literal::
-    
-   normalize-by-median.py -C 5 -k 20 -M |memuse| \\
-      --savetable normC5k20.ct -p *.abundfilt.pe \\
-      -u orphans.keep.abundfilt.fq.gz && \\
+   normalize-by-median.py -C 5 -k 20 -M 4e8 \
+      --savegraph normC5k20.ct -p *.abundfilt.pe \
+      -u orphans.keep.abundfilt.fq.gz && \
       rm *.abundfilt.pe orphans.keep.abundfilt.fq.gz
 
 Compress and Combine the Files
