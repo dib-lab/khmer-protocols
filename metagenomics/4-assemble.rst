@@ -8,229 +8,70 @@ down to the serious business of assembling.  Huzzah!
 
 .. shell start
 
-Install Some Assemblers
-------------------------
+Install MEGAHIT
+---------------
 
-Let's try assembling the sequences with three different assemblers: Velvet,
-IDBA, and SPADes.
+We've found that `the MEGAHIT assembler (Li et al., 2015)
+<http://www.ncbi.nlm.nih.gov/pubmed/25609793>`__ is a good, fast,
+low-memory assembler for metagenomes (and transcriptomes), with no
+downsides for short read assembly.  You might look at `the SPAdes
+assembler <http://bioinf.spbau.ru/spades>`__ if you want to
+combine long reads.
 
-First, let's install `Velvet <http://www.ebi.ac.uk/~zerbino/velvet/>`__:
+MEGAHIT is primarily distributed
+`via GitHub <https://github.com/voutcn/megahit>`__, and you can
+find the latest release `here <https://github.com/voutcn/megahit/releases/latest>`__.  We'll be using v1.0.2
 ::
 
-   cd /root
-   curl -O http://www.ebi.ac.uk/~zerbino/velvet/velvet_1.2.10.tgz
-   tar xzf velvet_1.2.10.tgz
-   cd velvet_1.2.10
-   make MAXKMERLENGTH=51
-   cp velvet? /usr/local/bin
+   cd ~/
+   curl -L https://github.com/voutcn/megahit/archive/v1.0.2.tar.gz > megahit.tar.gz
+   tar xzf megahit.tar.gz
+   cd megahit*
+   make -j 4
+   export PATH=$PATH:${PWD}
 
-And also `IDBA <https://code.google.com/p/hku-idba/>`__:
+Install QUAST
+-------------
+
+We also want to use the QUAST tool to get statistics for the assemblies;
+let's install that
 ::
 
-   cd /root
-   curl -O https://hku-idba.googlecode.com/files/idba-1.1.1.tar.gz
-   tar xzf idba-1.1.1.tar.gz
-   cd idba-1.1.1
-   ./configure && make
-   cp bin/idba_ud /usr/local/bin
+   cd ~/
+   curl -L http://sourceforge.net/projects/quast/files/quast-3.0.tar.gz/download > quast-3.0.tar.gz
+   tar xvf quast-3.0.tar.gz
 
-And also `SPADes <http://bioinf.spbau.ru/spades/>`__. First:
+Running MEGAHIT
+---------------
+
+To run MEGAHIT, we need to give it a list of paired-end files, together
+with the file full of orphans
 ::
 
-   apt-get -y install cmake
+   cd /mnt/work
+   PE_FILES=$(ls -1 *.pe.qc.kak.fq.gz | tr '\n' ',')
+   megahit --12 ${PE_FILES%,} -r orphans.qc.kak.fq.gz
 
-then:
+If everything works, you should see ``ALL DONE.`` with some other information
+at the end.  If this command works::
 
-::
+   ls megahit_out/done
 
-   wget http://spades.bioinf.spbau.ru/release3.1.0/SPAdes-3.1.0.tar.gz
-   tar -xzf SPAdes-3.1.0.tar.gz
-   cd SPAdes-3.1.0
-   PREFIX=/usr/local ./spades_compile.sh
+then your assembly completed, and your final contigs are in ``megahit_out/final.contigs.fa``.
 
-Preparing the Data
--------------------
-
-Each assembler takes in data in a slightly different format.  Velvet
-is the most flexible: it can take in paired-end and orphaned reads,
-in FASTA or FASTQ format, gzipped or not.  However, SPADes requires
-paired-end FASTQ, while IDBA requires paired-end FASTA.  So we need
-to do some conversions.
-
-First, let's gunzip all of the pe.fq files (for SPADes)
-
-::
-
-   cd /mnt/work/
-   for i in *kak*.pe.fq.gz
-   do
-      gunzip -c $i > $(basename $i .gz)
-   done
-
-and convert them all into FASTA (for IDBA)
-
-::
-
-   for i in kak*.pe.fq.gz
-   do
-      name=$(basename $i .fq).fa
-      python /usr/local/share/khmer/scripts/fastq-to-fasta.py $i > $name
-   done
-
-Setting Up the Assemblies
--------------------------
-
-We're going to set up a bunch of assemblies in a script called
-'do-assembly.sh'.  This will let us execute them in parallel if we
-want to, and just keep track of things if we don't want to.
-
-Let's make sure the file is empty first
-
-::
-
-   rm -f do-assembly.sh
-
-And install `GNU parallel <http://www.gnu.org/software/parallel/>`__.
-::
-
-   cd /root
-   curl -O http://ftp.gnu.org/gnu/parallel/parallel-latest.tar.bz2
-   tar xjf parallel-latest.tar.bz2
-   cd parallel-*
-   ./configure && make && make install
-   cd /mnt/work/
-
-Setting Up Velvet Runs
------------------------
-
-I personally really like the Velvet assembler as a first cut
-assembler, since it yields pretty good results in a wide variety of
-situations.  It's also rather fast.  The downside is that you have to
-specify a 'k' parameter, which gets annoying because it gives you
-different results and you have to run a lot of assemblies.  Typically,
-I just run a bunch of 'k's, and evaluate the results.
-
-So, let's just do that
-
-::
-    
-    for i in *kak*.pe.fq.gz;
-    do
-        name=$(basename $i .pe.fq.gz);
-        pefile=$name.pe.fq.gz
-        sefile=$name.se.fq.gz;
-        for k in {19..51..2};
-        do
-            echo "velveth $name.velvet.$k.d $k -fastq.gz -shortPaired $pefile -short $sefile && \
-            velvetg $name.velvet.$k.d -exp_cov auto -cov_cutoff auto"
-        done
-    done >> do-assembly.sh
-
-Setting Up IDBA Runs
---------------------
-
-Set up a bunch of IDBA runs
-
-::
-
-   for i in *.pe.fa
-   do
-      name=$(basename $i .pe.fa);
-      echo "idba_ud --pre_correction -r $i -o $name.idba.d"
-   done >> do-assembly.sh
-
-Setting Up SPADes runs
-----------------------
-
-And also set up a bunch of SPADes runs
-
-::
-
-   for i in *.pe.fq
-   do
-      name=$(basename $i .pe.fq);
-      echo "spades.py --sc --pe1-12 $name.pe.fq.gz -o $name.spades.d"
-   done >> do-assembly.sh
-
-Running the Assemblies
-----------------------
-
-Now, run them all in parallel:: 
-
-   parallel -j 4 < do-assembly.sh
-
-or, if you're memory limited, one by one 
-
-::
-
-   bash do-assembly.sh
-
-Getting Stats For the Assemblies
---------------------------------
+Getting statistics for the assembly
+-----------------------------------
 
 To get some basic stats for the assemblies, run
 ::
 
-    python /usr/local/share/khmer/sandbox/assemstats3.py 1000 *velvet.*.d/contigs.fa  *.spades.d/contigs.fasta *.idba.d/scaffold.fa
+    ~/quast-3.0/quast.py megahit_out/final.contigs.fa -o report
 
+and then look at ``report/report.txt``::
 
-This will yield something like:
+   less report/report.txt
 
-   N       sum     max     filename
-   38      671957  83467   dn.21/contigs.fa
-   32      668918  83568   dn.23/contigs.fa
-   35      668509  83401   dn.25/contigs.fa
-   31      671843  83817   dn.27/contigs.fa
-   32      669104  83721   dn.29/contigs.fa
-   32      672735  84066   dn.31/contigs.fa
-   32      673102  83774   dn.33/contigs.fa
-   31      674629  83912   dn.35/contigs.fa
-   31      677446  84200   dn.37/contigs.fa
-   33      681099  84554   dn.39/contigs.fa
-   35      685245  84852   dn.41/contigs.fa
-   40      686733  85276   dn.43/contigs.fa
-   41      649574  62719   nodn.21/contigs.fa
-   39      639388  62155   nodn.23/contigs.fa
-   49      646132  62145   nodn.25/contigs.fa
-   39      647100  83798   nodn.27/contigs.fa
-   38      650487  83750   nodn.29/contigs.fa
-   33      649863  83770   nodn.31/contigs.fa
-   31      636979  83822   nodn.33/contigs.fa
-   35      645536  83856   nodn.35/contigs.fa
-   36      647848  83800   nodn.37/contigs.fa
-   33      654660  83934   nodn.39/contigs.fa
-   36      645126  83897   nodn.41/contigs.fa
-   34      660289  83231   idba.dn.d/scaffold.fa
-   45      666147  41120   idba.nodn.d/scaffold.fa
-
-Generating a Final Set of Contigs
-----------------------------------
-
-Next, for each partition of input reads, let's pick one assembly to
-represent the partition.  (An alternative would be to use something like
-minimus2 to merge assemblies, but we think assembling assemblies is a
-bad idea.)  To pick the best assembly, we're going to choose the one
-that is best 
-::
-
-    GROUPLIST=$(ls -1 kak.group*.pe.fq.gz | cut -c 5-13)
-    for g in $GROUPLIST
-    do
-       python /usr/local/share/khmer/sandbox/calc-best-assembly.py -q *.${g}.*velvet.*.d/contigs.fa  *.${g}.*spades.d/contigs.fasta *.${g}.*.idba.d/scaffold.fa -o best.$g.fa
-    done
-
-Now, rename the sequences:
-::
- 
-    python /usr/local/share/khmer/sandbox/multi-rename.py assembly  best.group*.fa > assembly.fa
-    fold assembly.fa > final-assembly.fa
-   
-After this, 'final-assembly.fa' will contain the final set of contigs,
-with each contig renamed to 'assembly.N'.  To get stats
-
-::
-
-    python /usr/local/share/khmer/sandbox/assemstats3.py 500 final-assembly.fa
+This will give you all of your basic assembly statistics, should you care :).
 
 ----
 
