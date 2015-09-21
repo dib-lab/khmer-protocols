@@ -20,7 +20,7 @@ Install software
 ----------------
 
 On the new machine, run the following commands to update the base
-software and reboot the machine
+software:
 ::
 
    sudo apt-get update && \
@@ -58,8 +58,11 @@ you will need to run::
 Find your data
 --------------
 
-Load the data
-from `Tulin et al., 2013 <http://www.evodevojournal.com/content/4/1/16>`__.
+Load the data from `Tulin et al., 2013
+<http://www.evodevojournal.com/content/4/1/16>`__ into ``/mnt/data``.
+You may need to make the ``/mnt/`` directory writeable by doing::
+
+   sudo chmod a+rwxt /mnt
 
 .. ::
 
