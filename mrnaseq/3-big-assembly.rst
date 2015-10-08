@@ -1,3 +1,6 @@
+working problem: split-paired-reads.py for loop uses *.filterabund.* files, but trim-low-abund.py was used instead,
+and streaming means the files names haven't changed to reflect trim-low usage
+
 ==============================
 3. Running the Actual Assembly
 ==============================
