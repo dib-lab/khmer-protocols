@@ -215,26 +215,6 @@ installed above.
 
 Now let's use a for loop again - you might notice this is only a minor
 modification of the previous for loop...
-::
-
-   for filename in *_R1_*.qc.fq.gz
-   do
-        # first, make the base by removing .extract.fastq.gz
-        base=$(basename $filename .qc.fq.gz)
-        echo $base
-
-        # now, construct the R2 filename by replacing R1 with R2
-        baseR2=${base/_R1_/_R2_}
-        echo $baseR2
-
-        # construct the output filename
-        output=${base/_R1_/}.pe.qc.fq.gz
-
-        (interleave-reads.py ${base}.qc.fq.gz ${baseR2}.qc.fq.gz | \
-            gzip > $output) && rm ${base}.qc.fq.gz ${baseR2}.qc.fq.gz
-   done
-
-.. ::
 
    echo 1-quality DONE `date` >> ${HOME}/times.out
 
