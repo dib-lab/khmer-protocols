@@ -1,14 +1,7 @@
 for filename in *_R1_*.qc.fq.gz
 do
-     # first, make the base by removing .extract.fastq.gz
      (base=$(basename $filename .qc.fq.gz)
-     echo $base
-
-     # now, construct the R2 filename by replacing R1 with R2
      baseR2=${base/_R1_/_R2_}
-     echo $baseR2
-
-     # construct the output filename
      output=${base/_R1_/}.pe.qc.fq.gz)
 
 done | \
