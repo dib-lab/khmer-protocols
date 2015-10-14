@@ -1,5 +1,5 @@
 .. shell start
-::
+
 
 for filename in *_R1_*.qc.fq.gz
 do
