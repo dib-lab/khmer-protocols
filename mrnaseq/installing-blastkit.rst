@@ -1,7 +1,7 @@
 ===============================
 4. BLASTing your assembled data
 ===============================
-.. shell start
+:: .. shell start
 
 One thing everyone wants to do is BLAST sequence data, right?  Here's a
 simple way to set up a stylish little BLAST server that lets you search
