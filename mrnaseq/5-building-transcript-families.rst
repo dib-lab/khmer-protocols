@@ -2,7 +2,7 @@
 5. Building transcript families
 ===============================
 
-.. shell start
+:: .. shell start
 
 Install khmer, screed, and BLAST.  (See :doc:`1-quality` and
 :doc:`installing-blastkit`).  I would suggest using an m1.large or
