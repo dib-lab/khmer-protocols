@@ -1,7 +1,7 @@
 8. Differential expression (with EBSeq)
 =======================================
 
-.. shell start
+:: .. shell start
 
 .. ::
 
