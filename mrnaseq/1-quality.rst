@@ -230,14 +230,6 @@ Make the end product files read-only::
 
    chmod u-w *.pe.qc.fq.gz orphans.fq.gz
 
-to make sure you don't accidentally delete them.
-
-If you linked your original data files into /mnt/work, you can now do
-::
-
-   rm *.fastq.gz
-
-to remove them from this location; you don't need them any more.
 
 Things to think about
 ~~~~~~~~~~~~~~~~~~~~~
