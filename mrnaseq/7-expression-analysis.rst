@@ -1,7 +1,7 @@
 7. Expression analysis (with RSEM)
 ==================================
 
-.. shell start
+:: .. shell start
 
 .. ::
 
