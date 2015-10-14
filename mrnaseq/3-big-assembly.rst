@@ -5,7 +5,7 @@ and streaming means the files names haven't changed to reflect trim-low usage
 3. Running the Actual Assembly
 ==============================
 
-.. shell start
+:: .. shell start
 
 All of the below should be run in screen, probably...  You will want
 at least 15 GB of RAM, maybe more.
