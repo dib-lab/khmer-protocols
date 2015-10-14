@@ -1,7 +1,7 @@
 Acceptance tests for khmer
 ==========================
 
-.. shell start
+:: .. shell start
 
 .. for testing purposes:
 
