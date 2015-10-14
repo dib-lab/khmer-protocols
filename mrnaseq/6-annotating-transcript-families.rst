@@ -2,7 +2,7 @@
 6. Annotating transcript families
 ============================================================
 
-.. shell start
+:: .. shell start
 
 .. ::
 
