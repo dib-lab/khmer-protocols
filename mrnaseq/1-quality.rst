@@ -4,23 +4,6 @@
 
 .. shell start
 
-Boot up an m3.xlarge machine from Amazon Web Services running Ubuntu
-14.04 LTS (ami-59a4a230); this has about 15 GB of RAM, and 2 CPUs, and
-will be enough to complete the assembly of the Nematostella data
-set. If you are using your own data, be aware of your space
-requirements and obtain an appropriately sized machine ("instance")
-and storage ("volume").
-
-.. note::
-
-   The raw data for this tutorial is available as public snapshot
-   snap-f5a9dea7.
-
-Install software
-----------------
-
-On the new machine, run the following commands to update the base
-software:
 ::
 
    sudo apt-get update && \
@@ -49,18 +32,7 @@ Install `khmer <http://khmer.readthedocs.org>`__ from its source code.
    cd khmer
    make install
 
-The use of ``virtualenv`` allows us to install Python software without having
-root access. If you come back to this protocol in a different terminal session
-you will need to run::
-
-        source ~/work/bin/activate
-
-Find your data
---------------
-
-Load the data from `Tulin et al., 2013
-<http://www.evodevojournal.com/content/4/1/16>`__ into ``/mnt/data``.
-You may need to make the ``/mnt/`` directory writeable by doing::
+::
 
    sudo chmod a+rwxt /mnt
 
@@ -74,23 +46,8 @@ You may need to make the ``/mnt/`` directory writeable by doing::
 
 .. @CTB move mrnaseq-subset.tar onto S3
 
-Check::
 
-   ls /mnt/data/
-
-If you see all the files you think you should, good!  Otherwise, debug.
-
-If you're using the Tulin et al. data provided in the snapshot above,
-you should see a bunch of files like::
-
-   0Hour_ATCACG_L002_R1_001.fastq.gz
-
-Link your data into a working directory
----------------------------------------
-
-Rather than *copying* the files into the working directory, let's just
-*link* them in -- this creates a reference so that UNIX knows where to
-find them but doesn't need to actually move them around. :
+ :
 ::
 
    cd /mnt
@@ -99,66 +56,16 @@ find them but doesn't need to actually move them around. :
    
    ln -fs /mnt/data/*.fastq.gz .
 
-(The ``ln`` command does the linking.)
-
-Now, do an ``ls`` to list the files.  If you see only one entry,
-``*.fastq.gz``, then the ln command above didn't work properly.  One
-possibility is that your files aren't in /mnt/data; another is that
-their names don't end with ``.fastq.gz``.
-
-.. note::
-
-   This protocol takes many hours (days!) to run, so you might not want
-   to run it on all the data the first time.  If you're using the
-   example data, you can work with a subset of it by running this command
-   instead of the `ln -fs` command above::
-
-      cd /mnt/data
-      mkdir -p extract
-      for file in *.fastq.gz
-      do
-          gunzip -c ${file} | head -400000 | gzip \
-              > extract/${file%%.fastq.gz}.extract.fastq.gz
-      done
-
-   This will pull out the first 100,000 reads of each file (4 lines per record)
-   and put them in the new ``/mnt/data/extract`` directory.  Then, do::
-
-      rm -fr /mnt/work
-      mkdir /mnt/work
-      cd /mnt/work
-      ln -fs /mnt/data/extract/*.fastq.gz /mnt/work
-
-   to work with the subset data.
-
-Run FastQC on all your files
-----------------------------
 
 We can use FastQC to look at the quality of
 your sequences::
 
    fastqc *.fastq.gz
 
-Find the right Illumina adapters
---------------------------------
-
-You'll need to know which Illumina sequencing adapters were used for
-your library in order to trim them off. Below, we will use the TruSeq3-PE.fa
-adapters
 ::
 
    cd /mnt/work
    wget https://sources.debian.net/data/main/t/trimmomatic/0.33+dfsg-1/adapters/TruSeq3-PE.fa
-
-.. note::
-
-   You'll need to make sure these are the right adapters for your
-   data.  If they are the right adapters, you should see that some of
-   the reads are trimmed; if they're not, you won't see anything
-   get trimmed.
-
-Adapter trim each pair of files
--------------------------------
 
 .. ::
 
