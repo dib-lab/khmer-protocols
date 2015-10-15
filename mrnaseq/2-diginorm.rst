@@ -1,6 +1,8 @@
 .. shell start
 ::
 
+source ~/work/bin/activate
+
 for filename in *_R1_*.qc.fq.gz
 do
      (base=$(basename $filename .qc.fq.gz)
