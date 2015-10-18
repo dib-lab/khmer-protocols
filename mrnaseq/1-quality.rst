@@ -114,8 +114,7 @@ Run
 
    done | \
 
-      normalize-by-median.py -k 20 -C 20 -M 4e9 - -o - | \
-      trim-low-abund.py -V -k 20 -Z 20 -C 3 - -o - -M 4e9 | \
+      trim-low-abund.py -V -k 20 -Z 20 -C 3 - -o - -M 4e9 --diginorm | \
       extract-paired-reads.py --gzip  -p paired.gz -s single.gz
 
 .. shell stop
