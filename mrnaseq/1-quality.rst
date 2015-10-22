@@ -117,4 +117,36 @@ Run
       trim-low-abund.py -V -k 20 -Z 20 -C 3 - -o - -M 4e9 --diginorm | \
       extract-paired-reads.py --gzip  -p paired.gz -s single.gz
 
+
+   echo 3-big-assembly compileTrinity `date` >> ${HOME}/times.out
+   
+Installing Trinity
+------------------
+::
+
+   cd ${HOME}
+   
+   wget https://github.com/trinityrnaseq/trinityrnaseq/archive/v2.0.4.tar.gz \
+     -O trinity.tar.gz
+   tar xzf trinity.tar.gz
+   cd trinityrnaseq*/
+   make |& tee trinity-build.log
+
+Build the files to assemble
+---------------------------
+
+.. ::
+
+   echo 3-big-assembly extractReads `date` >> ${HOME}/times.out
+
+
+:
+::
+
+   cd /mnt/work
+   zcat paired.gz | \
+   split-paired-reads.py -1 left.fq -2 right.fq paired.gz | \
+   gunzip -c orphans.fq.gz >> left.fq
+   
+
 .. shell stop
