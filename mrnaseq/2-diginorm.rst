@@ -1,4 +1,4 @@
-.. shell start
+
 ::
 
 source ~/work/bin/activate
