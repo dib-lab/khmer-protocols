@@ -1,34 +1,40 @@
-working problem: split-paired-reads.py for loop uses *.filterabund.* files, but trim-low-abund.py was used instead,
-and streaming means the files names haven't changed to reflect trim-low usage
+================================================
+1. Quality Trimming and Filtering Your Sequences
+================================================
 
-==============================
-3. Running the Actual Assembly
-==============================
+.. shell start
 
-:: .. shell start
+::
 
-All of the below should be run in screen, probably...  You will want
-at least 15 GB of RAM, maybe more.
-
-(If you start up a new machine, you'll need to go to
-:doc:`1-quality` and go through the Install Software section.)
-
-.. note::
-
-   You can start this tutorial with the contents of EC2/EBS snapshot
-   snap-7b0b872e.
-
-Installing Trinity
-------------------
-
+   sudo apt-get update && \
+   sudo apt-get -y install screen git curl gcc make g++ python-dev unzip \
+            default-jre pkg-config libncurses5-dev r-base-core r-cran-gplots \
+            python-matplotlib python-pip python-virtualenv sysstat fastqc \
+            trimmomatic bowtie samtools blast2
 .. ::
 
    set -x
    set -e
-   source /home/ubuntu/work/bin/activate
-   echo 3-big-assembly compileTrinity `date` >> ${HOME}/times.out
 
-To install Trinity:
+   echo Clearing times.out
+   touch ${HOME}/times.out
+   mv -f ${HOME}/times.out ${HOME}/times.out.bak
+   echo 1-quality INSTALL `date` >> ${HOME}/times.out
+
+Install `khmer <http://khmer.readthedocs.org>`__ from its source code.
+::
+
+   cd ~/
+   python2.7 -m virtualenv work
+   source work/bin/activate
+   pip install -U setuptools
+   git clone --branch cleanup/semistreaming https://github.com/dib-lab/khmer.git
+   cd khmer
+   make install
+::
+
+Installing Trinity
+------------------
 ::
 
    cd ${HOME}
@@ -39,59 +45,103 @@ To install Trinity:
    cd trinityrnaseq*/
    make |& tee trinity-build.log
 
-Build the files to assemble
----------------------------
+::
+
+   sudo chmod a+rwxt /mnt
 
 .. ::
 
-   echo 3-big-assembly extractReads `date` >> ${HOME}/times.out
+   cd /mnt
+   curl -O https://s3.amazonaws.com/public.ged.msu.edu/mrnaseq-subset.tar
+   mkdir -p data
+   cd data
+   tar xvf ../mrnaseq-subset.tar
 
-For paired-end data, Trinity expects two files, 'left' and 'right';
-there can be orphan sequences present, however.  So, below, we split
-all of our interleaved pair files in two, and then add the single-ended
-seqs to one of 'em. :
+.. @CTB move mrnaseq-subset.tar onto S3
+
+
+ :
+::
+
+   cd /mnt
+   mkdir -p work
+   cd work
+   
+   ln -fs /mnt/data/*.fastq.gz .
+
+
+We can use FastQC to look at the quality of
+your sequences::
+
+   fastqc *.fastq.gz
+
 ::
 
    cd /mnt/work
-   for file in *.pe.qc.keep.abundfilt.fq.gz
-   do
-      split-paired-reads.py ${file}
-   done
-   
-   cat *.1 > left.fq
-   cat *.2 > right.fq
-   
-   gunzip -c orphans.keep.abundfilt.fq.gz >> left.fq
-
-Assembling with Trinity
------------------------
+   wget https://sources.debian.net/data/main/t/trimmomatic/0.33+dfsg-1/adapters/TruSeq3-PE.fa
 
 .. ::
 
-   echo 3-big-assembly assemble `date` >> ${HOME}/times.out
+   echo 1-quality TRIM `date` >> ${HOME}/times.out
 
-Run the assembler!
+(From this point on, you may want to be running things inside of
+screen, so that you can leave it running while you go do something
+else; see :doc:`../amazon/using-screen` for more information.)
+
+Run
 ::
 
-   ${HOME}/trinity*/Trinity --left left.fq \
-     --right right.fq --seqType fq --max_memory 14G \
-     --CPU ${THREADS:-2}
+   rm -f orphans.fq.gz
 
-Note that this last two parts (``--max_memory 14G --CPU ${THREADS:-2}``) is the
-maximum amount of memory and CPUs to use.  You can increase (or decrease) them
-based on what machine you rented. This size works for the m1.xlarge machines.
+   for filename in *_R1_*.fastq.gz
+   do
+        # first, make the base by removing fastq.gz
+        base=$(basename $filename .fastq.gz)
+        echo $base
+        
+        # now, construct the R2 filename by replacing R1 with R2
+        baseR2=${base/_R1_/_R2_}
+        echo $baseR2
+        
+        # finally, run Trimmomatic
+        TrimmomaticPE ${base}.fastq.gz ${baseR2}.fastq.gz \
+           ${base}.qc.fq.gz s1_se \
+           ${baseR2}.qc.fq.gz s2_se \
+           ILLUMINACLIP:TruSeq3-PE.fa:2:40:15 \
+           LEADING:2 TRAILING:2 \
+           SLIDINGWINDOW:4:2 \
+           MINLEN:25
+        
+        # save the orphans
+        gzip -9c s1_se s2_se >> orphans.fq.gz
+        rm -f s1_se s2_se
+   done
 
-Once this completes (on the Nematostella data it might take about 12 hours),
-you'll have an assembled transcriptome in
-``${HOME}/projects/eelpond/trinity_out_dir/Trinity.fasta``.
+   (for filename in *_R1_*.qc.fq.gz
+   do
+      base=$(basename $filename .qc.fq.gz)
+      baseR2=${base/_R1_/_R2_}
+      output=${base/_R1_/}.pe.qc.fq.gz
 
-You can now copy it over via Dropbox, or set it up for BLAST (see
-:doc:`installing-blastkit`).
+      interleave-reads.py ${base}.qc.fq.gz ${baseR2}.qc.fq.gz  
 
-.. ::
+   done && zcat orphans.fq.gz) | \
 
-   echo 3-big-assembly DONE `date` >> ${HOME}/times.out
+      trim-low-abund.py -V -k 20 -Z 20 -C 3 - -o - -M 4e9 --diginorm | \
+      extract-paired-reads.py --gzip  -p paired.gz -s single.gz
+
+
+   echo 3-big-assembly compileTrinity `date` >> ${HOME}/times.out
+   
+
+
+:
+::
+
+   cd /mnt/work
+   zcat paired.gz | \
+   split-paired-reads.py -1 left.fq -2 right.fq paired.gz | \
+   gunzip -c orphans.fq.gz >> left.fq
+   
 
 .. shell stop
-
-Next: :doc:`5-building-transcript-families` (or :doc:`installing-blastkit`).
