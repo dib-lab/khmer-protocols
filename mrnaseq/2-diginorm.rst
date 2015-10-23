@@ -21,6 +21,8 @@
    touch ${HOME}/times.out
    mv -f ${HOME}/times.out ${HOME}/times.out.bak
    echo 1-quality INSTALL `date` >> ${HOME}/times.out
+   
+   ::
 
 Install `khmer <http://khmer.readthedocs.org>`__ from its source code.
 ::
