@@ -33,19 +33,6 @@ Install `khmer <http://khmer.readthedocs.org>`__ from its source code.
    cd khmer
    make install
    
-      
-Installing Trinity
-------------------
-::
-
-   cd ${HOME}
-   
-   wget https://github.com/trinityrnaseq/trinityrnaseq/archive/v2.0.4.tar.gz \
-     -O trinity.tar.gz
-   tar xzf trinity.tar.gz
-   cd trinityrnaseq*/
-   make |& tee trinity-build.log
-
 ::
 
    sudo chmod a+rwxt /mnt
@@ -57,6 +44,18 @@ Installing Trinity
    mkdir -p data
    cd data
    tar xvf ../mrnaseq-subset.tar
+   
+   Installing Trinity
+------------------
+::
+
+   wget https://github.com/trinityrnaseq/trinityrnaseq/archive/v2.0.4.tar.gz \
+     -O trinity.tar.gz
+   tar xzf trinity.tar.gz
+   mkdir trinityrnaseq
+   cd trinityrnaseq/
+   make |& tee trinity-build.log
+
 
 .. @CTB move mrnaseq-subset.tar onto S3
 
