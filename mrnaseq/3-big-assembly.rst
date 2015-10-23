@@ -37,6 +37,12 @@ Installing Trinity
 ------------------
 ::
 
+   source /home/ubuntu/work/bin/activate
+   echo 3-big-assembly compileTrinity `date` >> ${HOME}/times.out
+
+To install Trinity:
+::
+   
    cd ${HOME}
    
    wget https://github.com/trinityrnaseq/trinityrnaseq/archive/v2.0.4.tar.gz \
@@ -130,12 +136,10 @@ Run
       trim-low-abund.py -V -k 20 -Z 20 -C 3 - -o - -M 4e9 --diginorm | \
       extract-paired-reads.py --gzip  -p paired.gz -s single.gz
 
-
-   echo 3-big-assembly compileTrinity `date` >> ${HOME}/times.out
-   
-
-
-:
+For paired-end data, Trinity expects two files, 'left' and 'right';
+there can be orphan sequences present, however.  So, below, we split
+all of our interleaved pair files in two, and then add the single-ended
+seqs to one of 'em. :
 ::
 
    cd /mnt/work
