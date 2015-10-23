@@ -33,26 +33,6 @@ Install `khmer <http://khmer.readthedocs.org>`__ from its source code.
    make install
 ::
 
-Installing Trinity
-------------------
-::
-
-   source /home/ubuntu/work/bin/activate
-   echo 3-big-assembly compileTrinity `date` >> ${HOME}/times.out
-
-To install Trinity:
-::
-   
-   cd ${HOME}
-   
-   wget https://github.com/trinityrnaseq/trinityrnaseq/archive/v2.0.4.tar.gz \
-     -O trinity.tar.gz
-   tar xzf trinity.tar.gz
-   cd trinityrnaseq*/
-   make |& tee trinity-build.log
-
-::
-
    sudo chmod a+rwxt /mnt
 
 .. ::
@@ -146,6 +126,27 @@ seqs to one of 'em. :
    zcat paired.gz | \
    split-paired-reads.py -1 left.fq -2 right.fq paired.gz | \
    gunzip -c orphans.fq.gz >> left.fq
+   
+Installing Trinity
+------------------
+::
+
+   source /home/ubuntu/work/bin/activate
+   echo 3-big-assembly compileTrinity `date` >> ${HOME}/times.out
+
+To install Trinity:
+::
+   
+   cd ${HOME}
+   
+   wget https://github.com/trinityrnaseq/trinityrnaseq/archive/v2.0.4.tar.gz \
+     -O trinity.tar.gz
+   tar xzf trinity.tar.gz
+   cd trinityrnaseq*/
+   make |& tee trinity-build.log
+
+::
+
    
 Now we will be running Trinity:
 ::
