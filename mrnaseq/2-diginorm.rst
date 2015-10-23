@@ -24,8 +24,7 @@
    
    ::
 
-Install `khmer <http://khmer.readthedocs.org>`__ from its source code.
-::
+
 
    cd ~/
    python2.7 -m virtualenv work
@@ -35,11 +34,11 @@ Install `khmer <http://khmer.readthedocs.org>`__ from its source code.
    cd khmer
    make install
    
-::
+
 
    sudo chmod a+rwxt /mnt
 
-.. ::
+
 
    cd /mnt
    curl -O https://s3.amazonaws.com/public.ged.msu.edu/mrnaseq-subset.tar
@@ -47,24 +46,12 @@ Install `khmer <http://khmer.readthedocs.org>`__ from its source code.
    cd data
    tar xvf ../mrnaseq-subset.tar
    
-   Installing Trinity
-------------------
-::
-
    wget https://github.com/trinityrnaseq/trinityrnaseq/archive/v2.0.4.tar.gz \
-     -O trinity.tar.gz
+   -O trinity.tar.gz
    tar xzf trinity.tar.gz
-   mkdir trinityrnaseq
-   cd trinityrnaseq/
+   cd trinityrnaseq*/
    make |& tee trinity-build.log
-
-
-.. @CTB move mrnaseq-subset.tar onto S3
-
-
- :
-::
-
+   
    cd /mnt
    mkdir -p work
    cd work
