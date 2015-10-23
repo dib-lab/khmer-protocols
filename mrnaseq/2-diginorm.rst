@@ -11,7 +11,6 @@
             default-jre pkg-config libncurses5-dev r-base-core r-cran-gplots \
             python-matplotlib python-pip python-virtualenv sysstat fastqc \
             trimmomatic bowtie samtools blast2
-            
 .. ::
 
    set -x
@@ -21,10 +20,9 @@
    touch ${HOME}/times.out
    mv -f ${HOME}/times.out ${HOME}/times.out.bak
    echo 1-quality INSTALL `date` >> ${HOME}/times.out
-   
-   ::
 
-
+Install `khmer <http://khmer.readthedocs.org>`__ from its source code.
+::
 
    cd ~/
    python2.7 -m virtualenv work
@@ -33,25 +31,44 @@
    git clone --branch cleanup/semistreaming https://github.com/dib-lab/khmer.git
    cd khmer
    make install
-   
+::
 
+Installing Trinity
+------------------
+::
+
+   source /home/ubuntu/work/bin/activate
+   echo 3-big-assembly compileTrinity `date` >> ${HOME}/times.out
+
+To install Trinity:
+::
+   
+   cd ${HOME}
+   
+   wget https://github.com/trinityrnaseq/trinityrnaseq/archive/v2.0.4.tar.gz \
+     -O trinity.tar.gz
+   tar xzf trinity.tar.gz
+   cd trinityrnaseq*/
+   make |& tee trinity-build.log
+
+::
 
    sudo chmod a+rwxt /mnt
 
-
+.. ::
 
    cd /mnt
    curl -O https://s3.amazonaws.com/public.ged.msu.edu/mrnaseq-subset.tar
    mkdir -p data
    cd data
    tar xvf ../mrnaseq-subset.tar
-   
-   wget https://github.com/trinityrnaseq/trinityrnaseq/archive/v2.0.4.tar.gz \
-   -O trinity.tar.gz
-   tar xzf trinity.tar.gz
-   cd trinityrnaseq*/
-   make |& tee trinity-build.log
-   
+
+.. @CTB move mrnaseq-subset.tar onto S3
+
+
+ :
+::
+
    cd /mnt
    mkdir -p work
    cd work
@@ -119,25 +136,16 @@ Run
       trim-low-abund.py -V -k 20 -Z 20 -C 3 - -o - -M 4e9 --diginorm | \
       extract-paired-reads.py --gzip  -p paired.gz -s single.gz
 
-
-
-
-Build the files to assemble
----------------------------
-
-.. ::
-
-   echo 3-big-assembly extractReads `date` >> ${HOME}/times.out
-
-
-:
+For paired-end data, Trinity expects two files, 'left' and 'right';
+there can be orphan sequences present, however.  So, below, we split
+all of our interleaved pair files in two, and then add the single-ended
+seqs to one of 'em. :
 ::
 
    cd /mnt/work
    zcat paired.gz | \
    split-paired-reads.py -1 left.fq -2 right.fq paired.gz | \
    gunzip -c orphans.fq.gz >> left.fq
-
    
 
 .. shell stop
