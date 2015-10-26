@@ -1,5 +1,5 @@
 ================================================
-1. Quality Trimming and Filtering Your Sequences
+Working page for 2015-ep-streaming - integrating sar cmds
 ================================================
 
 .. shell start
@@ -31,7 +31,6 @@ Install `khmer <http://khmer.readthedocs.org>`__ from its source code.
    git clone --branch cleanup/semistreaming https://github.com/dib-lab/khmer.git
    cd khmer
    make install
-
 ::
 
    sudo chmod a+rwxt /mnt
@@ -112,18 +111,34 @@ Run
 
       interleave-reads.py ${base}.qc.fq.gz ${baseR2}.qc.fq.gz  
 
-   done && zcat orphans.fq.gz) | \
+   done && zcat orphans.fq.gz \
+      echo 1-quality DONE `date` >> ${HOME}/times.out) | \
 
-      trim-low-abund.py -V -k 20 -Z 20 -C 3 - -o - -M 4e9 --diginorm | \
+      trim-low-abund.py -V -k 20 -Z 20 -C 3 - -o - -M 4e9 --diginorm \
+      --diginorm-coverage=20 -C 2 -Z 18 -k 20 -V | \
       extract-paired-reads.py --gzip  -p paired.gz -s single.gz
 
+For paired-end data, Trinity expects two files, 'left' and 'right';
+there can be orphan sequences present, however.  So, below, we split
+all of our interleaved pair files in two, and then add the single-ended
+seqs to one of 'em. :
+::
 
-   echo 3-big-assembly compileTrinity `date` >> ${HOME}/times.out
+   cd /mnt/work
+   zcat paired.gz | \
+   split-paired-reads.py -1 left.fq -2 right.fq paired.gz | \
+   gunzip -c orphans.fq.gz >> left.fq
    
 Installing Trinity
 ------------------
 ::
 
+   source /home/ubuntu/work/bin/activate
+   echo 3-big-assembly compileTrinity `date` >> ${HOME}/times.out
+
+To install Trinity:
+::
+   
    cd ${HOME}
    
    wget https://github.com/trinityrnaseq/trinityrnaseq/archive/v2.0.4.tar.gz \
@@ -132,21 +147,13 @@ Installing Trinity
    cd trinityrnaseq*/
    make |& tee trinity-build.log
 
-Build the files to assemble
----------------------------
-
-.. ::
-
-   echo 3-big-assembly extractReads `date` >> ${HOME}/times.out
-
-
-:
 ::
 
+   
+Now we will be running Trinity:
+::
    cd /mnt/work
-   zcat paired.gz | \
-   split-paired-reads.py -1 left.fq -2 right.fq paired.gz | \
-   gunzip -c orphans.fq.gz >> left.fq
+   ${HOME}/trinity*/Trinity --left left.fq --right right.fq --seqType fq --max_memory 14G --CPU ${THREADS:-2}
    
 
 .. shell stop
