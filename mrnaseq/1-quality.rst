@@ -123,6 +123,7 @@ all of our interleaved pair files in two, and then add the single-ended
 seqs to one of 'em. :
 ::
 
+   echo 3-big-assembly extractReads `date` >> ${HOME}/times.out
    cd /mnt/work
    zcat paired.gz | \
    split-paired-reads.py -1 left.fq -2 right.fq paired.gz | \
