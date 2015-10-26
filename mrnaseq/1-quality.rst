@@ -117,17 +117,6 @@ Run
       --diginorm-coverage=20 -C 2 -Z 18 -k 20 -V | \
       extract-paired-reads.py --gzip  -p paired.gz -s single.gz
 
-For paired-end data, Trinity expects two files, 'left' and 'right';
-there can be orphan sequences present, however.  So, below, we split
-all of our interleaved pair files in two, and then add the single-ended
-seqs to one of 'em. :
-::
-
-   echo 3-big-assembly extractReads `date` >> ${HOME}/times.out
-   cd /mnt/work
-   zcat paired.gz | \
-   split-paired-reads.py -1 left.fq -2 right.fq paired.gz | \
-   gunzip -c orphans.fq.gz >> left.fq
    
 Installing Trinity
 ------------------
@@ -148,6 +137,13 @@ To install Trinity:
    make |& tee trinity-build.log
 
 ::
+
+   echo 3-big-assembly extractReads `date` >> ${HOME}/times.out
+   cd /mnt/work
+   zcat paired.gz | \
+   split-paired-reads.py -1 left.fq -2 right.fq paired.gz | \
+   gunzip -c orphans.fq.gz >> left.fq
+   
 
    echo 3-big-assembly assemble `date` >> ${HOME}/times.out
 
