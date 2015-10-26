@@ -113,7 +113,8 @@ Run
 
    done && zcat orphans.fq.gz) | \
 
-      trim-low-abund.py -V -k 20 -Z 20 -C 3 - -o - -M 4e9 --diginorm | \
+      trim-low-abund.py -V -k 20 -Z 20 -C 3 - -o - -M 4e9 --diginorm \
+      --diginorm-coverage=20 -C 2 -Z 18 -k 20 | \
       extract-paired-reads.py --gzip  -p paired.gz -s single.gz
 
 For paired-end data, Trinity expects two files, 'left' and 'right';
