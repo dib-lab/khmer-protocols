@@ -149,11 +149,13 @@ To install Trinity:
 
 ::
 
-   
+   echo 3-big-assembly assemble `date` >> ${HOME}/times.out
+
 Now we will be running Trinity:
 ::
    cd /mnt/work
    ${HOME}/trinity*/Trinity --left left.fq --right right.fq --seqType fq --max_memory 14G --CPU ${THREADS:-2}
    
+   echo 3-big-assembly DONE `date` >> ${HOME}/times.out
 
 .. shell stop
