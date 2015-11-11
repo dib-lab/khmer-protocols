@@ -17,6 +17,10 @@ assembly <https://peerj.com/preprints/505/>`__.
    set -e
    source /home/ubuntu/work/bin/activate
 
+.. docker::
+
+   RUN pip install -U setuptools && pip install -U khmer==2.0
+
 .. note::
 
    You'll need ~15 GB of RAM for this, or more if you have a LOT of data.

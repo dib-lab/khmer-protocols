@@ -2,6 +2,11 @@
 3. Running the Actual Assembly
 ==============================
 
+.. docker::
+
+   RUN apt-get -y install wget
+   RUN pip install -U setuptools && pip install -U khmer==2.0
+
 .. shell start
 
 All of the below should be run in screen, probably...  You will want
