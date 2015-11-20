@@ -1,0 +1,5 @@
+{
+        "prefix"     : "eel-pond",
+        "format"     : "reST",
+        "filesGlob"  : "[1-3]*.rst"
+}
