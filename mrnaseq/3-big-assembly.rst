@@ -77,7 +77,7 @@ Run the assembler!
 
    ${HOME}/trinity*/Trinity --left left.fq \
      --right right.fq --seqType fq --max_memory 14G \
-     --CPU ${THREADS:-2}
+     --CPU 1
 
 Note that this last two parts (``--max_memory 14G --CPU ${THREADS:-2}``) is the
 maximum amount of memory and CPUs to use.  You can increase (or decrease) them
