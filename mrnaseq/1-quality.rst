@@ -148,7 +148,7 @@ adapters
 ::
 
    cd /mnt/work
-   wget https://sources.debian.net/data/main/t/trimmomatic/0.32+dfsg-4/adapters/TruSeq3-PE.fa
+   wget https://anonscm.debian.org/cgit/debian-med/trimmomatic.git/plain/adapters/TruSeq3-PE.fa
 
 .. note: jessica swapped above link from "https://sources.debian.net/data/main/t/trimmomatic/0.33+dfsg-1/adapters/TruSeq3-PE.fa" because that one doesn't exist anymore, and it's still the TruSeq3-PE.fa file
 
