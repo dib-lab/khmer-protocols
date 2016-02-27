@@ -64,7 +64,7 @@ your sequences::
 ::
 
    cd /mnt/work
-   wget https://sources.debian.net/data/main/t/trimmomatic/0.33+dfsg-1/adapters/TruSeq3-PE.fa
+   wget https://anonscm.debian.org/cgit/debian-med/trimmomatic.git/plain/adapters/TruSeq3-PE.fa
 
 .. ::
 
