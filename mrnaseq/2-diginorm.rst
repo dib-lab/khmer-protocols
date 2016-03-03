@@ -41,7 +41,7 @@ Link in data from mounted volume.
    sudo mkdir -p work
    cd work
    
-   ln -fs /home/ubuntu/data/*.fastq.gz .
+   sudo ln -fs /home/ubuntu/data/*.fastq.gz .
 
 
 We can use FastQC to look at the quality of
