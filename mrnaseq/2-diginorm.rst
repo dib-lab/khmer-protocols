@@ -1,6 +1,8 @@
-================================================
-2015-ep-streaming - EP 1-2 (no trinity)
-================================================
+===========================================
+2016-ep-streaming - Streaming, full dataset
+===========================================
+
+This is the same as 1-quality.rst in this repository, but the automatic data download is commented out because the full data set for this is mounted from the public amazon snapshot snap-f5a9dea7.
 
 .. shell start
 
@@ -31,29 +33,15 @@ Install `khmer <http://khmer.readthedocs.org>`__ from its source code.
    git clone --branch cleanup/semistreaming https://github.com/dib-lab/khmer.git
    cd khmer
    make install
-::
-
-   sudo chmod a+rwxt /mnt
-
-.. ::
-
-   cd /mnt
-   curl -O https://s3.amazonaws.com/public.ged.msu.edu/mrnaseq-subset.tar
-   mkdir -p data
-   cd data
-   tar xvf ../mrnaseq-subset.tar
-
-.. @CTB move mrnaseq-subset.tar onto S3
-
-
- :
+   
+Link in data from mounted volume.
 ::
 
    cd /mnt
-   mkdir -p work
+   sudo mkdir -p work
    cd work
    
-   ln -fs /mnt/data/*.fastq.gz .
+   ln -fs /home/ubuntu/data/*.fastq.gz .
 
 
 We can use FastQC to look at the quality of
@@ -64,7 +52,7 @@ your sequences::
 ::
 
    cd /mnt/work
-   wget https://sources.debian.net/data/main/t/trimmomatic/0.33+dfsg-1/adapters/TruSeq3-PE.fa
+   wget https://anonscm.debian.org/cgit/debian-med/trimmomatic.git/plain/adapters/TruSeq3-PE.fa
 
 .. ::
 
@@ -114,14 +102,47 @@ Run
    done && zcat orphans.fq.gz && \
       echo 1-quality DONE `date` >> ${HOME}/times.out && \
       echo 2-diginorm normalize1-pe `date` >> ${HOME}/times.out) | \
-      trim-low-abund.py -V -k 20 -Z 18 -C 3 - -o - -M 4e9 --diginorm \
-      --diginorm-coverage=20 | \
+      trim-low-abund.py -V -k 20 -Z 20 -C 3 - -o - -M 4e9 --diginorm \
+      --diginorm-coverage=20 -C 2 -Z 18 -k 20 -V | \
       (echo 2-diginorm filter-abund `date` >> ${HOME}/times.out && \
       echo 2-diginorm extract `date` >> ${HOME}/times.out && \
       extract-paired-reads.py --gzip  -p paired.gz -s single.gz && \
       echo 2-diginorm DONE `date` >> ${HOME}/times.out)
+   
+Installing Trinity
+------------------
+::
 
+   source /home/ubuntu/work/bin/activate
+   echo 3-big-assembly compileTrinity `date` >> ${HOME}/times.out
+
+To install Trinity:
+::
+   
+   cd ${HOME}
+   
+   wget https://github.com/trinityrnaseq/trinityrnaseq/archive/v2.0.4.tar.gz \
+     -O trinity.tar.gz
+   tar xzf trinity.tar.gz
+   cd trinityrnaseq*/
+   make |& tee trinity-build.log
+
+::
+
+   echo 3-big-assembly extractReads `date` >> ${HOME}/times.out
+   cd /mnt/work
+   zcat paired.gz | \
+   split-paired-reads.py -1 left.fq -2 right.fq paired.gz | \
+   gunzip -c orphans.fq.gz >> left.fq
+   
+
+   echo 3-big-assembly assemble `date` >> ${HOME}/times.out
+
+Now we will be running Trinity:
+::
+   cd /mnt/work
+   ${HOME}/trinity*/Trinity --left left.fq --right right.fq --seqType fq --max_memory 14G --CPU ${THREADS:-2}
+   
+   echo 3-big-assembly DONE `date` >> ${HOME}/times.out
 
 .. shell stop
-
-note - not sure if -C in trim-low-abund.py should be 3 or 2
