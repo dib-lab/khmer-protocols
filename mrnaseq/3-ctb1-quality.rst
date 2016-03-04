@@ -58,48 +58,14 @@ you will need to run::
 Find your data
 --------------
 
-Load the data from `Tulin et al., 2013
-<http://www.evodevojournal.com/content/4/1/16>`__ into ``/mnt/data``.
-You may need to make the ``/mnt/`` directory writeable by doing::
-
-   sudo chmod a+rwxt /mnt
-
-.. ::
-
-   cd /mnt
-   curl -O https://s3.amazonaws.com/public.ged.msu.edu/mrnaseq-subset.tar
-   mkdir -p data
-   cd data
-   tar xvf ../mrnaseq-subset.tar
-
-.. @CTB move mrnaseq-subset.tar onto S3
-
-Check::
-
-   ls /mnt/data/
-
-If you see all the files you think you should, good!  Otherwise, debug.
-
-If you're using the Tulin et al. data provided in the snapshot above,
-you should see a bunch of files like::
-
-   0Hour_ATCACG_L002_R1_001.fastq.gz
-
-Link your data into a working directory
----------------------------------------
-
-Rather than *copying* the files into the working directory, let's just
-*link* them in -- this creates a reference so that UNIX knows where to
-find them but doesn't need to actually move them around. :
+Link in mounted data:
 ::
 
    cd /mnt
-   mkdir -p work
+   sudo mkdir -p work
    cd work
    
-   ln -fs /mnt/data/*.fastq.gz .
-
-(The ``ln`` command does the linking.)
+   sudo ln -fs /home/ubuntu/data/*.fastq.gz .
 
 Now, do an ``ls`` to list the files.  If you see only one entry,
 ``*.fastq.gz``, then the ln command above didn't work properly.  One
