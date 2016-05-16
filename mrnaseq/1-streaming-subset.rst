@@ -145,7 +145,7 @@ To install Trinity:
    cd /mnt/work
    zcat paired.gz | \
    split-paired-reads.py -1 left.fq -2 right.fq paired.gz | \
-   gunzip -c orphans.fq.gz >> left.fq
+   gunzip -c single.gz >> left.fq
    
 
    echo 3-big-assembly assemble `date` >> ${HOME}/times.out
