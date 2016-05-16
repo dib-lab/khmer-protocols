@@ -114,7 +114,7 @@ Run
    done && zcat orphans.fq.gz && \
       echo 1-quality DONE `date` >> ${HOME}/times.out && \
       echo 2-diginorm normalize1-pe `date` >> ${HOME}/times.out) | \
-      trim-low-abund.py -V -k 20 -Z 20 -C 3 - -o - -M 4e9 --diginorm \
+      trim-low-abund.py -V -k 20 -Z 18 -C 2 - -o - -M 4e9 --diginorm \
       --diginorm-coverage=20 | \
       (echo 2-diginorm filter-abund `date` >> ${HOME}/times.out && \
       echo 2-diginorm extract `date` >> ${HOME}/times.out && \
