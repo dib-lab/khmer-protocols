@@ -131,11 +131,9 @@ To install Trinity:
 
    echo 3-big-assembly extractReads `date` >> ${HOME}/times.out
    cd /mnt/work
-   zcat paired.gz | \
-   split-paired-reads.py -1 left.fq -2 right.fq paired.gz | \
+   split-paired-reads.py -1 left.fq -2 right.fq paired.gz
    gunzip -c single.gz >> left.fq
    
-
    echo 3-big-assembly assemble `date` >> ${HOME}/times.out
 
 Now we will be running Trinity:
