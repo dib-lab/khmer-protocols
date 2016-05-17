@@ -1,6 +1,6 @@
-================================================
-2015-ep-streaming - EP 1-3 (runs through Trinity)
-================================================
+==================================================
+ep-semi - streaming - EP 1-3 (runs through Trinity)
+==================================================
 
 .. shell start
 
@@ -114,11 +114,11 @@ Run
    done && zcat orphans.fq.gz && \
       echo 1-quality DONE `date` >> ${HOME}/times.out && \
       echo 2-diginorm normalize1-pe `date` >> ${HOME}/times.out) | \
-      trim-low-abund.py -V -k 20 -Z 18 -C 2 - -o - -M 4e9 --diginorm \
-      --diginorm-coverage=20 | \
+      trim-low-abund.py -V -k 20 -Z 18 -C 2 - -o abund-trim-reads.gz -M 4e9 --diginorm \
+      --diginorm-coverage=20
       (echo 2-diginorm filter-abund `date` >> ${HOME}/times.out && \
       echo 2-diginorm extract `date` >> ${HOME}/times.out && \
-      extract-paired-reads.py --gzip  -p paired.gz -s single.gz && \
+      extract-paired-reads.py --gzip  -p paired.gz -s single.gz abund-trim-reads.gz && \
       echo 2-diginorm DONE `date` >> ${HOME}/times.out)
    
 Installing Trinity
