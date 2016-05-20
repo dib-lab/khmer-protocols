@@ -38,10 +38,10 @@ Link in data from mounted volume.
 ::
 
    cd /mnt
-   sudo mkdir -p work
+   mkdir -p work
    cd work
    
-   sudo ln -fs /home/ubuntu/data/*.fastq.gz .
+   ln -fs /home/ubuntu/data/*.fastq.gz .
 
 
 We can use FastQC to look at the quality of
