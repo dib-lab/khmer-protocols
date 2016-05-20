@@ -39,7 +39,7 @@ Install `khmer <http://khmer.readthedocs.org>`__ from its source code.
 
    cd /mnt
    curl -O https://s3.amazonaws.com/public.ged.msu.edu/mrnaseq-subset.tar
-   mkdir -p data
+   sudo mkdir -p data
    cd data
    tar xvf ../mrnaseq-subset.tar
 
@@ -50,7 +50,7 @@ Install `khmer <http://khmer.readthedocs.org>`__ from its source code.
 ::
 
    cd /mnt
-   mkdir -p work
+   sudo mkdir -p work
    cd work
    
    ln -fs /mnt/data/*.fastq.gz .
