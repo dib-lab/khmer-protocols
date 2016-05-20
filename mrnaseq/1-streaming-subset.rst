@@ -31,9 +31,6 @@ Install `khmer <http://khmer.readthedocs.org>`__ from its source code.
    git clone https://github.com/dib-lab/khmer.git
    cd khmer
    make install
-::
-
-   sudo chmod a+rwxt /mnt
 
 .. ::
 
