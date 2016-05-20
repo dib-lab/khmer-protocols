@@ -52,7 +52,7 @@ your sequences::
 ::
 
    cd /mnt/work
-   sudo wget https://anonscm.debian.org/cgit/debian-med/trimmomatic.git/plain/adapters/TruSeq3-PE.fa
+   wget https://anonscm.debian.org/cgit/debian-med/trimmomatic.git/plain/adapters/TruSeq3-PE.fa
 
 .. ::
 
