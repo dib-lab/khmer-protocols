@@ -17,6 +17,7 @@ This is the same as 1-quality.rst in this repository, but the automatic data dow
 
    set -x
    set -e
+   set -e pipefail
 
    echo Clearing times.out
    touch ${HOME}/times.out
