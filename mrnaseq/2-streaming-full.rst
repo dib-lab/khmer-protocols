@@ -93,14 +93,18 @@ Run
    done
    
    echo 1-quality DONE `date` >> ${HOME}/times.out
-
+   
+   echo 1.5-interleave START `date` >> ${HOME}/times.out
+   
    (for filename in *_R1_*.qc.fq.gz
    do
       base=$(basename $filename .qc.fq.gz)
       baseR2=${base/_R1_/_R2_}
       output=${base/_R1_/}.pe.qc.fq.gz
 
-      interleave-reads.py ${base}.qc.fq.gz ${baseR2}.qc.fq.gz  
+      interleave-reads.py ${base}.qc.fq.gz ${baseR2}.qc.fq.gz 
+      echo 1.5-interleave DONE `date` >> ${HOME}/times.out
+
 
    done && zcat orphans.fq.gz && \
       echo 2-diginorm normalize1-pe `date` >> ${HOME}/times.out) | \
