@@ -91,6 +91,8 @@ Run
         gzip -9c s1_se s2_se >> orphans.fq.gz
         rm -f s1_se s2_se
    done
+   
+   echo 1-quality DONE `date` >> ${HOME}/times.out
 
    (for filename in *_R1_*.qc.fq.gz
    do
@@ -101,7 +103,6 @@ Run
       interleave-reads.py ${base}.qc.fq.gz ${baseR2}.qc.fq.gz  
 
    done && zcat orphans.fq.gz && \
-      echo 1-quality DONE `date` >> ${HOME}/times.out && \
       echo 2-diginorm normalize1-pe `date` >> ${HOME}/times.out) | \
       trim-low-abund.py -V -k 20 -Z 18 -C 2 - -o - -M 4e9 --diginorm \
       --diginorm-coverage=20 | \
