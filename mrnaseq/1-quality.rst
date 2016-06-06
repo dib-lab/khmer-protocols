@@ -222,6 +222,8 @@ Now let's use a for loop again - you might notice this is only a minor
 modification of the previous for loop...
 ::
 
+   echo 1.5-interleave START `date` >> ${HOME}/times.out
+
    for filename in *_R1_*.qc.fq.gz
    do
         # first, make the base by removing .extract.fastq.gz
@@ -239,6 +241,8 @@ modification of the previous for loop...
             gzip > $output) && rm ${base}.qc.fq.gz ${baseR2}.qc.fq.gz
    done
 
+   echo 1.5-interleave START `date` >> ${HOME}/times.out
+   
 .. ::
 
 
