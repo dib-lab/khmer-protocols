@@ -241,7 +241,7 @@ modification of the previous for loop...
             gzip > $output) && rm ${base}.qc.fq.gz ${baseR2}.qc.fq.gz
    done
 
-   echo 1.5-interleave START `date` >> ${HOME}/times.out
+   echo 1.5-interleave DONE `date` >> ${HOME}/times.out
    
 .. ::
 
