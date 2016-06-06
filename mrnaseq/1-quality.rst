@@ -208,6 +208,8 @@ The paired sequences output by this set of commands will be in the
 files ending in ``qc.fq.gz``, with any orphaned sequences all together
 in ``orphans.fq.gz``.
 
+   echo 1-quality DONE `date` >> ${HOME}/times.out
+
 Interleave the sequences
 ------------------------
 
@@ -239,7 +241,6 @@ modification of the previous for loop...
 
 .. ::
 
-   echo 1-quality DONE `date` >> ${HOME}/times.out
 
 The final product of this is now a set of files named
 ``*.pe.qc.fq.gz`` that are paired-end / interleaved and quality
