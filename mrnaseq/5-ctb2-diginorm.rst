@@ -37,7 +37,7 @@ Run digital normalization
 
 .. ::
 
-   echo 2-diginorm normalize1-pe `date` >> ${HOME}/times.out
+   echo 3-norm-by-med START `date` >> ${HOME}/times.out
 
 Apply digital normalization to the paired-end reads
 ::
@@ -46,6 +46,9 @@ Apply digital normalization to the paired-end reads
    normalize-by-median.py -p -k 20 -C 20 -M 4e9 \
      --savegraph normC20k20.ct -u orphans.fq.gz \
      *.pe.qc.fq.gz
+  
+   echo 3-norm-by-med DONE `date` >> ${HOME}/times.out
+
 
 Note the ``-p`` in the normalize-by-median command -- when run on
 PE data, that ensures that no paired ends are orphaned.  The ``-u`` tells
@@ -63,7 +66,7 @@ Trim off likely erroneous k-mers
 
 .. ::
 
-   echo 2-diginorm filter-abund `date` >> ${HOME}/times.out
+   echo 4-filter-abund START `date` >> ${HOME}/times.out
 
 Now, run through all the reads and trim off low-abundance parts of
 high-coverage reads
@@ -71,6 +74,9 @@ high-coverage reads
 
    filter-abund.py -V -Z 18 normC20k20.ct *.keep && \
       rm *.keep normC20k20.ct
+   
+    echo 4-filter-abund DONE `date` >> ${HOME}/times.out
+
 
 This will turn some reads into orphans when their partner read is
 removed by the trimming.
@@ -82,7 +88,7 @@ You'll have a bunch of ``keep.abundfilt`` files -- let's make things prettier.
 
 .. ::
    
-   echo 2-diginorm extract `date` >> ${HOME}/times.out
+   echo 5-extract START `date` >> ${HOME}/times.out
 
 First, let's break out the orphaned and still-paired reads
 ::
@@ -93,8 +99,12 @@ First, let's break out the orphaned and still-paired reads
             rm ${file}
    done
 
+   echo 5-extract START `date` >> ${HOME}/times.out
+
 We can combine all of the orphaned reads into a single file
 ::
+
+   echo 6-rename START `date` >> ${HOME}/times.out
 
    gzip -9c orphans.fq.gz.keep.abundfilt > orphans.keep.abundfilt.fq.gz && \
        rm orphans.fq.gz.keep.abundfilt
@@ -114,6 +124,8 @@ We can also rename the remaining PE reads & compress those files
       gzip ${newfile}
    done
 
+   echo 6-rename DONE `date` >> ${HOME}/times.out
+
 This leaves you with a bunch of files named ``*.keep.abundfilt.fq``,
 which represent the paired-end/interleaved reads that remain after
 both digital normalization and error trimming, together with
@@ -122,7 +134,5 @@ both digital normalization and error trimming, together with
 Save all these files to a new volume, and get ready to assemble!
 
 .. ::
-
-   echo 2-diginorm DONE `date` >> ${HOME}/times.out
 
 .. shell stop
