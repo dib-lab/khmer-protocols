@@ -28,7 +28,7 @@ Installing Trinity
    set -x
    set -e
    source /home/ubuntu/work/bin/activate
-   echo 3-big-assembly compileTrinity `date` >> ${HOME}/times.out
+   echo 8-compile-trinity START `date` >> ${HOME}/times.out
 
 To install Trinity:
 ::
@@ -40,37 +40,17 @@ To install Trinity:
    tar xzf trinity.tar.gz
    cd trinityrnaseq*/
    make |& tee trinity-build.log
-
-Build the files to assemble
----------------------------
-
-.. ::
-
-   echo 3-big-assembly extractReads `date` >> ${HOME}/times.out
-
-For paired-end data, Trinity expects two files, 'left' and 'right';
-there can be orphan sequences present, however.  So, below, we split
-all of our interleaved pair files in two, and then add the single-ended
-seqs to one of 'em. :
-::
-
-   cd /mnt/work
-   for file in *.pe.qc.keep.abundfilt.fq.gz
-   do
-      split-paired-reads.py ${file}
-   done
    
-   cat *.1 > left.fq
-   cat *.2 > right.fq
-   
-   gunzip -c orphans.keep.abundfilt.fq.gz >> left.fq
+   echo 8-compile-trinity DONE `date` >> ${HOME}/times.out
+
+
 
 Assembling with Trinity
 -----------------------
 
 .. ::
 
-   echo 3-big-assembly assemble `date` >> ${HOME}/times.out
+   echo 9-big-assembly START `date` >> ${HOME}/times.out
 
 Run the assembler!
 ::
@@ -92,6 +72,6 @@ You can now copy it over via Dropbox, or set it up for BLAST (see
 
 .. ::
 
-   echo 3-big-assembly DONE `date` >> ${HOME}/times.out
+   echo 9-big-assembly DONE `date` >> ${HOME}/times.out
 
 .. shell stop
