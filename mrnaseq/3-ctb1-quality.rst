@@ -36,7 +36,7 @@ software:
    echo Clearing times.out
    touch ${HOME}/times.out
    mv -f ${HOME}/times.out ${HOME}/times.out.bak
-   echo 1-quality INSTALL `date` >> ${HOME}/times.out
+   echo 0-install START `date` >> ${HOME}/times.out
 
 Install `khmer <http://khmer.readthedocs.org>`__ from its source code.
 ::
@@ -48,6 +48,7 @@ Install `khmer <http://khmer.readthedocs.org>`__ from its source code.
    git clone --branch v2.0 https://github.com/dib-lab/khmer.git
    cd khmer
    make install
+   echo 0-install DONE `date` >> ${HOME}/times.out
 
 The use of ``virtualenv`` allows us to install Python software without having
 root access. If you come back to this protocol in a different terminal session
@@ -131,7 +132,7 @@ Adapter trim each pair of files
 
 .. ::
 
-   echo 1-quality TRIM `date` >> ${HOME}/times.out
+   echo 1-trim START `date` >> ${HOME}/times.out
 
 (From this point on, you may want to be running things inside of
 screen, so that you can leave it running while you go do something
@@ -166,6 +167,8 @@ Run
         rm -f s1_se s2_se
    done
 
+   echo 1-trim DONE `date` >> ${HOME}/times.out
+
 
 Each file with an R1 in its name should have a matching file with an R2 --
 these are the paired ends.
@@ -186,6 +189,8 @@ Now let's use a for loop again - you might notice this is only a minor
 modification of the previous for loop...
 ::
 
+   echo 2-interleave START `date` >> ${HOME}/times.out
+
    for filename in *_R1_*.qc.fq.gz
    do
         # first, make the base by removing .extract.fastq.gz
@@ -205,7 +210,7 @@ modification of the previous for loop...
 
 .. ::
 
-   echo 1-quality DONE `date` >> ${HOME}/times.out
+   echo 2-interleave DONE `date` >> ${HOME}/times.out
 
 The final product of this is now a set of files named
 ``*.pe.qc.fq.gz`` that are paired-end / interleaved and quality
