@@ -1,6 +1,6 @@
-===========================================
-2016-ep-streaming - Streaming, full dataset
-===========================================
+===============================================
+2016-ep-streaming - Streaming, through diginorm
+===============================================
 
 This is the same as 1-quality.rst in this repository, but the automatic data download is commented out because the full data set for this is mounted from the public amazon snapshot snap-f5a9dea7.
 
@@ -121,5 +121,7 @@ Run
    split-paired-reads.py -1 left.fq -2 right.fq paired.gz
    gunzip -c single.gz >> left.fq
    echo 5-split-pairs DONE `date` >> ${HOME}/times.out
-
+   
 .. shell stop
+
+# be sure to run readstats.py on reads at this point
