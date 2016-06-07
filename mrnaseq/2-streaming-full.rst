@@ -110,9 +110,16 @@ Run
       trim-low-abund.py -V -k 20 -Z 18 -C 2 - -o - -M 4e9 --diginorm \
       --diginorm-coverage=20 &&  \
       echo 2-diginorm normalize1-DONE `date` >> ${HOME}/times.out) | \
-      (echo 2-diginorm extract-paired-START `date` >> ${HOME}/times.out && \
+      (echo 3-extract START `date` >> ${HOME}/times.out && \
       extract-paired-reads.py --gzip  -p paired.gz -s single.gz && \
-      echo 2-diginorm DONE `date` >> ${HOME}/times.out)
+      echo 3-extract DONE `date` >> ${HOME}/times.out)
+   
+   
+   echo 4-split-pairs START `date` >> ${HOME}/times.out
+   split-paired-reads.py -1 left.fq -2 right.fq paired.gz
+   gunzip -c single.gz >> left.fq
+   echo 4-split-pairs DONE `date` >> ${HOME}/times.out
+
    
 Installing Trinity
 ------------------
@@ -131,15 +138,6 @@ To install Trinity:
    tar xzf trinity.tar.gz
    cd trinityrnaseq*/
    make |& tee trinity-build.log
-
-::
-
-   echo 3-big-assembly extractReads `date` >> ${HOME}/times.out
-   cd /mnt/work
-   split-paired-reads.py -1 left.fq -2 right.fq paired.gz
-   gunzip -c single.gz >> left.fq
-   
-   echo 3-big-assembly assemble `date` >> ${HOME}/times.out
 
 Now we will be running Trinity:
 ::
