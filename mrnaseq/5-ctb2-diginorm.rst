@@ -131,7 +131,25 @@ which represent the paired-end/interleaved reads that remain after
 both digital normalization and error trimming, together with
 ``orphans.keep.fq.gz``
 
-Save all these files to a new volume, and get ready to assemble!
+For paired-end data, Trinity expects two files, 'left' and 'right';
+there can be orphan sequences present, however.  So, below, we split
+all of our interleaved pair files in two, and then add the single-ended
+seqs to one of 'em. 
+
+   echo 7-split-pairs START `date` >> ${HOME}/times.out
+
+   for file in *.pe.qc.keep.abundfilt.fq.gz
+   do
+      split-paired-reads.py ${file}
+   done
+   
+   cat *.1 > left.fq
+   cat *.2 > right.fq
+   
+   gunzip -c orphans.keep.abundfilt.fq.gz >> left.fq
+   
+   echo 7-split-pairs DONE `date` >> ${HOME}/times.out
+
 
 .. ::
 
