@@ -22,7 +22,7 @@ This is the same as 1-quality.rst in this repository, but the automatic data dow
    echo Clearing times.out
    touch ${HOME}/times.out
    mv -f ${HOME}/times.out ${HOME}/times.out.bak
-   echo 1-quality INSTALL `date` >> ${HOME}/times.out
+   echo 0-install START `date` >> ${HOME}/times.out
 
 Install `khmer <http://khmer.readthedocs.org>`__ from its source code.
 ::
@@ -34,7 +34,9 @@ Install `khmer <http://khmer.readthedocs.org>`__ from its source code.
    git clone https://github.com/dib-lab/khmer.git
    cd khmer
    make install
-   
+   echo 0-install DONE `date` >> ${HOME}/times.out
+
+
 Link in data from mounted volume.
 ::
 
@@ -57,7 +59,7 @@ your sequences::
 
 .. ::
 
-   echo 1-quality TRIM `date` >> ${HOME}/times.out
+   echo 1-trim START `date` >> ${HOME}/times.out
 
 (From this point on, you may want to be running things inside of
 screen, so that you can leave it running while you go do something
@@ -92,9 +94,9 @@ Run
         rm -f s1_se s2_se
    done
    
-   echo 1-quality DONE `date` >> ${HOME}/times.out
+   echo 2-trim DONE `date` >> ${HOME}/times.out
    
-   echo 1.5-interleave START `date` >> ${HOME}/times.out
+   echo 3-interleave START `date` >> ${HOME}/times.out
    
    (for filename in *_R1_*.qc.fq.gz
    do
@@ -103,22 +105,22 @@ Run
       output=${base/_R1_/}.pe.qc.fq.gz
 
       interleave-reads.py ${base}.qc.fq.gz ${baseR2}.qc.fq.gz 
-      echo 1.5-interleave DONE `date` >> ${HOME}/times.out
+      echo 3-interleave DONE `date` >> ${HOME}/times.out
 
    done && zcat orphans.fq.gz) | \
-      (echo 2-diginorm normalize1-pe `date` >> ${HOME}/times.out && \
+      (echo 4-diginorm START `date` >> ${HOME}/times.out && \
       trim-low-abund.py -V -k 20 -Z 18 -C 2 - -o - -M 4e9 --diginorm \
       --diginorm-coverage=20 &&  \
-      echo 2-diginorm normalize1-DONE `date` >> ${HOME}/times.out) | \
-      (echo 3-extract START `date` >> ${HOME}/times.out && \
+      echo 4-diginorm DONE `date` >> ${HOME}/times.out) | \
+      (echo 5-extract START `date` >> ${HOME}/times.out && \
       extract-paired-reads.py --gzip  -p paired.gz -s single.gz && \
-      echo 3-extract DONE `date` >> ${HOME}/times.out)
+      echo 5-extract DONE `date` >> ${HOME}/times.out)
    
    
-   echo 4-split-pairs START `date` >> ${HOME}/times.out
+   echo 6-split-pairs START `date` >> ${HOME}/times.out
    split-paired-reads.py -1 left.fq -2 right.fq paired.gz
    gunzip -c single.gz >> left.fq
-   echo 4-split-pairs DONE `date` >> ${HOME}/times.out
+   echo 6-split-pairs DONE `date` >> ${HOME}/times.out
 
    
 Installing Trinity
@@ -126,7 +128,7 @@ Installing Trinity
 ::
 
    source /home/ubuntu/work/bin/activate
-   echo 3-big-assembly compileTrinity `date` >> ${HOME}/times.out
+   echo 7-compile-trinity START `date` >> ${HOME}/times.out
 
 To install Trinity:
 ::
@@ -138,12 +140,15 @@ To install Trinity:
    tar xzf trinity.tar.gz
    cd trinityrnaseq*/
    make |& tee trinity-build.log
+   
+   echo 7-compile-trinity DONE `date` >> ${HOME}/times.out
+   echo 8-big-assembly START `date` >> ${HOME}/times.out
 
 Now we will be running Trinity:
 ::
    cd /mnt/work
    ${HOME}/trinity*/Trinity --left left.fq --right right.fq --seqType fq --max_memory 14G --CPU 2
    
-   echo 3-big-assembly DONE `date` >> ${HOME}/times.out
+   echo 8-big-assembly DONE `date` >> ${HOME}/times.out
 
 .. shell stop
