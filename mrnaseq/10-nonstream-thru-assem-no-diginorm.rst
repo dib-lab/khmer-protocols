@@ -137,6 +137,12 @@ Run
    done
 
    echo 1-trim DONE `date` >> ${HOME}/times.out
+   
+  zcat *R1* > left.fq
+  zcat *R2* > right.fq
+
+  gunzip orphans.fq.gz >> left.fq
+  
 
 
 Each file with an R1 in its name should have a matching file with an R2 --
@@ -144,13 +150,7 @@ these are the paired ends.
 
 Now, we will zcat all right and left files to feed to Trinity.
 
-::
 
-  zcat *R1* > left.fq
-  zcat *R2* > right.fq
-
-  gunzip orphans.fq.gz >> left.fq
-  
 
 
 Installing Trinity
