@@ -22,13 +22,18 @@ at least 15 GB of RAM, maybe more.
 
 Installing Trinity
 ------------------
+Flush the disk cache, then install trinity
 
 .. ::
+
+   echo 8-flush-disk START `date` >> ${HOME}/times.out
+   echo 3 | sudo tee /proc/sys/vm/drop_caches
+   echo 8-flush-disk DONE `date` >> ${HOME}/times.out
 
    set -x
    set -e
    source /home/ubuntu/work/bin/activate
-   echo 8-compile-trinity START `date` >> ${HOME}/times.out
+   echo 9-compile-trinity START `date` >> ${HOME}/times.out
 
 To install Trinity:
 ::
@@ -41,7 +46,7 @@ To install Trinity:
    cd trinityrnaseq*/
    make |& tee trinity-build.log
    
-   echo 8-compile-trinity DONE `date` >> ${HOME}/times.out
+   echo 9-compile-trinity DONE `date` >> ${HOME}/times.out
 
 
 
@@ -50,7 +55,7 @@ Assembling with Trinity
 
 .. ::
 
-   echo 9-big-assembly START `date` >> ${HOME}/times.out
+   echo 10-big-assembly START `date` >> ${HOME}/times.out
 
 Run the assembler!
 ::
@@ -72,6 +77,6 @@ You can now copy it over via Dropbox, or set it up for BLAST (see
 
 .. ::
 
-   echo 9-big-assembly DONE `date` >> ${HOME}/times.out
+   echo 10-big-assembly DONE `date` >> ${HOME}/times.out
 
 .. shell stop
