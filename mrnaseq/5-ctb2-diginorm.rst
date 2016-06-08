@@ -37,10 +37,11 @@ Run digital normalization
 
 .. ::
 
-   echo 3-norm-by-med START `date` >> ${HOME}/times.out
 
 Apply digital normalization to the paired-end reads
 ::
+
+   echo 3-norm-by-med START `date` >> ${HOME}/times.out
 
    cd /mnt/work
    normalize-by-median.py -p -k 20 -C 20 -M 4e9 \
@@ -66,16 +67,16 @@ Trim off likely erroneous k-mers
 
 .. ::
 
-   echo 4-filter-abund START `date` >> ${HOME}/times.out
-
 Now, run through all the reads and trim off low-abundance parts of
 high-coverage reads
 ::
 
+   echo 4-filter-abund START `date` >> ${HOME}/times.out
+
    filter-abund.py -V -Z 18 normC20k20.ct *.keep && \
       rm *.keep normC20k20.ct
    
-    echo 4-filter-abund DONE `date` >> ${HOME}/times.out
+   echo 4-filter-abund DONE `date` >> ${HOME}/times.out
 
 
 This will turn some reads into orphans when their partner read is
@@ -88,10 +89,11 @@ You'll have a bunch of ``keep.abundfilt`` files -- let's make things prettier.
 
 .. ::
    
-   echo 5-extract START `date` >> ${HOME}/times.out
 
 First, let's break out the orphaned and still-paired reads
 ::
+
+   echo 5-extract START `date` >> ${HOME}/times.out
 
    for file in *.pe.*.abundfilt
    do 
