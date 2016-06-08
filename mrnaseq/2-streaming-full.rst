@@ -105,9 +105,9 @@ Run
       output=${base/_R1_/}.pe.qc.fq.gz
 
       interleave-reads.py ${base}.qc.fq.gz ${baseR2}.qc.fq.gz 
-      echo 2-interleave DONE `date` >> ${HOME}/times.out
 
-   done && zcat orphans.fq.gz) | \
+   done && zcat orphans.fq.gz &&
+      echo 2-interleave DONE `date` >> ${HOME}/times.out) | \
       (echo 3-diginorm START `date` >> ${HOME}/times.out && \
       trim-low-abund.py -V -k 20 -Z 18 -C 2 - -o - -M 4e9 --diginorm \
       --diginorm-coverage=20 &&  \
