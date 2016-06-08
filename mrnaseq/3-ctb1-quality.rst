@@ -73,30 +73,6 @@ Now, do an ``ls`` to list the files.  If you see only one entry,
 possibility is that your files aren't in /mnt/data; another is that
 their names don't end with ``.fastq.gz``.
 
-.. note::
-
-   This protocol takes many hours (days!) to run, so you might not want
-   to run it on all the data the first time.  If you're using the
-   example data, you can work with a subset of it by running this command
-   instead of the `ln -fs` command above::
-
-      cd /mnt/data
-      mkdir -p extract
-      for file in *.fastq.gz
-      do
-          gunzip -c ${file} | head -400000 | gzip \
-              > extract/${file%%.fastq.gz}.extract.fastq.gz
-      done
-
-   This will pull out the first 100,000 reads of each file (4 lines per record)
-   and put them in the new ``/mnt/data/extract`` directory.  Then, do::
-
-      rm -fr /mnt/work
-      mkdir /mnt/work
-      cd /mnt/work
-      ln -fs /mnt/data/extract/*.fastq.gz /mnt/work
-
-   to work with the subset data.
 
 Run FastQC on all your files
 ----------------------------
@@ -119,20 +95,11 @@ adapters
 
 .. note: jessica swapped above link from "https://sources.debian.net/data/main/t/trimmomatic/0.33+dfsg-1/adapters/TruSeq3-PE.fa" because that one doesn't exist anymore, and it's still the TruSeq3-PE.fa file
 
-.. note::
-
-   You'll need to make sure these are the right adapters for your
-   data.  If they are the right adapters, you should see that some of
-   the reads are trimmed; if they're not, you won't see anything
-   get trimmed.
-   
 
 Adapter trim each pair of files
 -------------------------------
 
 .. ::
-
-   echo 1-trim START `date` >> ${HOME}/times.out
 
 (From this point on, you may want to be running things inside of
 screen, so that you can leave it running while you go do something
@@ -140,6 +107,8 @@ else; see :doc:`../amazon/using-screen` for more information.)
 
 Run
 ::
+
+   echo 1-trim START `date` >> ${HOME}/times.out
 
    rm -f orphans.fq.gz
 
@@ -207,10 +176,11 @@ modification of the previous for loop...
         (interleave-reads.py ${base}.qc.fq.gz ${baseR2}.qc.fq.gz | \
             gzip > $output) && rm ${base}.qc.fq.gz ${baseR2}.qc.fq.gz
    done
+   
+   echo 2-interleave DONE `date` >> ${HOME}/times.out
 
 .. ::
 
-   echo 2-interleave DONE `date` >> ${HOME}/times.out
 
 The final product of this is now a set of files named
 ``*.pe.qc.fq.gz`` that are paired-end / interleaved and quality
