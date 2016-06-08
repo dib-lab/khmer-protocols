@@ -55,14 +55,18 @@ Assembling with Trinity
 
 .. ::
 
-   echo 10-big-assembly START `date` >> ${HOME}/times.out
 
 Run the assembler!
 ::
 
+   echo 10-big-assembly START `date` >> ${HOME}/times.out
+
    ${HOME}/trinity*/Trinity --left left.fq \
      --right right.fq --seqType fq --max_memory 14G \
      --CPU 2
+
+   echo 10-big-assembly DONE `date` >> ${HOME}/times.out
+
 
 Note that this last two parts (``--max_memory 14G --CPU ${THREADS:-2}``) is the
 maximum amount of memory and CPUs to use.  You can increase (or decrease) them
@@ -77,6 +81,5 @@ You can now copy it over via Dropbox, or set it up for BLAST (see
 
 .. ::
 
-   echo 10-big-assembly DONE `date` >> ${HOME}/times.out
 
 .. shell stop
