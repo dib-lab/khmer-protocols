@@ -135,29 +135,20 @@ Run
         gzip -9c s1_se s2_se >> orphans.fq.gz
         rm -f s1_se s2_se
    done
-
    echo 1-trim DONE `date` >> ${HOME}/times.out
    
-  zcat *R1* > left.fq
-  zcat *R2* > right.fq
+   zcat *R1* > left.fq
+   zcat *R2* > right.fq
 
-  gunzip orphans.fq.gz >> left.fq
-  
-
-
-Each file with an R1 in its name should have a matching file with an R2 --
-these are the paired ends.
-
-Now, we will zcat all right and left files to feed to Trinity.
-
-
-
+   gunzip orphans.fq.gz >> left.fq
+   
 
 Installing Trinity
 ------------------
 Flush the disk cache, then install trinity
 
 .. ::
+   cd ${HOME}
 
    echo 2-flush-disk START `date` >> ${HOME}/times.out
    echo 3 | sudo tee /proc/sys/vm/drop_caches
