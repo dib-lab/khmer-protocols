@@ -183,6 +183,8 @@ Assembling with Trinity
 Run the assembler!
 ::
 
+   cd /mnt/work   
+
    echo 4-big-assembly START `date` >> ${HOME}/times.out
 
    ${HOME}/trinity*/Trinity --left left.fq \
