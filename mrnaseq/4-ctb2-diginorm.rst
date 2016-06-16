@@ -136,7 +136,8 @@ both digital normalization and error trimming, together with
 For paired-end data, Trinity expects two files, 'left' and 'right';
 there can be orphan sequences present, however.  So, below, we split
 all of our interleaved pair files in two, and then add the single-ended
-seqs to one of 'em. ::
+seqs to one of 'em. 
+::
 
    echo 7-split-pairs START `date` >> ${HOME}/times.out
 
