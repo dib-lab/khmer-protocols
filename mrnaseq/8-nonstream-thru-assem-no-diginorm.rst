@@ -156,7 +156,7 @@ Flush the disk cache, then install trinity
 
    set -x
    set -e
-   source /home/ubuntu/work/bin/activate
+   source ~/work/bin/activate
    echo 3-compile-trinity START `date` >> ${HOME}/times.out
 
 To install Trinity:
