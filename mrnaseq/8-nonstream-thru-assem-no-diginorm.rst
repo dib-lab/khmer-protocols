@@ -38,7 +38,7 @@ software:
    mv -f ${HOME}/times.out ${HOME}/times.out.bak
    echo 0-install START `date` >> ${HOME}/times.out
 
-Install `khmer <http://khmer.readthedocs.org>`__ from its source code.
+Install `khmer <http://khmer.readthedocs.org>`__ from its source code. Also downloading datasubset. This is temporary, should be removed once code works.
 ::
 
    cd ~/
@@ -49,6 +49,13 @@ Install `khmer <http://khmer.readthedocs.org>`__ from its source code.
    cd khmer
    make install
    echo 0-install DONE `date` >> ${HOME}/times.out
+   
+   cd /mnt
+   curl -O https://s3.amazonaws.com/public.ged.msu.edu/mrnaseq-subset.tar
+   sudo mkdir -p data
+   cd data
+   tar xvf ../mrnaseq-subset.tar
+
 
 The use of ``virtualenv`` allows us to install Python software without having
 root access. If you come back to this protocol in a different terminal session
