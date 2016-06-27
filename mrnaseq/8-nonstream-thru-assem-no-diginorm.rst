@@ -49,10 +49,6 @@ Install `khmer <http://khmer.readthedocs.org>`__ from its source code. Also down
    cd khmer
    make install
    echo 0-install DONE `date` >> ${HOME}/times.out
-   
-   cd /mnt/work
-   curl -O https://s3.amazonaws.com/public.ged.msu.edu/mrnaseq-subset.tar
-   tar xvf ../mrnaseq-subset.tar
 
 
 The use of ``virtualenv`` allows us to install Python software without having
