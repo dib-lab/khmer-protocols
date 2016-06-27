@@ -184,7 +184,7 @@ Assembling with Trinity
 Run the assembler!
 ::
 
-   cd /mnt/work   
+   sudo ln -fs /mnt/work/{left,right}.fq .   
 
    echo 4-big-assembly START `date` >> ${HOME}/times.out
 
