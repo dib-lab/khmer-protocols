@@ -130,7 +130,7 @@ To install Trinity:
    
    cd ${HOME}
    
-   wget https://github.com/trinityrnaseq/trinityrnaseq/archive/v2.0.4.tar.gz \
+   wget https://github.com/trinityrnaseq/trinityrnaseq/archive/Trinity-v2.3.2.tar.gz \
      -O trinity.tar.gz
    tar xzf trinity.tar.gz
    cd trinityrnaseq*/
