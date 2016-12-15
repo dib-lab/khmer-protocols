@@ -10,7 +10,7 @@
    sudo apt-get -y install screen git curl gcc make g++ python-dev unzip \
             default-jre pkg-config libncurses5-dev r-base-core r-cran-gplots \
             python-matplotlib python-pip python-virtualenv sysstat fastqc \
-            trimmomatic bowtie samtools blast2
+            trimmomatic bowtie samtools blast2 bowtie2
 .. ::
 
    set -x
