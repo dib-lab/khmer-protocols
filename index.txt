@@ -22,7 +22,7 @@ If you need to reference these protocols, please cite::
    Brown, C. Titus; Sheneman, Leigh; Scott, Camille; Crusoe, Michael;
    Rosenthal, Josh; Howe, Adina Chuang (2013): khmer-protocols
    documentation.
-   figshare. http://dx.doi.org/10.6084/m9.figshare.878460
+   figshare. https://doi.org/10.6084/m9.figshare.878460
 
 Helpful instructions:
 ---------------------
